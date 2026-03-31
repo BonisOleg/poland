@@ -1,0 +1,26 @@
+[
+  {
+    "id": 21,
+    "name": "Misc",
+    "slug": "misc",
+    "description": "",
+    "parent": 0,
+    "count": 1
+  },
+  {
+    "id": 27,
+    "name": "skryabin",
+    "slug": "skryabin",
+    "description": "",
+    "parent": 0,
+    "count": 3
+  },
+  {
+    "id": 22,
+    "name": "Voucher",
+    "slug": "voucher",
+    "description": "",
+    "parent": 0,
+    "count": 6
+  }
+]

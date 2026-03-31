@@ -1,0 +1,39 @@
+{% load static i18n %}
+<header class="header" x-data="{ menuOpen: false }">
+    <div class="container header__inner">
+        <a href="{% url 'core:homepage' %}" class="header__logo">
+            <img src="{% static 'img/logo.svg' %}" alt="{{ SITE_NAME }}" width="140" height="40">
+        </a>
+
+        <nav class="header__nav">
+            <a href="{% url 'events:list' %}">{% trans "Wydarzenia" %}</a>
+            <a href="{% url 'blog:list' %}">{% trans "Aktualności" %}</a>
+            <a href="/dla-dzieci/">{% trans "Dla dzieci" %}</a>
+            <a href="/dla-szkol/">{% trans "Dla szkół" %}</a>
+            <a href="/dla-firm/">{% trans "Dla firm" %}</a>
+            <a href="/vouchery/">{% trans "Voucher" %}</a>
+        </nav>
+
+        <div class="header__actions">
+            <a href="{% url 'events:list' %}" class="btn btn--primary btn--sm hidden-mobile">{% trans "Kup bilety" %}</a>
+            <div class="lang-switch">
+                <a href="/pl{{ request.path }}" class="{% if LANGUAGE_CODE == 'pl' %}active{% endif %}">PL</a>
+                <a href="/en{{ request.path }}" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}">EN</a>
+            </div>
+            <button class="header__burger" @click="menuOpen = !menuOpen" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="mobile-menu" :class="menuOpen && 'mobile-menu--open'" @click.outside="menuOpen = false">
+        <a href="{% url 'events:list' %}" @click="menuOpen = false">{% trans "Wydarzenia" %}</a>
+        <a href="{% url 'blog:list' %}" @click="menuOpen = false">{% trans "Aktualności" %}</a>
+        <a href="/dla-dzieci/" @click="menuOpen = false">{% trans "Dla dzieci" %}</a>
+        <a href="/dla-szkol/" @click="menuOpen = false">{% trans "Dla szkół" %}</a>
+        <a href="/dla-firm/" @click="menuOpen = false">{% trans "Dla firm" %}</a>
+        <a href="/vouchery/" @click="menuOpen = false">{% trans "Voucher" %}</a>
+    </div>
+</header>

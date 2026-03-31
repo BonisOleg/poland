@@ -1,0 +1,734 @@
+[
+  {
+    "id": 6078,
+    "name": "6.11 Ryga",
+    "slug": "6-11-ryga",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/6-11-ryga/",
+    "sku": "",
+    "short_description": "<p>Koncert legendarnego zespołu</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "10900",
+      "regular_price": "10900",
+      "sale_price": "10900",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">109,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [],
+    "categories": [
+      {
+        "id": 27,
+        "name": "skryabin",
+        "slug": "skryabin",
+        "link": "https://hypeglobal.pro/product-category/skryabin/"
+      }
+    ],
+    "tags": [],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;6.11 Ryga&rdquo;",
+      "url": "?add-to-cart=6078",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 6077,
+    "name": "7.11. Wilno",
+    "slug": "7-11-wilno",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/7-11-wilno/",
+    "sku": "",
+    "short_description": "<p>Koncert legendarnego zespołu</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "8900",
+      "regular_price": "8900",
+      "sale_price": "8900",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">89,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [],
+    "categories": [
+      {
+        "id": 27,
+        "name": "skryabin",
+        "slug": "skryabin",
+        "link": "https://hypeglobal.pro/product-category/skryabin/"
+      }
+    ],
+    "tags": [],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;7.11. Wilno&rdquo;",
+      "url": "?add-to-cart=6077",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 6060,
+    "name": "5.11 Tallin",
+    "slug": "5-11-tallin",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/5-11-tallin/",
+    "sku": "",
+    "short_description": "<p>Koncert legendarnego zespołu</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "9900",
+      "regular_price": "9900",
+      "sale_price": "9900",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">99,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [],
+    "categories": [
+      {
+        "id": 27,
+        "name": "skryabin",
+        "slug": "skryabin",
+        "link": "https://hypeglobal.pro/product-category/skryabin/"
+      }
+    ],
+    "tags": [],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;5.11 Tallin&rdquo;",
+      "url": "?add-to-cart=6060",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 1007,
+    "name": "0.1 zl TEST",
+    "slug": "voucher-100-zl-test",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-100-zl-test/",
+    "sku": "",
+    "short_description": "",
+    "description": "",
+    "on_sale": true,
+    "prices": {
+      "price": "10",
+      "regular_price": "10000",
+      "sale_price": "10",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\">100,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span></del> <span class=\"screen-reader-text\">Pierwotna cena wynosiła: 100,00&nbsp;&#122;&#322;.</span><ins aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\">0,10&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span></ins><span class=\"screen-reader-text\">Aktualna cena wynosi: 0,10&nbsp;&#122;&#322;.</span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 454,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2023/12/bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-489c-af5e-75543d361b0a.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2023/12/bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-489c-af5e-75543d361b0a-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2023/12/bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-489c-af5e-75543d361b0a.png 578w, https://hypeglobal.pro/wp-content/uploads/2023/12/bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-489c-af5e-75543d361b0a-300x169.png 300w",
+        "sizes": "(max-width: 578px) 100vw, 578px",
+        "name": "bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-489c-af5e-75543d361b0a",
+        "alt": ""
+      }
+    ],
+    "categories": [],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;0.1 zl TEST&rdquo;",
+      "url": "?add-to-cart=1007",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 796,
+    "name": "Voucher 150 zl",
+    "slug": "voucher-150-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-150-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 150 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "15000",
+      "regular_price": "15000",
+      "sale_price": "15000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">150,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20288,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126.png 874w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126-768x431.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126-800x450.png 800w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2126-600x336.png 600w",
+        "sizes": "(max-width: 874px) 100vw, 874px",
+        "name": "Voucher-2126",
+        "alt": ""
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 150 zl&rdquo;",
+      "url": "?add-to-cart=796",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 795,
+    "name": "Voucher 50 zl",
+    "slug": "voucher-50-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-50-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 50 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "5000",
+      "regular_price": "5000",
+      "sale_price": "5000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">50,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20283,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120.png 1019w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120-768x430.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2120-600x336.png 600w",
+        "sizes": "(max-width: 1019px) 100vw, 1019px",
+        "name": "Voucher-2120",
+        "alt": "biletu do teatru"
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 50 zl&rdquo;",
+      "url": "?add-to-cart=795",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 730,
+    "name": "Voucher 500 zl",
+    "slug": "voucher-500-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-500-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 500 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "50000",
+      "regular_price": "50000",
+      "sale_price": "50000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">500,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20286,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124.png 874w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124-768x431.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124-800x450.png 800w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2124-600x336.png 600w",
+        "sizes": "(max-width: 874px) 100vw, 874px",
+        "name": "Voucher-2124",
+        "alt": ""
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 500 zl&rdquo;",
+      "url": "?add-to-cart=730",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 729,
+    "name": "Voucher 300 zl",
+    "slug": "voucher-300-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-300-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 300 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "30000",
+      "regular_price": "30000",
+      "sale_price": "30000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">300,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20285,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123.png 874w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123-768x431.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123-800x450.png 800w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2123-600x336.png 600w",
+        "sizes": "(max-width: 874px) 100vw, 874px",
+        "name": "Voucher-2123",
+        "alt": ""
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 300 zl&rdquo;",
+      "url": "?add-to-cart=729",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 727,
+    "name": "Voucher 200 zl",
+    "slug": "voucher-200-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-200-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 200 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "20000",
+      "regular_price": "20000",
+      "sale_price": "20000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">200,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20281,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127.png 874w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127-768x431.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127-800x450.png 800w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2127-600x336.png 600w",
+        "sizes": "(max-width: 874px) 100vw, 874px",
+        "name": "Voucher-2127",
+        "alt": "przedstawienia"
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 200 zl&rdquo;",
+      "url": "?add-to-cart=727",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 453,
+    "name": "Voucher 100 zl",
+    "slug": "voucher-100-zl",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://hypeglobal.pro/product/voucher-100-zl/",
+    "sku": "",
+    "short_description": "<p>Voucher Prezentowy na kwotę 100 zł</p>",
+    "description": "",
+    "on_sale": false,
+    "prices": {
+      "price": "10000",
+      "regular_price": "10000",
+      "sale_price": "10000",
+      "price_range": null,
+      "currency_code": "PLN",
+      "currency_symbol": "zł",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ",",
+      "currency_thousand_separator": "",
+      "currency_prefix": "",
+      "currency_suffix": " zł"
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\">100,00&nbsp;<span class=\"woocommerce-Price-currencySymbol\">&#122;&#322;</span></span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 20284,
+        "src": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121.png",
+        "thumbnail": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121-300x300.png",
+        "srcset": "https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121.png 874w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121-300x168.png 300w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121-768x431.png 768w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121-800x450.png 800w, https://hypeglobal.pro/wp-content/uploads/2025/10/Voucher-2121-600x336.png 600w",
+        "sizes": "(max-width: 874px) 100vw, 874px",
+        "name": "Voucher-2121",
+        "alt": "bilet do teatru"
+      }
+    ],
+    "categories": [
+      {
+        "id": 22,
+        "name": "Voucher",
+        "slug": "voucher",
+        "link": "https://hypeglobal.pro/product-category/voucher/"
+      }
+    ],
+    "tags": [
+      {
+        "id": 23,
+        "name": "100",
+        "slug": "100",
+        "link": "https://hypeglobal.pro/product-tag/100/"
+      }
+    ],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Dodaj do koszyka",
+      "description": "Dodaj do koszyka: &bdquo;Voucher 100 zl&rdquo;",
+      "url": "?add-to-cart=453",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  }
+]

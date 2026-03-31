@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ page.seo_description }}{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<section class="section">
+    <div class="container" style="max-width: 900px;">
+        <h1 style="margin-bottom: var(--space-xl);">{{ page.title }}</h1>
+        <div class="event-content">
+            {{ page.content|safe }}
+        </div>
+
+        {% if page.show_contact_form %}
+        <div style="margin-top: var(--space-2xl); max-width: 600px;">
+            <h2 style="margin-bottom: var(--space-lg);">{% trans "Formularz kontaktowy" %}</h2>
+            <form method="post" action="/contact/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>{% trans "Imię i nazwisko" %}</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Email" %}</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Organizacja" %}</label>
+                    <input type="text" name="organization">
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Wiadomość" %}</label>
+                    <textarea name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary">{% trans "Wyślij" %}</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

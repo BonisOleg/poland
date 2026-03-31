@@ -1,0 +1,12 @@
+{% load i18n %}
+{% if results %}
+<div class="grid grid--cards">
+    {% for ec in results %}
+        {% include "components/event_card.html" %}
+    {% endfor %}
+</div>
+{% elif q %}
+<p class="text-gray text-center" style="padding: var(--space-xl);">
+    {% trans "Nie znaleziono wydarzeń dla" %} "{{ q }}"
+</p>
+{% endif %}

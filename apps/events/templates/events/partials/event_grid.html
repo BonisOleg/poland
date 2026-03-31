@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="grid grid--cards">
+    {% for ec in page_obj %}
+        {% include "components/event_card.html" %}
+    {% empty %}
+        <p class="text-gray text-center" style="grid-column: 1 / -1; padding: var(--space-2xl);">
+            {% trans "Nie znaleziono wydarzeń pasujących do filtrów." %}
+        </p>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_next %}
+<div class="text-center" style="margin-top: var(--space-xl);">
+    <button class="btn btn--outline"
+            hx-get="{% url 'events:filter' %}?page={{ page_obj.next_page_number }}"
+            hx-target="#events-grid"
+            hx-swap="innerHTML"
+            hx-include=".filter-bar__select">
+        {% trans "Więcej wydarzeń" %}
+    </button>
+</div>
+{% endif %}

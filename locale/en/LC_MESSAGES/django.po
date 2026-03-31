@@ -1,0 +1,175 @@
+# English translations for HypeGlobal.pro
+# Copyright (C) 2026 Hype Global Production
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: HypeGlobal 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-31 22:17+0200\n"
+"PO-Revision-Date: 2026-03-31 22:17+0200\n"
+"Last-Translator: admin\n"
+"Language-Team: EN\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Aktualności"
+msgstr "News"
+
+msgid "Brak aktualności."
+msgstr "No news available."
+
+msgid "Strona główna"
+msgstr "Home"
+
+msgid "Wydarzenia"
+msgstr "Events"
+
+msgid "Dni"
+msgstr "Days"
+
+msgid "Godz"
+msgstr "Hours"
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Sek"
+msgstr "Sec"
+
+msgid "Kup bilet"
+msgstr "Buy ticket"
+
+msgid "Kupno biletu"
+msgstr "Buy ticket"
+
+msgid "Zobacz także"
+msgstr "See also"
+
+msgid "Recenzje"
+msgstr "Reviews"
+
+msgid "Brak recenzji. Bądź pierwszy!"
+msgstr "No reviews yet. Be the first!"
+
+msgid "Wszystkie miasta"
+msgstr "All cities"
+
+msgid "Wszystkie kategorie"
+msgstr "All categories"
+
+msgid "Wiek"
+msgstr "Age"
+
+msgid "Data"
+msgstr "Date"
+
+msgid "Popularne"
+msgstr "Popular"
+
+msgid "Nie znaleziono wydarzeń pasujących do filtrów."
+msgstr "No events found matching the filters."
+
+msgid "Więcej wydarzeń"
+msgstr "More events"
+
+msgid "Formularz kontaktowy"
+msgstr "Contact form"
+
+msgid "Imię i nazwisko"
+msgstr "Full name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Organizacja"
+msgstr "Organization"
+
+msgid "Wiadomość"
+msgstr "Message"
+
+msgid "Wyślij"
+msgstr "Send"
+
+msgid "Imię"
+msgstr "Name"
+
+msgid "Ocena"
+msgstr "Rating"
+
+msgid "Recenzja"
+msgstr "Review"
+
+msgid "Dodaj recenzję"
+msgstr "Add review"
+
+msgid "Dziękujemy za recenzję! Zostanie opublikowana po moderacji."
+msgstr "Thank you for your review! It will be published after moderation."
+
+msgid "Nie znaleziono wydarzeń dla"
+msgstr "No events found for"
+
+msgid "Bilety na wydarzenia w twoim mieście"
+msgstr "Tickets for events in your city"
+
+msgid "Wyszukaj wydarzenie, miasto..."
+msgstr "Search event, city..."
+
+msgid "Szukaj"
+msgstr "Search"
+
+msgid "Kategoria:"
+msgstr "Category:"
+
+msgid "Dla Dzieci"
+msgstr "For Children"
+
+msgid "Dla Dorosłych"
+msgstr "For Adults"
+
+msgid "Najbliższe wydarzenia"
+msgstr "Upcoming events"
+
+msgid "Brak wydarzeń"
+msgstr "No events"
+
+msgid "Wszystkie wydarzenia"
+msgstr "All events"
+
+msgid "Organizator tras koncertowych w Polsce, Europie i ZEA."
+msgstr "Concert tour organizer in Poland, Europe and UAE."
+
+msgid "Spektakle"
+msgstr "Shows"
+
+msgid "Koncerty"
+msgstr "Concerts"
+
+msgid "Informacje"
+msgstr "Information"
+
+msgid "Regulaminy"
+msgstr "Terms & Conditions"
+
+msgid "Polityka prywatności"
+msgstr "Privacy Policy"
+
+msgid "Dla szkół"
+msgstr "For schools"
+
+msgid "Dla firm"
+msgstr "For companies"
+
+msgid "Voucher"
+msgstr "Voucher"
+
+msgid "Wszelkie prawa zastrzeżone."
+msgstr "All rights reserved."
+
+msgid "Dla dzieci"
+msgstr "For children"
+
+msgid "Wyniki wyszukiwania"
+msgstr "Search results"

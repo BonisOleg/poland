@@ -1,0 +1,27 @@
+<article class="card">
+    {% if ec.event.image %}
+        <img src="{{ ec.event.image.url }}" alt="{{ ec.get_display_title }}" class="card__image" loading="lazy" width="400" height="250">
+    {% elif ec.og_image %}
+        <img src="{{ ec.og_image }}" alt="{{ ec.get_display_title }}" class="card__image" loading="lazy" width="400" height="250">
+    {% endif %}
+
+    {% if ec.ticket_badge %}
+        {% if ec.ticket_status == "sold_out" or ec.seats_left is not None and ec.seats_left < 10 %}
+            <span class="card__badge card__badge--sold-out">{{ ec.ticket_badge }}</span>
+        {% elif ec.ticket_status == "few_left" or ec.seats_left is not None and ec.seats_left < 50 %}
+            <span class="card__badge card__badge--few-left">{{ ec.ticket_badge }}</span>
+        {% endif %}
+    {% endif %}
+
+    <div class="card__body">
+        {% if ec.event_date %}
+            <div class="card__date">{{ ec.event_date|date:"d.m.Y, H:i" }}</div>
+        {% endif %}
+        <h3 class="card__title">{{ ec.get_display_title }}</h3>
+        <div class="card__city">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ ec.city.name }}
+        </div>
+    </div>
+    <a href="{{ ec.get_absolute_url }}" class="card__link" aria-label="{{ ec.get_display_title }}"></a>
+</article>

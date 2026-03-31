@@ -1,0 +1,12 @@
+{% load i18n %}
+<nav class="breadcrumbs container" aria-label="Breadcrumbs">
+    <a href="{% url 'core:homepage' %}">{% trans "Strona główna" %}</a>
+    {% for crumb in breadcrumbs %}
+        <span class="breadcrumbs__sep">»</span>
+        {% if crumb.url %}
+            <a href="{{ crumb.url }}">{{ crumb.title }}</a>
+        {% else %}
+            <span>{{ crumb.title }}</span>
+        {% endif %}
+    {% endfor %}
+</nav>

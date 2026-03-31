@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% if article.seo_title %}{{ article.seo_title }}{% else %}{{ article.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ article.seo_description }}{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<article class="section">
+    <div class="container" style="max-width: 800px;">
+        <div class="card__date" style="margin-bottom: var(--space-md);">{{ article.published_at|date:"d.m.Y" }}</div>
+        <h1 style="margin-bottom: var(--space-xl);">{{ article.title }}</h1>
+
+        {% if article.image %}
+            <img src="{{ article.image.url }}" alt="{{ article.title }}" style="border-radius: var(--radius-lg); margin-bottom: var(--space-xl); width: 100%;">
+        {% endif %}
+
+        <div class="event-content">
+            {{ article.content|safe }}
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ SITE_NAME }} — {% trans "Bilety na wydarzenia w twoim mieście" %}{% endblock %}
+
+{% block content %}
+<section class="section section--hero-intro">
+    <div class="container">
+        <h1 class="hero-intro__heading text-gradient">{% trans "Bilety na wydarzenia" %}</h1>
+        <p class="hero-intro__sub">{% trans "Teatr, koncerty, spektakle dla dzieci i dorosłych w całej Polsce" %}</p>
+        <div class="search-bar">
+            <input
+                type="search"
+                class="search-bar__input"
+                placeholder="{% trans 'Wyszukaj wydarzenie, miasto...' %}"
+                name="q"
+                hx-get="{% url 'core:search' %}"
+                hx-trigger="keyup changed delay:300ms"
+                hx-target="#search-results"
+                autocomplete="off"
+            >
+            <button class="search-bar__btn" aria-label="{% trans 'Szukaj' %}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
+        </div>
+        <div id="search-results"></div>
+    </div>
+</section>
+
+<section class="section section--alt" style="padding-top: var(--space-2xl); padding-bottom: var(--space-2xl);">
+    <div class="container">
+        <div class="grid grid--2" style="gap: var(--space-lg);">
+            <a href="/dla-dzieci/" class="category-card">
+                <div class="category-card__label">{% trans "Kategoria" %}</div>
+                <div class="category-card__title">{% trans "Dla Dzieci" %}</div>
+            </a>
+            <a href="{% url 'events:list' %}?category=dla-doroslych" class="category-card">
+                <div class="category-card__label">{% trans "Kategoria" %}</div>
+                <div class="category-card__title">{% trans "Dla Dorosłych" %}</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section__title text-gradient">{% trans "Najbliższe wydarzenia" %}</h2>
+        <div class="grid grid--cards">
+            {% for ec in events %}
+                {% include "components/event_card.html" %}
+            {% empty %}
+                <p class="text-gray">{% trans "Brak wydarzeń" %}</p>
+            {% endfor %}
+        </div>
+        <div class="text-center" style="margin-top: var(--space-xl);">
+            <a href="{% url 'events:list' %}" class="btn btn--outline">{% trans "Wszystkie wydarzenia" %}</a>
+        </div>
+    </div>
+</section>
+
+{% if articles %}
+<section class="section section--alt">
+    <div class="container">
+        <h2 class="section__title text-gradient">{% trans "Aktualności" %}</h2>
+        <div class="grid grid--articles">
+            {% for article in articles %}
+            <a href="{{ article.get_absolute_url }}" class="card">
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="card__image" loading="lazy">
+                {% endif %}
+                <div class="card__body">
+                    <div class="card__date">{{ article.published_at|date:"d.m.Y" }}</div>
+                    <h3 class="card__title">{{ article.title }}</h3>
+                    {% if article.excerpt %}
+                        <p class="text-gray" style="font-size: var(--fs-sm);">{{ article.excerpt|truncatewords:20 }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

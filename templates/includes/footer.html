@@ -1,0 +1,48 @@
+{% load i18n %}
+<footer class="footer">
+    <div class="container">
+        <div class="footer__grid">
+            <div>
+                <div class="footer__title">{{ SITE_NAME }}</div>
+                <p class="text-gray" style="font-size: var(--fs-sm); line-height: 1.7;">
+                    {% trans "Organizator tras koncertowych w Polsce, Europie i ZEA." %}
+                </p>
+                <div style="margin-top: var(--space-md);">
+                    <a href="mailto:info@hypeglobal.pro" class="text-gray" style="font-size: var(--fs-sm);">info@hypeglobal.pro</a><br>
+                    <a href="tel:+48573569787" class="text-gray" style="font-size: var(--fs-sm);">+48 573 569 787</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer__title">{% trans "Spektakle" %}</div>
+                <div class="footer__links">
+                    <a href="/lotd/">Lord of the Dance</a>
+                    <a href="/tbm/">Teatr Baniek Mydlanych</a>
+                    <a href="/naukowcy/">Szaleni Naukowcy</a>
+                    <a href="/maciejpol/">Teatr Magii</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer__title">{% trans "Koncerty" %}</div>
+                <div class="footer__links">
+                    <a href="/abba/">Abba The Show</a>
+                    <a href="/urszula/">Urszula</a>
+                    <a href="/dpp/">Dżentelmeni Polskiej Piosenki</a>
+                    <a href="/morandi/">Morandi</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer__title">{% trans "Informacje" %}</div>
+                <div class="footer__links">
+                    <a href="/regulaminy/">{% trans "Regulaminy" %}</a>
+                    <a href="/polityka-prywatnosci/">{% trans "Polityka prywatności" %}</a>
+                    <a href="/dla-szkol/">{% trans "Dla szkół" %}</a>
+                    <a href="/dla-firm/">{% trans "Dla firm" %}</a>
+                    <a href="/vouchery/">{% trans "Voucher" %}</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            &copy; {% now "Y" %} {{ SITE_NAME }}. {% trans "Wszelkie prawa zastrzeżone." %}
+        </div>
+    </div>
+</footer>

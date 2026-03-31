@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Aktualności" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section__title text-gradient">{% trans "Aktualności" %}</h1>
+        <div class="grid grid--articles">
+            {% for article in page_obj %}
+            <a href="{{ article.get_absolute_url }}" class="card">
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="card__image" loading="lazy">
+                {% endif %}
+                <div class="card__body">
+                    <div class="card__date">{{ article.published_at|date:"d.m.Y" }}</div>
+                    <h2 class="card__title" style="font-size: var(--fs-lg);">{{ article.title }}</h2>
+                    {% if article.excerpt %}
+                        <p class="text-gray" style="font-size: var(--fs-sm);">{{ article.excerpt|truncatewords:25 }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% empty %}
+                <p class="text-gray">{% trans "Brak aktualności." %}</p>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <div class="flex flex--center" style="margin-top: var(--space-xl); gap: var(--space-sm);">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn--outline btn--sm">&laquo;</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn--outline btn--sm">&raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

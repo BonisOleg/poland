@@ -1,0 +1,25 @@
+{% load i18n %}
+<form hx-post="{% url 'reviews:add' event_city.pk %}" hx-target="#reviews-list" hx-swap="afterbegin">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="author_name">{% trans "Imię" %}</label>
+        <input type="text" id="author_name" name="author_name" required maxlength="200">
+        {% if errors.author_name %}<div class="form-error">{{ errors.author_name }}</div>{% endif %}
+    </div>
+    <div class="form-group">
+        <label for="rating">{% trans "Ocena" %}</label>
+        <select id="rating" name="rating">
+            <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+            <option value="4">&#9733;&#9733;&#9733;&#9733;&#9734;</option>
+            <option value="3">&#9733;&#9733;&#9733;&#9734;&#9734;</option>
+            <option value="2">&#9733;&#9733;&#9734;&#9734;&#9734;</option>
+            <option value="1">&#9733;&#9734;&#9734;&#9734;&#9734;</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="review_content">{% trans "Recenzja" %}</label>
+        <textarea id="review_content" name="content" required maxlength="2000"></textarea>
+        {% if errors.content %}<div class="form-error">{{ errors.content }}</div>{% endif %}
+    </div>
+    <button type="submit" class="btn btn--primary">{% trans "Dodaj recenzję" %}</button>
+</form>

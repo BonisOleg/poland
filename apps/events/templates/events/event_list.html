@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Wydarzenia" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section__title text-gradient">{% trans "Wydarzenia" %}</h1>
+
+        <div class="filter-bar" style="margin-bottom: var(--space-xl);">
+            <select class="filter-bar__select"
+                    name="city"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="">{% trans "Wszystkie miasta" %}</option>
+                {% for city in cities %}
+                    <option value="{{ city.slug }}" {% if current_filters.city == city.slug %}selected{% endif %}>{{ city.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="category"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="">{% trans "Wszystkie kategorie" %}</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.slug }}" {% if current_filters.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="age"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="">{% trans "Wiek" %}</option>
+                {% for ag in age_groups %}
+                    <option value="{{ ag.slug }}" {% if current_filters.age == ag.slug %}selected{% endif %}>{{ ag.name }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="date"
+                   class="filter-bar__select"
+                   name="date"
+                   value="{{ current_filters.date }}"
+                   hx-get="{% url 'events:filter' %}"
+                   hx-target="#events-grid"
+                   hx-include=".filter-bar__select">
+
+            <select class="filter-bar__select"
+                    name="sort"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="date" {% if current_filters.sort == 'date' %}selected{% endif %}>{% trans "Data" %}</option>
+                <option value="popular" {% if current_filters.sort == 'popular' %}selected{% endif %}>{% trans "Popularne" %}</option>
+            </select>
+        </div>
+
+        <div id="events-grid">
+            {% include "events/partials/event_grid.html" %}
+        </div>
+    </div>
+</section>
+{% endblock %}

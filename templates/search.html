@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Wyniki wyszukiwania" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section__title">{% trans "Wyniki wyszukiwania" %}</h1>
+        <div class="search-bar" style="margin-bottom: var(--space-2xl);">
+            <input type="search" class="search-bar__input" name="q" value="{{ q }}"
+                   hx-get="{% url 'core:search' %}" hx-trigger="keyup changed delay:300ms" hx-target="#search-results">
+        </div>
+        <div id="search-results">
+            {% include "components/search_results.html" %}
+        </div>
+    </div>
+</section>
+{% endblock %}
