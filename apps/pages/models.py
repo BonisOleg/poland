@@ -7,6 +7,12 @@ class StaticPage(models.Model):
     content = models.TextField()
     seo_title = models.CharField(max_length=500, blank=True)
     seo_description = models.TextField(blank=True)
+    keywords = models.CharField(max_length=500, blank=True)
+    page_type = models.CharField(
+        max_length=20,
+        choices=[("static", "Статична сторінка"), ("landing", "Лендінг")],
+        default="static",
+    )
     show_contact_form = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
     sort_order = models.IntegerField(default=0)

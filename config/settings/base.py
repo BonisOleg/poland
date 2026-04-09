@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django_htmx",
     "imagekit",
+    "django_ckeditor_5",
     "apps.core",
     "apps.events",
     "apps.blog",
@@ -106,3 +107,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_URL = os.environ.get("SITE_URL", "https://hypeglobal.pro")
 SITE_NAME = "Hype Global Production"
+
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": {
+            "items": [
+                "heading", "|",
+                "bold", "italic", "underline", "|",
+                "link", "bulletedList", "numberedList", "|",
+                "blockQuote", "insertImage", "|",
+                "undo", "redo",
+            ],
+        },
+        "height": "400px",
+        "image": {
+            "toolbar": ["imageTextAlternative", "imageStyle:inline", "imageStyle:block"],
+        },
+    },
+}
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

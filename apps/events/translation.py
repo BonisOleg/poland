@@ -14,9 +14,9 @@ class AgeGroupTO(TranslationOptions):
 
 @register(Event)
 class EventTO(TranslationOptions):
-    fields = ("title", "description", "short_description")
+    fields = ("title", "description", "short_description", "target_audience")
 
 
 @register(EventCity)
 class EventCityTO(TranslationOptions):
-    fields = ("custom_title", "content_html", "seo_title", "seo_description")
+    fields = ("custom_title", "content_html", "seo_title", "seo_description", "keywords")

@@ -88,6 +88,18 @@ class Event(models.Model):
         default="spektakl",
     )
     is_active = models.BooleanField(default=True)
+    target_audience = models.CharField(max_length=300, blank=True)
+    duration = models.PositiveIntegerField(null=True, blank=True, help_text="Тривалість у хвилинах")
+    language_spoken = models.CharField(
+        max_length=10,
+        choices=[
+            ("pl", "Polski"),
+            ("en", "English"),
+            ("ua", "Українська"),
+            ("mixed", "Мішана мова"),
+        ],
+        blank=True,
+    )
     biletyna_base_url = models.URLField(blank=True)
     image = ProcessedImageField(
         upload_to="events/",
@@ -133,6 +145,11 @@ class EventCity(models.Model):
     )
     seats_left = models.IntegerField(null=True, blank=True)
     price_from = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price_to = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    keywords = models.CharField(max_length=500, blank=True)
+    related_events_manual = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name="featured_in_related"
+    )
 
     seo_title = models.CharField(max_length=500, blank=True)
     seo_description = models.TextField(blank=True)

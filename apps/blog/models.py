@@ -19,6 +19,7 @@ class Article(models.Model):
     seo_title = models.CharField(max_length=500, blank=True)
     seo_description = models.TextField(blank=True)
     og_image = models.URLField(blank=True, max_length=500)
+    keywords = models.CharField(max_length=500, blank=True)
     is_published = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

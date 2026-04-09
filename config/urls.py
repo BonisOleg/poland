@@ -6,6 +6,7 @@ from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("feeds/", include("apps.events.feed_urls")),
 ]
