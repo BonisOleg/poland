@@ -85,6 +85,14 @@ ul, ol {
     outline-offset: 2px;
 }
 
+/* Filter bar controls use border-only focus (see components.css). WebKit can still
+   paint the global :focus-visible outline on selects unless overridden here. */
+select.filter-bar__select:focus-visible,
+input.filter-bar__select:focus-visible {
+    outline: none;
+    outline-offset: 0;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

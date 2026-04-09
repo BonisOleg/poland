@@ -265,20 +265,213 @@
     color: var(--color-gray-light);
 }
 
+.event-content h1,
 .event-content h2,
-.event-content h3 {
+.event-content h3,
+.event-content h4,
+.event-content h5,
+.event-content h6 {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: var(--fw-bold);
     margin-top: var(--space-xl);
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-sm);
     color: var(--color-white);
+    line-height: 1.3;
+}
+
+.event-content h1 {
+    font-size: var(--fs-2xl);
+}
+
+.event-content h2 {
+    font-size: var(--fs-xl);
+}
+
+.event-content h3 {
+    font-size: var(--fs-lg);
+}
+
+.event-content h4,
+.event-content h5,
+.event-content h6 {
+    font-size: var(--fs-base);
 }
 
 .event-content p {
     margin-bottom: var(--space-md);
 }
 
+/* Undo global list reset (base.css) for imported HTML */
+.event-content ul,
+.event-content ol {
+    list-style: revert;
+    padding-left: 1.5em;
+    margin: 0 0 var(--space-md);
+}
+
+.event-content li {
+    margin-bottom: var(--space-xs);
+}
+
+.event-content li > ul,
+.event-content li > ol {
+    margin-top: var(--space-xs);
+    margin-bottom: 0;
+}
+
+/* WordPress Gutenberg: multi-column blocks often stack as full-width without flex */
+.event-content .wp-block-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.event-content .wp-block-column {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+/* Elementor (common on WP): row/column wrappers */
+.event-content .elementor-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+}
+
+.event-content .elementor-column {
+    flex: 1 1 220px;
+    min-width: 0;
+}
+
+.event-content figure {
+    margin: var(--space-lg) 0;
+}
+
+.event-content figcaption {
+    font-size: var(--fs-sm);
+    color: var(--color-gray);
+    margin-top: var(--space-sm);
+    text-align: center;
+}
+
+/* Inline SVG from imports often has no max width and fills the column */
+.event-content svg {
+    max-width: min(100%, 220px);
+    height: auto;
+    display: block;
+    margin: var(--space-md) auto;
+}
+
 .event-content img {
     border-radius: var(--radius-md);
-    margin: var(--space-lg) 0;
+    margin: var(--space-lg) auto;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Icon / decorative images: lone img in a paragraph (avoids 800px-wide “stars”) */
+.event-content p > img:only-child {
+    max-width: min(100%, 220px);
+}
+
+/* Partner/logo lists: grid of small images (e.g. REKOMENDACJE) */
+.event-content ul:has(> li > img) {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: var(--space-md) var(--space-lg);
+    align-items: center;
+    justify-items: center;
+}
+
+.event-content ul:has(> li > img) li {
+    margin-bottom: 0;
+}
+
+.event-content ul:has(> li > img) img {
+    margin: 0;
+    max-height: 64px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Video / embeds: full width of prose; WP alignment often shifts media right */
+.event-content video,
+.event-content iframe,
+.event-content embed,
+.event-content object {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0;
+    border-radius: var(--radius-md);
+}
+
+.event-content iframe,
+.event-content embed {
+    aspect-ratio: 16 / 9;
+    height: auto;
+}
+
+.event-content video {
+    height: auto;
+}
+
+.event-content .wp-block-embed,
+.event-content .wp-block-video {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.event-content .wp-block-embed .wp-block-embed__wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.event-content .wp-block-embed__wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: unset;
+}
+
+.event-content .elementor-widget-video .elementor-widget-container,
+.event-content .elementor-widget-video .elementor-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.event-content .elementor-container,
+.event-content .elementor-row {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.event-content .alignleft,
+.event-content .alignright,
+.event-content .aligncenter,
+.event-content .alignwide {
+    float: none;
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
 }
 
 .lang-switch {

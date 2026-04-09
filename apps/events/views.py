@@ -9,8 +9,18 @@ def event_list(request):
     ).select_related("event", "city")
 
     cities = City.objects.all()
-    categories = Category.objects.all()
-    age_groups = AgeGroup.objects.all()
+    categories = (
+        Category.objects
+        .filter(events__event_cities__is_published=True)
+        .distinct()
+        .order_by("sort_order", "name")
+    )
+    age_groups = (
+        AgeGroup.objects
+        .filter(events__event_cities__is_published=True)
+        .distinct()
+        .order_by("min_age")
+    )
 
     events = _apply_filters(events, request)
 

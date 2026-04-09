@@ -9,9 +9,23 @@ from django.conf import settings
 from django.utils.text import slugify
 from html import unescape
 
-from apps.events.models import Event, EventCity, City, Category
+from apps.events.models import AgeGroup, Category, City, Event, EventCity
 from apps.pages.models import StaticPage
 from apps.vouchers.models import Voucher
+
+# Slug-pattern → category slug + age_group slug
+SLUG_CATEGORY_MAP = [
+    ("dzieci",  "dla-dzieci",    "dla-dzieci"),
+    ("dorosl",  "dla-doroslych", "dla-doroslych"),
+]
+
+# event_type choice value → category slug (fallback when no slug match)
+EVENT_TYPE_CATEGORY_MAP = {
+    "spektakl": "spektakl",
+    "koncert":  "koncert",
+    "festiwal": "festiwal",
+    "warsztat": "warsztat",
+}
 
 POLISH_CITIES = {
     "warszawa": "Warszawa", "krakow": "Kraków", "gdansk": "Gdańsk",
@@ -53,6 +67,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_dir = options["data_dir"]
+        # Pre-load lookups so every page-loop doesn't hit the DB
+        self._categories = {c.slug: c for c in Category.objects.all()}
+        self._age_groups = {a.slug: a for a in AgeGroup.objects.all()}
         self.import_pages(data_dir)
         self.import_products(data_dir)
         self.import_menus(data_dir)
@@ -122,6 +139,8 @@ class Command(BaseCommand):
             )
             if created:
                 events_created += 1
+
+            self._assign_category_and_age(event, event_prefix)
 
             city = None
             if city_slug:
@@ -203,6 +222,28 @@ class Command(BaseCommand):
             menus = json.load(f)
 
         self.stdout.write(f"  Menu items: {len(menus)}")
+
+    def _assign_category_and_age(self, event, event_prefix):
+        cat_slug = None
+        age_slug = None
+
+        for keyword, c_slug, a_slug in SLUG_CATEGORY_MAP:
+            if keyword in event_prefix:
+                cat_slug, age_slug = c_slug, a_slug
+                break
+
+        if cat_slug is None:
+            et_slug = EVENT_TYPE_CATEGORY_MAP.get(event.event_type)
+            if et_slug:
+                cat_slug = et_slug
+
+        if cat_slug and cat_slug in self._categories:
+            event.categories.add(self._categories[cat_slug])
+
+        if age_slug and age_slug in self._age_groups:
+            if event.age_group_id is None:
+                event.age_group = self._age_groups[age_slug]
+                event.save(update_fields=["age_group"])
 
     def _split_slug(self, slug):
         for city_slug in sorted(POLISH_CITIES.keys(), key=len, reverse=True):

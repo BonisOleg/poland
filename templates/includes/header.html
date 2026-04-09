@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n i18n_switch %}
 <header class="header" x-data="{ menuOpen: false }">
     <div class="container header__inner">
         <a href="{% url 'core:homepage' %}" class="header__logo">
@@ -16,9 +16,11 @@
 
         <div class="header__actions">
             <a href="{% url 'events:list' %}" class="btn btn--primary btn--sm hidden-mobile">{% trans "Kup bilety" %}</a>
+            {% switch_lang_url 'pl' as pl_url %}
+            {% switch_lang_url 'en' as en_url %}
             <div class="lang-switch">
-                <a href="/pl{{ request.path }}" class="{% if LANGUAGE_CODE == 'pl' %}active{% endif %}">PL</a>
-                <a href="/en{{ request.path }}" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}">EN</a>
+                <a href="{{ pl_url }}" class="{% if LANGUAGE_CODE == 'pl' %}active{% endif %}">PL</a>
+                <a href="{{ en_url }}" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}">EN</a>
             </div>
             <button class="header__burger" @click="menuOpen = !menuOpen" aria-label="Menu">
                 <span></span>

@@ -42,6 +42,9 @@ msgstr "Sec"
 msgid "Kup bilet"
 msgstr "Buy ticket"
 
+msgid "Kup bilety"
+msgstr "Buy tickets"
+
 msgid "Kupno biletu"
 msgstr "Buy ticket"
 
