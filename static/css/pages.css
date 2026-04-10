@@ -8,7 +8,7 @@
 }
 
 .hero-intro__heading {
-    font-size: var(--fs-3xl);
+    font-size: var(--fs-2xl);
     margin-bottom: var(--space-md);
 }
 
