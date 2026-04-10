@@ -8,15 +8,15 @@
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
 <section class="section">
-    <div class="container" style="max-width: 900px;">
-        <h1 style="margin-bottom: var(--space-xl);">{{ page.title }}</h1>
+    <div class="container page-container--narrow">
+        <h1 class="page-title">{{ page.title }}</h1>
         <div class="event-content">
             {{ page.content|safe }}
         </div>
 
         {% if page.show_contact_form %}
-        <div style="margin-top: var(--space-2xl); max-width: 600px;">
-            <h2 style="margin-bottom: var(--space-lg);">{% trans "Formularz kontaktowy" %}</h2>
+        <div class="page-contact-form">
+            <h2>{% trans "Formularz kontaktowy" %}</h2>
             <form method="post" action="/contact/">
                 {% csrf_token %}
                 <div class="form-group">
