@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 db.sqlite3
+*.bak
+db.sqlite3.bak*
 .env
 media/
 staticfiles/

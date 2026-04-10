@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ page.seo_description }}{% endblock %}
@@ -10,7 +10,11 @@
 <section class="section">
     <div class="container page-container--narrow">
         <h1 class="page-title">{{ page.title }}</h1>
-        <div class="event-content">
+        <div class="event-content{% if page.slug == 'vouchery' %} event-content--vouchery{% endif %}"
+             {% if page.slug == 'vouchery' %}
+             data-vouchery-button-href="/cart/"
+             data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}"
+             {% endif %}>
             {{ page.content|safe }}
         </div>
 
@@ -41,4 +45,10 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+{% if page.slug == 'vouchery' %}
+<script type="module" src="{% static 'js/vouchery-cart.js' %}"></script>
+{% endif %}
 {% endblock %}

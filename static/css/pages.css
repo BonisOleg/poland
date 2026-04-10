@@ -320,28 +320,16 @@
     margin-bottom: 0;
 }
 
-/* WordPress Gutenberg: multi-column blocks often stack as full-width without flex */
-.event-content .wp-block-columns {
+/* Multi-column layouts */
+.event-content .content-columns {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-lg);
     margin-bottom: var(--space-xl);
 }
 
-.event-content .wp-block-column {
+.event-content .content-column {
     flex: 1 1 240px;
-    min-width: 0;
-}
-
-/* Elementor (common on WP): row/column wrappers */
-.event-content .elementor-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
-}
-
-.event-content .elementor-column {
-    flex: 1 1 220px;
     min-width: 0;
 }
 
@@ -356,7 +344,7 @@
     text-align: center;
 }
 
-/* Inline SVG from imports often has no max width and fills the column */
+/* Standalone decorative SVGs: constrained width */
 .event-content svg {
     max-width: min(100%, 220px);
     height: auto;
@@ -372,12 +360,12 @@
     display: block;
 }
 
-/* Icon / decorative images: lone img in a paragraph (avoids 800px-wide “stars”) */
+/* Icon / decorative images: lone img in a paragraph */
 .event-content p > img:only-child {
     max-width: min(100%, 220px);
 }
 
-/* Partner/logo lists: grid of small images (e.g. REKOMENDACJE) */
+/* Partner/logo lists: grid of small images */
 .event-content ul:has(> li > img) {
     list-style: none;
     padding-left: 0;
@@ -400,7 +388,7 @@
     object-fit: contain;
 }
 
-/* Video / embeds: full width of prose; WP alignment often shifts media right */
+/* Video / embeds */
 .event-content video,
 .event-content iframe,
 .event-content embed,
@@ -449,20 +437,6 @@
     aspect-ratio: unset;
 }
 
-.event-content .elementor-widget-video .elementor-widget-container,
-.event-content .elementor-widget-video .elementor-wrapper {
-    width: 100%;
-    max-width: 100%;
-}
-
-.event-content .elementor-container,
-.event-content .elementor-row {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .event-content .alignleft,
 .event-content .alignright,
 .event-content .aligncenter,
@@ -474,81 +448,41 @@
     max-width: 100%;
 }
 
-/* Elementor v3.6+ flex containers (imported HTML has no Elementor theme CSS) */
-.event-content .e-con,
-.event-content .e-con-inner {
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0 0 var(--space-md);
-}
-
-.event-content .e-con.e-grid {
-    display: grid;
-    gap: var(--space-md);
-}
-
-.event-content .e-con:last-child,
-.event-content .e-con-inner:last-child {
-    margin-bottom: 0;
-}
-
-.event-content .elementor-section {
-    margin: 0 0 var(--space-md);
-    padding: 0;
-}
-
-.event-content .elementor-widget {
-    margin-bottom: var(--space-sm);
-}
-
-.event-content .elementor-widget-container,
-.event-content .elementor-widget-wrap {
-    padding: 0;
-}
-
-.event-content .elementor-widget-spacer {
-    display: none;
-}
-
-/* Icon list: undo generic ul/svg rules so stars sit inline with text */
-.event-content .elementor-icon-list-items {
+/* Icon list */
+.event-content .content-icon-list {
     list-style: none;
     padding-left: 0;
     margin: 0 0 var(--space-md);
 }
 
-.event-content .elementor-icon-list-item {
+.event-content .content-icon-list__item {
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
     margin-bottom: var(--space-sm);
 }
 
-.event-content .elementor-icon-list-item:last-child {
+.event-content .content-icon-list__item:last-child {
     margin-bottom: 0;
 }
 
-.event-content .elementor-icon-list-icon {
+.event-content .content-icon-list__icon {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     width: 1.25em;
-    color: var(--color-amber);
     margin-top: 0.15em;
 }
 
-.event-content .elementor-icon-list-icon svg {
-    display: block;
-    width: 1em;
-    height: 1em;
-    max-width: 1em;
-    max-height: 1em;
-    margin: 0;
-    fill: currentColor;
+.event-content .content-icon-list__icon::before {
+    content: "★";
+    color: var(--color-amber);
+    font-size: 0.9em;
+    line-height: 1;
 }
 
-.event-content .elementor-icon-list-text {
+.event-content .content-icon-list__text {
     flex: 1;
     min-width: 0;
     font-size: var(--fs-base);
@@ -557,18 +491,18 @@
 }
 
 /* Icon box */
-.event-content .elementor-icon-box-wrapper {
+.event-content .content-box {
     display: flex;
     align-items: flex-start;
     gap: var(--space-md);
     margin-bottom: var(--space-md);
 }
 
-.event-content .elementor-icon-box-icon {
+.event-content .content-box__icon {
     flex-shrink: 0;
 }
 
-.event-content .elementor-icon-box-icon svg {
+.event-content .content-box__icon svg {
     width: 1.5em;
     height: 1.5em;
     max-width: 1.5em;
@@ -576,80 +510,50 @@
     margin: 0;
 }
 
-.event-content .elementor-icon-box-description {
+.event-content .content-box__desc {
     font-size: var(--fs-base);
     line-height: 1.6;
     color: var(--color-gray-light);
 }
 
-/* Buttons */
-.event-content .elementor-button-wrapper {
-    margin: var(--space-md) 0;
-}
-
-.event-content .elementor-button,
-.event-content .elementor-button-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-sm) var(--space-lg);
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-semibold);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    border: 1px solid var(--color-amber);
-    color: var(--color-amber);
-    transition: color var(--transition-fast), background var(--transition-fast),
-        border-color var(--transition-fast);
-}
-
-.event-content .elementor-button:hover,
-.event-content .elementor-button-link:hover {
-    background: var(--color-amber);
-    color: var(--color-dark);
-    border-color: var(--color-amber);
-}
-
-/* Accordion */
-.event-content .elementor-accordion {
+/* Accordion (native <details>/<summary>) */
+.event-content .content-accordion {
     margin: var(--space-md) 0;
     border: 1px solid var(--color-dark-border);
     border-radius: var(--radius-md);
     overflow: hidden;
 }
 
-.event-content .elementor-accordion-item {
+.event-content .content-accordion__item {
     border-bottom: 1px solid var(--color-dark-border);
 }
 
-.event-content .elementor-accordion-item:last-child {
+.event-content .content-accordion__item:last-child {
     border-bottom: none;
 }
 
-.event-content .elementor-accordion-title {
+.event-content .content-accordion__title {
     padding: var(--space-md);
     font-size: var(--fs-base);
     font-weight: var(--fw-semibold);
     color: var(--color-white);
     background: var(--color-dark-surface);
     cursor: pointer;
+    list-style: none;
 }
 
-.event-content .elementor-tab-content {
+.event-content .content-accordion__title::-webkit-details-marker {
+    display: none;
+}
+
+.event-content .content-accordion__body {
     padding: var(--space-md);
     font-size: var(--fs-base);
     line-height: 1.6;
     color: var(--color-gray-light);
 }
 
-/* Headings inside Elementor widgets */
-.event-content .elementor-heading-title {
-    margin-top: 0;
-}
-
-/* Static page layout (no inline styles) */
+/* Static page layout */
 .page-container--narrow {
     max-width: 900px;
 }
@@ -687,4 +591,11 @@
 .lang-switch a.active {
     color: var(--color-white);
     background: var(--color-dark-hover);
+}
+
+/* Vouchery: cart icon replaced by JS with .btn (see vouchery-cart.js) */
+.event-content--vouchery .vouchery-cart-btn {
+    max-width: 22rem;
+    margin-left: auto;
+    margin-right: auto;
 }
