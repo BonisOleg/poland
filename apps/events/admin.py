@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from modeltranslation.admin import TranslationAdmin
 from django_ckeditor_5.widgets import CKEditor5Widget
-from .models import Category, AgeGroup, City, Venue, Event, EventCity, EventImage
+from .models import Category, AgeGroup, City, Venue, Event, EventCity, EventImage, EventVideo, EventContentBlock
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
 
@@ -20,6 +20,30 @@ def _apply_ckeditor(form, *base_field_names):
 class EventImageInline(admin.TabularInline):
     model = EventImage
     extra = 1
+
+
+class EventVideoInline(admin.TabularInline):
+    model = EventVideo
+    extra = 1
+    fields = ("embed_url", "title", "sort_order")
+
+
+class EventContentBlockInline(admin.StackedInline):
+    model = EventContentBlock
+    extra = 0
+    fields = ("sort_order", "title_pl", "title_uk", "body_pl", "body_uk", "image", "button_text_pl", "button_text_uk", "button_url")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        return _apply_ckeditor(form, "body")
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        for lang in _LANGS:
+            field = f"body_{lang}"
+            if field in formset.form.base_fields:
+                formset.form.base_fields[field].widget = CKEditor5Widget(config_name="default")
+        return formset
 
 
 @admin.register(Category)
@@ -90,12 +114,12 @@ class EventCityAdmin(TranslationAdmin):
     list_filter = ("is_published", "ticket_status", "city", "event__event_type")
     search_fields = ("slug", "event__title", "city__name", "seo_title")
     raw_id_fields = ("event", "city", "venue")
-    inlines = [EventImageInline]
+    inlines = [EventImageInline, EventVideoInline, EventContentBlockInline]
     list_editable = ("ticket_status", "is_published")
     filter_horizontal = ("related_events_manual",)
     fieldsets = (
         ("Основне", {
-            "fields": ("event", "city", "venue", "slug", "custom_title", "is_published"),
+            "fields": ("event", "city", "venue", "slug", "custom_title", "is_published", "use_new_layout"),
         }),
         ("Дата і квитки", {
             "fields": (

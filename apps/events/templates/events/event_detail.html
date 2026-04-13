@@ -169,9 +169,71 @@
     </div>
     {% endif %}
 
+    {% if event_city.use_new_layout %}
+        {% for block in event_city.content_blocks.all %}
+        <section class="event-detail__panel event-content-block">
+            {% if block.title %}<h2 class="event-content-block__title">{{ block.title }}</h2>{% endif %}
+            {% if block.body %}
+            <div class="event-content-block__body">{{ block.body|safe }}</div>
+            {% endif %}
+            {% if block.image %}
+            <figure class="event-content-block__figure">
+                <img src="{{ block.image.url }}" alt="{{ block.title }}" class="event-content-block__img">
+            </figure>
+            {% endif %}
+            {% if block.button_text and block.button_url %}
+            <div class="event-content-block__cta">
+                <a href="{{ block.button_url }}" class="btn btn--outline-amber">{{ block.button_text }}</a>
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+
+        {% with videos=event_city.videos.all %}
+        {% if videos %}
+        <section class="event-detail__panel event-gallery event-gallery--video" aria-label="{% trans 'Galeria wideo' %}">
+            <h2 class="event-gallery__title">{% trans "Wideo" %}</h2>
+            <div class="event-gallery__grid">
+                {% for video in videos %}
+                <div class="event-gallery__video-item">
+                    <iframe
+                        src="{{ video.embed_url }}"
+                        title="{{ video.title|default:event_city.get_display_title }}"
+                        class="event-gallery__iframe"
+                        allowfullscreen
+                        loading="lazy"
+                        sandbox="allow-scripts allow-same-origin allow-presentation"
+                    ></iframe>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        {% endwith %}
+
+        {% with photos=event_city.images.all %}
+        {% if photos %}
+        <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
+            <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
+            <div class="event-gallery__grid">
+                {% for photo in photos %}
+                <button class="event-gallery__thumb-btn" data-lightbox-src="{{ photo.image.url }}" data-lightbox-alt="{{ photo.alt_text|default:event_city.get_display_title }}" aria-label="{% trans 'Powiększ zdjęcie' %}">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.alt_text|default:event_city.get_display_title }}" class="event-gallery__thumb" loading="lazy">
+                </button>
+                {% endfor %}
+            </div>
+        </section>
+        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+            <img src="" alt="" class="event-lightbox__img">
+        </dialog>
+        {% endif %}
+        {% endwith %}
+    {% else %}
     <div class="event-detail__panel event-content">
         {{ event_city.content_html|safe }}
     </div>
+    {% endif %}
 
     {% if related_events %}
     <section class="section">
@@ -201,5 +263,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/countdown.js' %}"></script>
+<script src="{% static 'js/countdown.js' %}" defer></script>
+{% if event_city.use_new_layout %}
+<script src="{% static 'js/event-gallery.js' %}" defer></script>
+{% endif %}
 {% endblock %}

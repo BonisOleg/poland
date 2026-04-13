@@ -167,6 +167,10 @@ class EventCity(models.Model):
     og_image = models.URLField(blank=True, max_length=500)
     canonical_url = models.URLField(blank=True, max_length=500)
     content_html = models.TextField(blank=True)
+    use_new_layout = models.BooleanField(
+        default=False,
+        help_text="Увімкнути структурований layout (контент-блоки, відео-, фото-галерея). Старий content_html ігнорується.",
+    )
     is_published = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -217,6 +221,50 @@ class EventCity(models.Model):
             if self.seats_left < 50:
                 return "Ostatnie miejsca!"
         return dict(self.TICKET_STATUS_CHOICES).get(self.ticket_status, "")
+
+
+class EventVideo(models.Model):
+    event_city = models.ForeignKey(
+        EventCity, on_delete=models.CASCADE, related_name="videos"
+    )
+    embed_url = models.URLField(max_length=500, help_text="Повний embed-URL (YouTube /embed/…, Vimeo player.vimeo.com/…)")
+    title = models.CharField(max_length=300, blank=True)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Відео події"
+        verbose_name_plural = "Відео подій"
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.title or self.embed_url
+
+
+class EventContentBlock(models.Model):
+    event_city = models.ForeignKey(
+        EventCity, on_delete=models.CASCADE, related_name="content_blocks"
+    )
+    title = models.CharField(max_length=500, blank=True)
+    body = models.TextField(blank=True)
+    image = ProcessedImageField(
+        upload_to="events/blocks/",
+        processors=[ResizeToFill(1200, 800)],
+        format="WEBP",
+        options={"quality": 85},
+        blank=True,
+        null=True,
+    )
+    button_text = models.CharField(max_length=200, blank=True)
+    button_url = models.URLField(blank=True, max_length=500)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Блок контенту події"
+        verbose_name_plural = "Блоки контенту події"
+        ordering = ["sort_order"]
+
+    def __str__(self):
+        return self.title or f"Block #{self.pk}"
 
 
 class EventImage(models.Model):
