@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from pilkit.processors.resize import Anchor
 
 
 class Category(models.Model):
@@ -103,11 +104,21 @@ class Event(models.Model):
     biletyna_base_url = models.URLField(blank=True)
     image = ProcessedImageField(
         upload_to="events/",
-        processors=[ResizeToFill(1200, 700)],
+        processors=[ResizeToFill(1200, 800, anchor=Anchor.BOTTOM)],
         format="WEBP",
         options={"quality": 85},
         blank=True,
         null=True,
+    )
+    hero_image_focal = models.CharField(
+        max_length=20,
+        choices=[
+            ("top", "Top"),
+            ("center", "Center"),
+            ("bottom", "Bottom"),
+        ],
+        default="center",
+        help_text="Vertical crop focus for the event detail hero image (object-position).",
     )
     sort_order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

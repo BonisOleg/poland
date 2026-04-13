@@ -99,3 +99,16 @@
 .section--alt {
     background: var(--color-dark-surface);
 }
+
+.mt-xl {
+    margin-top: var(--space-xl);
+}
+
+.grid__empty {
+    grid-column: 1 / -1;
+    padding: var(--space-2xl);
+}
+
+.p-xl {
+    padding: var(--space-xl);
+}

@@ -69,7 +69,7 @@ class EventAdmin(TranslationAdmin):
             "fields": ("categories", "age_group"),
         }),
         ("Зображення", {
-            "fields": ("image",),
+            "fields": ("image", "hero_image_focal"),
         }),
         ("Квитки", {
             "fields": ("biletyna_base_url",),

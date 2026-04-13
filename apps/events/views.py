@@ -1,6 +1,32 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.utils import timezone
+from django.utils.dateparse import parse_date
+from django.utils.translation import gettext as _
+
 from .models import EventCity, Category, City, AgeGroup
+
+
+def _filter_year_range():
+    y = timezone.now().date().year
+    return list(range(y - 1, y + 3))
+
+
+def _month_choices():
+    return [
+        (1, _("January")),
+        (2, _("February")),
+        (3, _("March")),
+        (4, _("April")),
+        (5, _("May")),
+        (6, _("June")),
+        (7, _("July")),
+        (8, _("August")),
+        (9, _("September")),
+        (10, _("October")),
+        (11, _("November")),
+        (12, _("December")),
+    ]
 
 
 def event_list(request):
@@ -42,9 +68,13 @@ def event_list(request):
             "city": request.GET.get("city", ""),
             "category": request.GET.get("category", ""),
             "age": request.GET.get("age", ""),
+            "year": request.GET.get("year", ""),
+            "month": request.GET.get("month", ""),
             "date": request.GET.get("date", ""),
             "sort": sort,
         },
+        "filter_years": _filter_year_range(),
+        "month_choices": _month_choices(),
     }
 
     if request.htmx:
@@ -102,11 +132,27 @@ def _apply_filters(qs, request):
     if age:
         qs = qs.filter(event__age_group__slug=age)
 
-    date_str = request.GET.get("date")
-    if date_str:
-        from django.utils.dateparse import parse_date
-        d = parse_date(date_str)
-        if d:
-            qs = qs.filter(event_date__date=d)
+    year_str = (request.GET.get("year") or "").strip()
+    if year_str:
+        try:
+            year = int(year_str)
+        except ValueError:
+            year = None
+        if year is not None:
+            qs = qs.filter(event_date__isnull=False, event_date__year=year)
+            month_str = (request.GET.get("month") or "").strip()
+            if month_str:
+                try:
+                    month = int(month_str)
+                except ValueError:
+                    month = None
+                if month is not None and 1 <= month <= 12:
+                    qs = qs.filter(event_date__month=month)
+    else:
+        date_str = request.GET.get("date")
+        if date_str:
+            d = parse_date(date_str)
+            if d:
+                qs = qs.filter(event_date__date=d)
 
     return qs

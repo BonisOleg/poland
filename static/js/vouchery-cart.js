@@ -62,7 +62,8 @@ function init() {
     }
     const fallbackHref = root.dataset.voucheryButtonHref || "/cart/";
     const label = root.dataset.voucheryButtonLabel || "KLIKNIJ PO PREZENT";
-    const widget = findCartWidget(root);
+    const marked = root.querySelector("[data-vouchery-cart-widget], .vouchery-cart-widget");
+    const widget = marked || findCartWidget(root);
     if (!widget) {
         return;
     }

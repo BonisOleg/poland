@@ -62,7 +62,23 @@
 
     --header-height: 64px;
 
+    /* event detail hero: image height follows intrinsic size (capped) */
+    --event-detail-hero-image-max-height: min(48vh, 380px);
+    --event-detail-hero-media-max-width: min(100%, 480px);
+
     --transition-fast: 150ms ease;
     --transition-base: 250ms ease;
     --transition-slow: 400ms ease;
+
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-blur: 12px;
+
+    /* event-content rich text */
+    --content-max-width: 800px;
+    --content-media-max: 640px;
+    --content-img-max: 480px;
+    --content-icon-max: 200px;
+    --content-list-max: 36rem;
+    --content-fs-detail: 0.9375rem;
 }

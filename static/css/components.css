@@ -69,7 +69,8 @@
 
 .card__image {
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
     object-fit: cover;
 }
 
@@ -286,10 +287,6 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-}
-
-input.filter-bar__select[type="date"] {
-    color-scheme: dark;
 }
 
 select.filter-bar__select:focus,

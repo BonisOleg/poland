@@ -44,13 +44,27 @@
                 {% endfor %}
             </select>
 
-            <input type="date"
-                   class="filter-bar__select"
-                   name="date"
-                   value="{{ current_filters.date }}"
-                   hx-get="{% url 'events:filter' %}"
-                   hx-target="#events-grid"
-                   hx-include=".filter-bar__select">
+            <select class="filter-bar__select"
+                    name="year"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="">{% trans "Dowolny rok" %}</option>
+                {% for y in filter_years %}
+                    <option value="{{ y }}" {% if current_filters.year == y|stringformat:"d" %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="month"
+                    hx-get="{% url 'events:filter' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select">
+                <option value="">{% trans "Cały rok" %}</option>
+                {% for m in month_choices %}
+                    <option value="{{ m.0 }}" {% if current_filters.month == m.0|stringformat:"d" %}selected{% endif %}>{{ m.1 }}</option>
+                {% endfor %}
+            </select>
 
             <select class="filter-bar__select"
                     name="sort"

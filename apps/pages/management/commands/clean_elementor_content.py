@@ -151,6 +151,128 @@ def _remap_classes(tag: Tag) -> None:
             del tag["class"]
 
 
+def _class_tokens(tag: Tag) -> list[str]:
+    cls = tag.get("class")
+    if not cls:
+        return []
+    if isinstance(cls, str):
+        return cls.split()
+    return list(cls)
+
+
+def _set_classes(tag: Tag, classes: list[str]) -> None:
+    if classes:
+        tag["class"] = classes
+    else:
+        tag.attrs.pop("class", None)
+
+
+def _replace_angle_double_down_svgs(soup: BeautifulSoup) -> None:
+    """Elementor e-font SVG chevrons → pure CSS hook (no WP/FA)."""
+    for svg in list(soup.find_all("svg")):
+        if not isinstance(svg, Tag):
+            continue
+        tokens = " ".join(_class_tokens(svg)).lower()
+        if "angle-double-down" not in tokens:
+            continue
+        span = soup.new_tag(
+            "span",
+            attrs={"class": "content-decor content-decor--chevrons-down", "aria-hidden": "true"},
+        )
+        svg.replace_with(span)
+
+
+def _normalize_content_box_svgs(soup: BeautifulSoup) -> None:
+    """Strip Elementor icon class names from inline SVGs; keep paths."""
+    for wrap in soup.find_all(class_="content-box__icon"):
+        if not isinstance(wrap, Tag):
+            continue
+        for svg in wrap.find_all("svg"):
+            if not isinstance(svg, Tag):
+                continue
+            cleaned = [
+                c
+                for c in _class_tokens(svg)
+                if not c.startswith("e-") and c != "e-font-icon-svg"
+            ]
+            if "content-box__svg" not in cleaned:
+                cleaned.append("content-box__svg")
+            _set_classes(svg, cleaned)
+
+
+def _upgrade_quick_view_rows(soup: BeautifulSoup) -> None:
+    """Premium Woo 'Quick View' rows: drop FA <i>, add hook class for CSS bullet."""
+    for el in soup.select(".premium-woo-qv-btn"):
+        if not isinstance(el, Tag):
+            continue
+        for icon in el.find_all("i"):
+            if isinstance(icon, Tag):
+                icon.decompose()
+        cls = _class_tokens(el)
+        if "vouchery-quick-view" not in cls:
+            cls.append("vouchery-quick-view")
+        _set_classes(el, cls)
+
+
+def _fix_quick_view_modal_close(soup: BeautifulSoup) -> None:
+    """Replace FA window-close with project class (styled in CSS)."""
+    for a in soup.select("a.premium-woo-quick-view-close"):
+        if not isinstance(a, Tag):
+            continue
+        cls = [c for c in _class_tokens(a) if not c.startswith("fa") and c not in ("fa",)]
+        if "vouchery-modal-close" not in cls:
+            cls.append("vouchery-modal-close")
+        _set_classes(a, cls)
+        if not a.get("aria-label"):
+            a["aria-label"] = "Zamknij"
+
+
+def _strip_orphan_font_awesome_icons(soup: BeautifulSoup) -> None:
+    """Remove leftover <i> tags that depended on Font Awesome / dashicons."""
+    for tag in list(soup.find_all("i")):
+        if not isinstance(tag, Tag):
+            continue
+        cls = _class_tokens(tag)
+        if not cls:
+            tag.decompose()
+            continue
+        joined = " ".join(cls).lower()
+        if any(
+            x in joined
+            for x in (
+                "fa-",
+                "fas",
+                "far",
+                "fab",
+                "fad",
+                "fal",
+                "font-awesome",
+                "dashicons",
+                "eicons",
+            )
+        ):
+            tag.decompose()
+
+
+def _ensure_vouchery_cart_marker(soup: BeautifulSoup) -> None:
+    """If a cart CTA survives cleanup, tag it so vouchery-cart.js can find it."""
+    if soup.select_one("[data-vouchery-cart-widget]"):
+        return
+    for a in soup.select('a[href*="cart"]'):
+        if not isinstance(a, Tag):
+            continue
+        href = (a.get("href") or "").lower()
+        if "/cart" not in href and "cart/" not in href:
+            continue
+        if a.find(["svg", "img"]) or len(a.get_text(strip=True)) < 48:
+            a["data-vouchery-cart-widget"] = ""
+            wcls = _class_tokens(a)
+            if "vouchery-cart-widget" not in wcls:
+                wcls.append("vouchery-cart-widget")
+            _set_classes(a, wcls)
+            return
+
+
 def _accordion_to_details(soup: BeautifulSoup) -> None:
     """Convert .content-accordion-item + title/body into native <details>/<summary>."""
     for item in soup.find_all(class_="content-accordion__item"):
@@ -253,6 +375,14 @@ def transform_html(raw_html: str) -> str:
             svg.decompose()
         for inner in list(icon_span.find_all("span")):
             inner.unwrap()
+
+    # --- Pass A2: Vouchers / Woo — replace WP-dependent icons with project hooks ---
+    _replace_angle_double_down_svgs(soup)
+    _normalize_content_box_svgs(soup)
+    _upgrade_quick_view_rows(soup)
+    _fix_quick_view_modal_close(soup)
+    _strip_orphan_font_awesome_icons(soup)
+    _ensure_vouchery_cart_marker(soup)
 
     # --- Pass B: transform .premium-button CTA links into .btn elements ---
     # Keeps href and visible text; removes SVG icon and inner div wrappers.

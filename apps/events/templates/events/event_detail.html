@@ -78,66 +78,82 @@
 {% block content %}
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-<div class="container">
-    <div class="hero">
-        {% if event.image %}
-            <img src="{{ event.image.url }}" alt="{{ event_city.get_display_title }}" class="hero__image">
-        {% elif event_city.og_image %}
-            <img src="{{ event_city.og_image }}" alt="{{ event_city.get_display_title }}" class="hero__image">
-        {% endif %}
-        <div class="hero__overlay"></div>
-        <div class="hero__content">
-            <h1>{{ event_city.get_display_title }}</h1>
+<div class="container event-detail">
+    <div class="hero{% if not event.image and not event_city.og_image %} hero--no-media{% endif %}" data-hero-focal="{{ event.hero_image_focal }}">
+        <div class="event-detail__hero-layout">
+            {% if event.image %}
+            <div class="hero__media hero__media--bleed">
+                <img src="{{ event.image.url }}" alt="{{ event_city.get_display_title }}" class="hero__image">
+            </div>
+            {% elif event_city.og_image %}
+            <div class="hero__media hero__media--bleed">
+                <img src="{{ event_city.og_image }}" alt="{{ event_city.get_display_title }}" class="hero__image">
+            </div>
+            {% endif %}
+            <div class="hero__content">
+                <h1 class="hero__title-line">{{ event.title }}</h1>
+                <p class="hero__subtitle-line">
+                    {% if event_city.event_date %}
+                        {{ event_city.event_date|date:"j F Y" }}r. w {{ event_city.city.name }}
+                    {% else %}
+                        {{ event_city.city.name }}
+                    {% endif %}
+                </p>
+            </div>
         </div>
     </div>
 
-    <div class="event-meta">
-        {% if event_city.event_date %}
-        <div class="event-meta__item">
-            <span class="event-meta__icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            </span>
-            {{ event_city.event_date|date:"d.m.Y, H:i" }}
+    <section class="event-detail__panel event-detail__panel--meta" aria-label="{% trans 'Data i miejsce' %}">
+        <div class="event-meta">
+            {% if event_city.event_date %}
+            <div class="event-meta__item">
+                <span class="event-meta__icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </span>
+                {{ event_city.event_date|date:"d.m.Y, H:i" }}
+            </div>
+            {% endif %}
+            <div class="event-meta__item">
+                <span class="event-meta__icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                {{ event_city.city.name }}{% if event_city.venue %}, {{ event_city.venue.name }}{% endif %}
+            </div>
+            {% if event_city.ticket_badge %}
+            <div class="event-meta__item">
+                <span class="card__badge event-meta__badge {% if event_city.ticket_status == 'sold_out' %}card__badge--sold-out{% else %}card__badge--few-left{% endif %}">
+                    {{ event_city.ticket_badge }}
+                </span>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-        <div class="event-meta__item">
-            <span class="event-meta__icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </span>
-            {{ event_city.city.name }}{% if event_city.venue %}, {{ event_city.venue.name }}{% endif %}
-        </div>
-        {% if event_city.ticket_badge %}
-        <div class="event-meta__item">
-            <span class="card__badge {% if event_city.ticket_status == 'sold_out' %}card__badge--sold-out{% else %}card__badge--few-left{% endif %}" style="position: static;">
-                {{ event_city.ticket_badge }}
-            </span>
-        </div>
-        {% endif %}
-    </div>
+    </section>
 
     {% if event_city.event_date and event_city.is_upcoming %}
-    <div class="countdown" data-countdown="{{ event_city.event_date|date:'c' }}" style="margin-bottom: var(--space-xl);">
-        <div class="countdown__block">
-            <div class="countdown__number" data-days>--</div>
-            <div class="countdown__label">{% trans "Dni" %}</div>
+    <section class="event-detail__panel event-detail__panel--compact" aria-label="{% trans 'Odliczanie' %}">
+        <div class="countdown" data-countdown="{{ event_city.event_date|date:'c' }}">
+            <div class="countdown__block">
+                <div class="countdown__number" data-days>--</div>
+                <div class="countdown__label">{% trans "Dni" %}</div>
+            </div>
+            <div class="countdown__block">
+                <div class="countdown__number" data-hours>--</div>
+                <div class="countdown__label">{% trans "Godz" %}</div>
+            </div>
+            <div class="countdown__block">
+                <div class="countdown__number" data-minutes>--</div>
+                <div class="countdown__label">{% trans "Min" %}</div>
+            </div>
+            <div class="countdown__block">
+                <div class="countdown__number" data-seconds>--</div>
+                <div class="countdown__label">{% trans "Sek" %}</div>
+            </div>
         </div>
-        <div class="countdown__block">
-            <div class="countdown__number" data-hours>--</div>
-            <div class="countdown__label">{% trans "Godz" %}</div>
-        </div>
-        <div class="countdown__block">
-            <div class="countdown__number" data-minutes>--</div>
-            <div class="countdown__label">{% trans "Min" %}</div>
-        </div>
-        <div class="countdown__block">
-            <div class="countdown__number" data-seconds>--</div>
-            <div class="countdown__label">{% trans "Sek" %}</div>
-        </div>
-    </div>
+    </section>
     {% endif %}
 
     {% if event_city.biletyna_url %}
-    <div style="margin-bottom: var(--space-2xl);" x-data="{ showTickets: false }">
+    <div class="event-detail__panel event-detail__panel--cta" x-data="{ showTickets: false }">
         <button class="btn btn--primary btn--lg btn--block" @click="showTickets = true">
             {% trans "Kup bilet" %}
         </button>
@@ -153,7 +169,7 @@
     </div>
     {% endif %}
 
-    <div class="event-content">
+    <div class="event-detail__panel event-content">
         {{ event_city.content_html|safe }}
     </div>
 
@@ -177,7 +193,7 @@
                 <p class="text-gray">{% trans "Brak recenzji. Bądź pierwszy!" %}</p>
             {% endfor %}
         </div>
-        <div style="margin-top: var(--space-xl);">
+        <div class="event-detail__review-form-wrap">
             {% include "reviews/partials/review_form.html" %}
         </div>
     </section>
