@@ -2,10 +2,12 @@
     --color-amber: #FFB347;
     --color-orange: #FF7043;
     --color-pink: #E91E63;
-    --color-dark: #1A1A1A;
-    --color-dark-surface: #252525;
-    --color-dark-hover: #2F2F2F;
-    --color-dark-border: #333;
+    --color-dark: #1E1E1E;
+    /* Hero + elevated panels/cards: same charcoal (replaces former #454545 panels) */
+    --color-dark-hero-surface: #212121;
+    --color-dark-surface: #212121;
+    --color-dark-hover: #2e2e2e;
+    --color-dark-border: #3a3a3a;
     --color-white: #FFFFFF;
     --color-gray: #B0B0B0;
     --color-gray-light: #E0E0E0;
@@ -15,7 +17,7 @@
 
     --gradient-brand: linear-gradient(90deg, #FFB347, #FF7043, #E91E63);
     --gradient-brand-hover: linear-gradient(90deg, #FFC370, #FF8A65, #F06292);
-    --gradient-dark: linear-gradient(180deg, #1A1A1A 0%, #111 100%);
+    --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
 
     --font-heading: 'Montserrat', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -70,9 +72,13 @@
     --transition-base: 250ms ease;
     --transition-slow: 400ms ease;
 
-    --glass-bg: rgba(255, 255, 255, 0.06);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-blur: 12px;
+    /* Classic glassmorphism: frosted layer + crisp edge + depth (cf. ref. cards) */
+    --glass-bg: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur: 16px;
+    --glass-saturate: 1.8;
+    --glass-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    --glass-elev-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
 
     /* event-content rich text */
     --content-max-width: 800px;
