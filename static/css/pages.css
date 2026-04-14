@@ -1037,8 +1037,8 @@
 }
 
 .event-content-block:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: var(--glass-inset-highlight), 0 0 24px rgba(255, 255, 255, 0.04), var(--glass-elev-shadow);
+    border-color: var(--color-amber);
+    box-shadow: 0 0 0 1px var(--color-amber), 0 0 28px rgba(255, 179, 71, 0.14), var(--glass-elev-shadow);
 }
 
 .event-content-block:last-of-type {
@@ -1254,8 +1254,8 @@
 .event-gallery__thumb-btn:nth-child(3n+3) { animation-delay: 1.4s; }
 
 @keyframes photo-thumb-pulse {
-    0%, 100% { box-shadow: none; }
-    50%       { box-shadow: 0 0 22px rgba(255, 179, 71, 0.35); }
+    0%, 100% { filter: brightness(1); }
+    50%       { filter: brightness(1.1); }
 }
 
 .event-gallery__thumb-btn:hover {
