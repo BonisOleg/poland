@@ -227,7 +227,17 @@ class EventVideo(models.Model):
     event_city = models.ForeignKey(
         EventCity, on_delete=models.CASCADE, related_name="videos"
     )
-    embed_url = models.URLField(max_length=500, help_text="Повний embed-URL (YouTube /embed/…, Vimeo player.vimeo.com/…)")
+    embed_url = models.URLField(
+        max_length=500,
+        blank=True,
+        help_text="Embed-URL (YouTube /embed/…, Vimeo player.vimeo.com/…)",
+    )
+    video_file = models.FileField(
+        upload_to="events/videos/",
+        blank=True,
+        null=True,
+        help_text="Альтернативно до URL: завантажте відеофайл з комп'ютера (mp4/webm)",
+    )
     title = models.CharField(max_length=300, blank=True)
     sort_order = models.IntegerField(default=0)
 
@@ -276,6 +286,13 @@ class EventImage(models.Model):
         processors=[ResizeToFill(1200, 800)],
         format="WEBP",
         options={"quality": 85},
+        blank=True,
+        null=True,
+    )
+    image_url = models.URLField(
+        blank=True,
+        max_length=500,
+        help_text="Альтернативно до файлу: вставте пряме URL зображення",
     )
     alt_text = models.CharField(max_length=300, blank=True)
     sort_order = models.IntegerField(default=0)
@@ -284,3 +301,9 @@ class EventImage(models.Model):
         verbose_name = "Zdjęcie galerii"
         verbose_name_plural = "Galeria zdjęć (dodaj wiele zdjęć tutaj)"
         ordering = ["sort_order"]
+
+    @property
+    def src(self):
+        if self.image:
+            return self.image.url
+        return self.image_url

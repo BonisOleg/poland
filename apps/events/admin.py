@@ -20,7 +20,7 @@ def _apply_ckeditor(form, *base_field_names):
 class EventImageInline(admin.TabularInline):
     model = EventImage
     extra = 3
-    fields = ("image", "alt_text", "sort_order")
+    fields = ("image", "image_url", "alt_text", "sort_order")
     verbose_name = "Zdjęcie"
     verbose_name_plural = "Galeria zdjęć — dodaj wiele zdjęć tutaj (pojawią się jako galeria na stronie)"
 
@@ -28,13 +28,13 @@ class EventImageInline(admin.TabularInline):
 class EventVideoInline(admin.TabularInline):
     model = EventVideo
     extra = 1
-    fields = ("embed_url", "title", "sort_order")
+    fields = ("embed_url", "video_file", "title", "sort_order")
 
 
 class EventContentBlockInline(admin.StackedInline):
     model = EventContentBlock
     extra = 0
-    fields = ("sort_order", "title_pl", "title_en", "body_pl", "body_en", "image", "button_text_pl", "button_text_en", "button_url")
+    fields = ("sort_order", "title_pl", "title_en", "body_pl", "body_en", "button_text_pl", "button_text_en", "button_url")
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
