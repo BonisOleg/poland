@@ -189,6 +189,32 @@
         </section>
         {% endfor %}
 
+        {% if event_city.biletyna_url %}
+        <div class="event-detail__panel event-content-block event-content-block--tickets">
+            <a href="{{ event_city.biletyna_url }}" class="btn btn--primary btn--lg btn--block"
+               target="_blank" rel="noopener noreferrer">{% trans "Kup bilet" %}</a>
+        </div>
+        {% endif %}
+
+        {% with photos=event_city.images.all %}
+        {% if photos %}
+        <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
+            <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
+            <div class="event-gallery__grid">
+                {% for photo in photos %}
+                <button class="event-gallery__thumb-btn" data-lightbox-src="{{ photo.image.url }}" data-lightbox-alt="{{ photo.alt_text|default:event_city.get_display_title }}" aria-label="{% trans 'Powiększ zdjęcie' %}">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.alt_text|default:event_city.get_display_title }}" class="event-gallery__thumb" loading="lazy">
+                </button>
+                {% endfor %}
+            </div>
+        </section>
+        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+            <img src="" alt="" class="event-lightbox__img">
+        </dialog>
+        {% endif %}
+        {% endwith %}
+
         {% with videos=event_city.videos.all %}
         {% if videos %}
         <section class="event-detail__panel event-gallery event-gallery--video" aria-label="{% trans 'Galeria wideo' %}">
@@ -208,25 +234,6 @@
                 {% endfor %}
             </div>
         </section>
-        {% endif %}
-        {% endwith %}
-
-        {% with photos=event_city.images.all %}
-        {% if photos %}
-        <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
-            <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
-            <div class="event-gallery__grid">
-                {% for photo in photos %}
-                <button class="event-gallery__thumb-btn" data-lightbox-src="{{ photo.image.url }}" data-lightbox-alt="{{ photo.alt_text|default:event_city.get_display_title }}" aria-label="{% trans 'Powiększ zdjęcie' %}">
-                    <img src="{{ photo.image.url }}" alt="{{ photo.alt_text|default:event_city.get_display_title }}" class="event-gallery__thumb" loading="lazy">
-                </button>
-                {% endfor %}
-            </div>
-        </section>
-        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
-            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
-            <img src="" alt="" class="event-lightbox__img">
-        </dialog>
         {% endif %}
         {% endwith %}
     {% else %}

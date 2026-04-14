@@ -1031,7 +1031,7 @@
 /* ─── Structured event layout: content blocks ─── */
 
 .event-content-block {
-    padding: var(--space-xl) 0;
+    padding: var(--space-xl) var(--space-lg);
     border-bottom: 1px solid var(--color-dark-surface);
 }
 
@@ -1115,7 +1115,7 @@
 /* ─── Galleries: shared ─── */
 
 .event-gallery {
-    padding: var(--space-xl) 0;
+    padding: var(--space-xl) var(--space-lg);
 }
 
 .event-gallery__title {
@@ -1134,6 +1134,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
     gap: var(--space-md);
+    max-width: 44rem;
+    margin-inline: auto;
 }
 
 .event-gallery__video-item {
