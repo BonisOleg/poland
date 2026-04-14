@@ -19,7 +19,8 @@ def _apply_ckeditor(form, *base_field_names):
 
 class EventImageInline(admin.TabularInline):
     model = EventImage
-    extra = 1
+    extra = 3
+    fields = ("image", "alt_text", "sort_order")
 
 
 class EventVideoInline(admin.TabularInline):
