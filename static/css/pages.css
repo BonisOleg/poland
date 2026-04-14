@@ -681,20 +681,22 @@
 
 /* ── Event detail overrides (only what actually differs) ── */
 .event-detail .event-content {
-    max-width: none;
+    max-width: 780px;
     padding: var(--space-xl);
-    font-size: var(--content-fs-detail);
-    line-height: 1.65;
+    font-size: 1rem;
+    line-height: 1.78;
     text-align: left;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    color: rgba(255, 255, 255, 0.88);
+    border-top: 2px solid var(--color-amber);
 }
 
 @media (min-width: 768px) {
     .event-detail .event-content {
         padding-block: var(--space-2xl);
-        padding-inline: var(--space-3xl);
+        padding-inline: var(--space-2xl);
     }
 }
 
@@ -702,8 +704,18 @@
     margin-top: 0;
 }
 
+/* Lead paragraph */
+.event-detail .event-content > p:first-of-type {
+    font-size: 1.05rem;
+    line-height: 1.82;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--glass-border);
+}
+
 .event-detail .event-content p {
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
 }
 
 .event-detail .event-content h1 { font-size: 1.35rem; }
@@ -724,15 +736,27 @@
     margin-bottom: var(--space-xs);
 }
 
-/* Lists: strip markers, align left */
+/* Lists */
 .event-detail .event-content ul:not(.content-icon-list) {
     list-style: none;
     padding-left: 0;
     margin-left: 0;
+    margin-top: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
 .event-detail .event-content ul:not(.content-icon-list) li {
-    margin-bottom: var(--space-xs);
+    margin-bottom: 0;
+    padding-left: 0.25rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+/* Colour the inline ▪ bullet character amber */
+.event-detail .event-content ul:not(.content-icon-list) li::first-letter {
+    color: var(--color-amber);
 }
 
 .event-detail .event-content ol {
