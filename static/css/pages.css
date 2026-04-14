@@ -682,7 +682,7 @@
 /* ── Event detail overrides (only what actually differs) ── */
 .event-detail .event-content {
     max-width: none;
-    padding: var(--space-xl);
+    padding: var(--space-xl) var(--space-2xl);
     font-size: 1rem;
     line-height: 1.78;
     text-align: left;
@@ -699,7 +699,7 @@
 @media (min-width: 768px) {
     .event-detail .event-content {
         padding-block: var(--space-2xl);
-        padding-inline: var(--space-2xl);
+        padding-inline: var(--space-3xl);
     }
 }
 
@@ -1167,6 +1167,13 @@
 .event-detail .event-content-block:has(.event-content-block__body) {
     border-top: 2px solid var(--color-amber);
     transition: box-shadow var(--transition-base), border-color var(--transition-base);
+    padding-inline: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+    .event-detail .event-content-block:has(.event-content-block__body) {
+        padding-inline: var(--space-2xl);
+    }
 }
 
 .event-detail .event-content-block:has(.event-content-block__body):hover {
