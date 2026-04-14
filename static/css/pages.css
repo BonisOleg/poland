@@ -691,6 +691,11 @@
     width: 100%;
     color: rgba(255, 255, 255, 0.88);
     border-top: 2px solid var(--color-amber);
+    transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.event-detail .event-content:hover {
+    box-shadow: 0 0 0 1px var(--color-amber), 0 0 28px rgba(255, 179, 71, 0.14), var(--glass-elev-shadow);
 }
 
 @media (min-width: 768px) {
