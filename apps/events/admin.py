@@ -21,6 +21,8 @@ class EventImageInline(admin.TabularInline):
     model = EventImage
     extra = 3
     fields = ("image", "alt_text", "sort_order")
+    verbose_name = "Zdjęcie"
+    verbose_name_plural = "Galeria zdjęć — dodaj wiele zdjęć tutaj (pojawią się jako galeria na stronie)"
 
 
 class EventVideoInline(admin.TabularInline):

@@ -281,6 +281,6 @@ class EventImage(models.Model):
     sort_order = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Изображение события"
-        verbose_name_plural = "Изображения событий"
+        verbose_name = "Zdjęcie galerii"
+        verbose_name_plural = "Galeria zdjęć (dodaj wiele zdjęć tutaj)"
         ordering = ["sort_order"]
