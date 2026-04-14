@@ -225,12 +225,6 @@
         </section>
         {% endfor %}
 
-        {% if event_city.biletyna_url %}
-        <div class="event-detail__panel event-content-block event-content-block--tickets">
-            <a href="{{ event_city.biletyna_url }}" class="btn btn--primary btn--lg btn--block"
-               target="_blank" rel="noopener noreferrer">{% trans "Kup bilet" %}</a>
-        </div>
-        {% endif %}
 
         {% with videos=event_city.videos.all %}
         {% if videos %}
