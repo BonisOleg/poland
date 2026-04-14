@@ -31,11 +31,7 @@ class EventVideoInline(admin.TabularInline):
 class EventContentBlockInline(admin.StackedInline):
     model = EventContentBlock
     extra = 0
-    fields = ("sort_order", "title_pl", "title_uk", "body_pl", "body_uk", "image", "button_text_pl", "button_text_uk", "button_url")
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        return _apply_ckeditor(form, "body")
+    fields = ("sort_order", "title_pl", "title_en", "body_pl", "body_en", "image", "button_text_pl", "button_text_en", "button_url")
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
