@@ -761,9 +761,9 @@
 .event-detail .event-content h1,
 .event-detail .event-content-block__body h1 { font-size: 1.35rem; }
 .event-detail .event-content h2,
-.event-detail .event-content-block__body h2 { font-size: 1.15rem; }
+.event-detail .event-content-block__body h2 { font-size: 1.1rem; }
 .event-detail .event-content h3,
-.event-detail .event-content-block__body h3 { font-size: 1.05rem; }
+.event-detail .event-content-block__body h3 { font-size: 1rem; }
 .event-detail .event-content h4,
 .event-detail .event-content h5,
 .event-detail .event-content h6,
@@ -778,8 +778,14 @@
 .event-detail .event-content h5,
 .event-detail .event-content h6 {
     text-align: left;
-    margin-top: var(--space-md);
-    margin-bottom: var(--space-xs);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+    letter-spacing: 0.02em;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(255, 179, 71, 0.25);
 }
 
 .event-detail .event-content-block__body h1,
