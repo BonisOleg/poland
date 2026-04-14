@@ -1384,6 +1384,38 @@
     display: block;
 }
 
+/* Subtle scale pulse per image — no glow/shadow */
+.event-gallery--photo .event-gallery__thumb {
+    animation: photo-thumb-breathe 3.2s ease-in-out infinite;
+}
+
+.event-gallery--photo .event-gallery__thumb-btn:nth-child(3n+2) .event-gallery__thumb {
+    animation-delay: 0.65s;
+}
+
+.event-gallery--photo .event-gallery__thumb-btn:nth-child(3n+3) .event-gallery__thumb {
+    animation-delay: 1.3s;
+}
+
+.event-gallery--photo .event-gallery__thumb-btn:hover .event-gallery__thumb {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .event-gallery--photo .event-gallery__thumb {
+        animation: none;
+    }
+}
+
+@keyframes photo-thumb-breathe {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
 @media (max-width: 640px) {
     .event-gallery__thumb-btn { flex: 0 0 100%; }
 }
