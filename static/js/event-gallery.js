@@ -83,9 +83,10 @@
 
         // ── arrows ───────────────────────────────────────────
         const updateArrows = () => {
-            const overflows = carousel.scrollWidth > carousel.clientWidth + 4;
-            prevBtn?.toggleAttribute('data-hidden', !overflows || carousel.scrollLeft <= 4);
-            nextBtn?.toggleAttribute('data-hidden', !overflows || carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 4);
+            const atStart = carousel.scrollLeft <= 4;
+            const atEnd   = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 4;
+            if (prevBtn) prevBtn.disabled = atStart;
+            if (nextBtn) nextBtn.disabled = atEnd;
         };
 
         prevBtn?.addEventListener('click', () => carousel.scrollBy({ left: -carousel.clientWidth, behavior: 'smooth' }));
@@ -95,7 +96,8 @@
 
         // ── init & resize ─────────────────────────────────────
         const setup = () => { buildDots(); updateArrows(); };
-        setup();
+        // Defer to let layout settle before measuring widths
+        requestAnimationFrame(setup);
         new ResizeObserver(setup).observe(carousel);
     };
 
