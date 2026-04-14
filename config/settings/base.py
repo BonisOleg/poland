@@ -108,7 +108,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_URL = os.environ.get("SITE_URL", "https://hypeglobal.pro")
 SITE_NAME = "Hype Global Production"
 # Bump after CSS changes so browsers skip cached stylesheets (also run collectstatic on deploy).
-STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "14")
+STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "15")
 
 CKEDITOR_5_CONFIGS = {
     "default": {
