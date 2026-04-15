@@ -1169,8 +1169,11 @@
     margin-bottom: var(--space-xl);
 }
 
-/* Vouchery v2: WooCommerce / Premium Woo product grid — 3 columns × 2 rows (6 items) */
-.event-detail .event-content-block__body.event-content--vouchery ul.products {
+/*
+ * Vouchery product grid (v1 + v2): requires .vouchery-page on the page container.
+ * Previous selectors only matched v2 under .event-detail + .event-content-block__body — v1 had neither.
+ */
+.vouchery-page ul.products {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-lg);
@@ -1181,12 +1184,12 @@
     clear: both;
 }
 
-.event-detail .event-content-block__body.event-content--vouchery ul.products::before,
-.event-detail .event-content-block__body.event-content--vouchery ul.products::after {
-    content: none;
+.vouchery-page ul.products::before,
+.vouchery-page ul.products::after {
+    display: none;
 }
 
-.event-detail .event-content-block__body.event-content--vouchery ul.products > li.product {
+.vouchery-page ul.products > li.product {
     float: none;
     width: 100%;
     max-width: none;
@@ -1195,25 +1198,30 @@
     list-style: none;
 }
 
-.event-detail .event-content-block__body.event-content--vouchery .premium-woo-products-inner {
+.vouchery-page .premium-woo-products-inner {
     width: 100%;
 }
 
-.event-detail .event-content-block__body.event-content--vouchery .premium-woo-product-wrapper {
+.vouchery-page .premium-woo-product-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
     min-width: 0;
+    border: 1px solid rgba(255, 179, 71, 0.5);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 900px) {
-    .event-detail .event-content-block__body.event-content--vouchery ul.products {
+    .vouchery-page ul.products {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 520px) {
-    .event-detail .event-content-block__body.event-content--vouchery ul.products {
+    .vouchery-page ul.products {
         grid-template-columns: 1fr;
     }
 }

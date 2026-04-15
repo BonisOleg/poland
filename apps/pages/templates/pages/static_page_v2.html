@@ -8,7 +8,7 @@
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
 <section class="section">
-    <div class="container page-container--narrow event-detail">
+    <div class="container page-container--narrow event-detail{% if page.slug == 'vouchery' %} vouchery-page{% endif %}">
         <h1 class="page-title">{{ page.title }}</h1>
 
         {% if gallery_images %}
