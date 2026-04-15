@@ -8,6 +8,8 @@ from .utils import (
     split_vouchery_content_into_panels,
     strip_quick_view_from_html,
     tag_products_grid,
+    tag_vouchery_faq_section,
+    tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
 )
 
@@ -16,6 +18,8 @@ def _prepare_vouchery_content(html: str) -> str:
     html = strip_quick_view_from_html(html)
     html = tag_products_grid(html)
     html = tag_vouchery_reasons_list(html)
+    html = tag_vouchery_offer_section(html)
+    html = tag_vouchery_faq_section(html)
     return html
 
 

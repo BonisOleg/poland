@@ -781,6 +781,58 @@
     font-weight: inherit;
 }
 
+/* «CHCESZ ZASKOCZYĆ DZIECI?»: divider directly under h2; form/CTA copy in .vouchery-offer-body (tag_vouchery_offer_section) */
+.event-detail.vouchery-page .vouchery-offer-section__title {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(255, 179, 71, 0.2);
+    color: var(--color-white);
+    font-weight: var(--fw-medium);
+}
+
+.event-detail.vouchery-page .vouchery-offer-body {
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+}
+
+.event-detail.vouchery-page .vouchery-offer-body > p {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: var(--fw-regular);
+    line-height: 1.45;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: var(--space-md);
+}
+
+/* FAQ: heading above line, questions below (tag_vouchery_faq_section) */
+.event-detail.vouchery-page .vouchery-faq-section__title {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(255, 179, 71, 0.2);
+    color: var(--color-white);
+    font-weight: var(--fw-medium);
+}
+
+.event-detail.vouchery-page .vouchery-faq-body {
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+}
+
+.event-detail.vouchery-page .vouchery-faq-body > p {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: var(--fw-regular);
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: var(--space-md);
+}
+
 .event-detail .event-content p,
 .event-detail .event-content-block__body p {
     margin-bottom: var(--space-md);

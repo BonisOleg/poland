@@ -82,6 +82,88 @@ _REASONS_H2_MARKERS: tuple[str, ...] = (
     "5 причин",
 )
 
+# «CHCESZ ZASKOCZYĆ DZIECI?» — PL / EN / RU substrings (lowercase)
+_OFFER_SECTION_H2_MARKERS: tuple[str, ...] = (
+    "chcesz zaskoczyć dzieci",
+    "want to surprise your children",
+    "хотите сделать сюрприз детям",
+)
+
+# FAQ panel heading — PL / EN / RU (lowercase)
+_FAQ_SECTION_H2_MARKERS: tuple[str, ...] = (
+    "najczęściej zadawane",
+    "frequently asked",
+    "часто задаваемые",
+)
+
+
+def tag_vouchery_offer_section(html: str) -> str:
+    """Wrap copy + CTA after the «surprise children» heading so CSS can place the divider under h2 only."""
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for h2 in soup.find_all("h2"):
+        if not isinstance(h2, Tag):
+            continue
+        t = (h2.get_text() or "").strip().lower()
+        if not any(m in t for m in _OFFER_SECTION_H2_MARKERS):
+            continue
+        if "vouchery-offer-section__title" in (h2.get("class") or []):
+            continue
+        to_wrap: list[Tag] = []
+        sib = h2.next_sibling
+        while sib is not None:
+            nxt = sib.next_sibling
+            if isinstance(sib, Tag):
+                if sib.name == "h2":
+                    break
+                to_wrap.append(sib)
+            sib = nxt
+        if not to_wrap:
+            continue
+        existing = h2.get("class") or []
+        h2["class"] = list(existing) + ["vouchery-offer-section__title"]
+        wrapper = soup.new_tag("div", attrs={"class": "vouchery-offer-body"})
+        h2.insert_after(wrapper)
+        for el in to_wrap:
+            wrapper.append(el.extract())
+    return str(soup)
+
+
+def tag_vouchery_faq_section(html: str) -> str:
+    """Wrap FAQ body so the divider sits under the «Najczęściej zadawane pytania (FAQ)» h2 only."""
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for h2 in soup.find_all("h2"):
+        if not isinstance(h2, Tag):
+            continue
+        t = (h2.get_text() or "").strip().lower()
+        if not any(m in t for m in _FAQ_SECTION_H2_MARKERS):
+            continue
+        if "vouchery-faq-section__title" in (h2.get("class") or []):
+            continue
+        to_wrap: list[Tag] = []
+        sib = h2.next_sibling
+        while sib is not None:
+            nxt = sib.next_sibling
+            if isinstance(sib, Tag):
+                if sib.name == "h2":
+                    break
+                to_wrap.append(sib)
+            sib = nxt
+        if not to_wrap:
+            continue
+        existing = h2.get("class") or []
+        h2["class"] = list(existing) + ["vouchery-faq-section__title"]
+        wrapper = soup.new_tag("div", attrs={"class": "vouchery-faq-body"})
+        h2.insert_after(wrapper)
+        for el in to_wrap:
+            wrapper.append(el.extract())
+    return str(soup)
+
 
 def tag_vouchery_reasons_list(html: str) -> str:
     """Mark the <ul> under the «5 reasons to visit…» heading for list + divider styling."""

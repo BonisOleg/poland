@@ -6,6 +6,8 @@ from apps.pages.management.commands.clean_elementor_content import transform_htm
 from apps.pages.utils import (
     split_vouchery_content_into_panels,
     strip_quick_view_from_html,
+    tag_vouchery_faq_section,
+    tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
 )
 
@@ -20,6 +22,44 @@ class TagVoucheryReasonsListTests(SimpleTestCase):
         out = tag_vouchery_reasons_list(html)
         self.assertIn("vouchery-reasons-list", out)
         self.assertIn('<ul class="vouchery-reasons-list">', out)
+
+
+class TagVoucheryFaqSectionTests(SimpleTestCase):
+    def test_wraps_body_under_faq_heading(self) -> None:
+        html = (
+            "<h2>NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>"
+            "<p>Question one? Question two?</p>"
+        )
+        out = tag_vouchery_faq_section(html)
+        self.assertIn("vouchery-faq-section__title", out)
+        self.assertIn('class="vouchery-faq-body"', out)
+        self.assertIn("Question one", out)
+
+
+class TagVoucheryOfferSectionTests(SimpleTestCase):
+    def test_wraps_body_under_chcesz_heading(self) -> None:
+        html = (
+            "<h2>CHCESZ ZASKOCZYĆ DZIECI ?</h2>"
+            "<p>ZAREZERWUJ TEATR</p>"
+            '<div class="elementor-button-wrapper"><a class="elementor-button">ZAPYTAJ</a></div>'
+        )
+        out = tag_vouchery_offer_section(html)
+        self.assertIn("vouchery-offer-section__title", out)
+        self.assertIn('class="vouchery-offer-body"', out)
+        self.assertIn("ZAREZERWUJ", out)
+        self.assertIn("ZAPYTAJ", out)
+
+    def test_stops_at_next_h2(self) -> None:
+        html = (
+            "<h2>CHCESZ ZASKOCZYĆ DZIECI ?</h2>"
+            "<p>One</p>"
+            "<h2>Next section</h2>"
+            "<p>Two</p>"
+        )
+        out = tag_vouchery_offer_section(html)
+        self.assertEqual(out.count("<h2>"), 2)
+        self.assertIn("vouchery-offer-body", out)
+        self.assertIn("Next section", out)
 
 
 class SplitVoucheryPanelsTests(SimpleTestCase):
