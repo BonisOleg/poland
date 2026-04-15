@@ -776,18 +776,43 @@
 }
 
 /*
- * Vouchery layout v2 only: first panel is wrapped with data-vouchery-button-href on .event-content-block__body
- * (see split_vouchery_content_into_panels). v1 uses .event-content without that class — unchanged.
- * Lighter lead copy than the global first-<p> block title above.
+ * Vouchery hero line («ZAPYTAJ O OFERTĘ»): same band as PRZEŻYJ — centered amber title, rules above + below.
+ * v2: first panel has data-vouchery-button-href on .event-content-block__body; v1: on .event-content.
  */
 .event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type,
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type {
-    font-weight: var(--fw-regular);
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type,
+.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type {
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    line-height: 1.35;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--color-amber);
+    max-width: var(--content-list-max);
+    margin-inline: auto;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md) 0;
+    border-top: 1px solid rgba(255, 179, 71, 0.28);
+    border-bottom: 1px solid rgba(255, 179, 71, 0.28);
+    border-left: none;
+    border-right: none;
 }
 
 .event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type :is(strong, b),
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type :is(strong, b) {
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type :is(strong, b),
+.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type :is(strong, b) {
     font-weight: inherit;
+    color: inherit;
+}
+
+/* Vouchery main content: no underlines on links (overrides generic event-detail hover rules) */
+.event-detail.vouchery-page .event-content-block__body a,
+.event-detail.vouchery-page .event-content-block__body a:hover,
+.event-detail.vouchery-page .event-content.event-content--vouchery a,
+.event-detail.vouchery-page .event-content.event-content--vouchery a:hover {
+    text-decoration: none;
 }
 
 /*
@@ -952,8 +977,7 @@
 
 .event-detail.vouchery-page .vouchery-faq-body details.content-accordion__item > p a {
     color: var(--color-amber);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: none;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body details.content-accordion__item > p a:hover,
@@ -1057,8 +1081,7 @@
 
 .event-detail.vouchery-page .vouchery-faq-body .elementor-tab-content a {
     color: var(--color-amber);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: none;
 }
 
 .event-detail .event-content p,
@@ -1679,8 +1702,7 @@
     background: transparent;
     color: var(--color-amber);
     opacity: 0.85;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-decoration: none;
     border: none;
 }
 
@@ -1716,8 +1738,7 @@
     color: var(--color-amber);
     border: none;
     opacity: 0.88;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-decoration: none;
 }
 
 .event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a:focus-visible,
