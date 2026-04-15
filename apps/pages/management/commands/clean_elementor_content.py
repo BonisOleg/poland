@@ -41,6 +41,7 @@ UNWRAP_CLASSES = {
     "e-con-inner",
     "elementor-button-wrapper",
     "elementor-icon-box-content",
+    "elementor-shortcode",
 }
 
 # Elementor data-attributes to strip from any element

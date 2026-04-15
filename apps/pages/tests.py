@@ -105,6 +105,29 @@ class SplitVoucheryPanelsTests(SimpleTestCase):
         out = split_vouchery_content_into_panels(html)
         self.assertEqual(out.count("<section"), 1)
 
+    def test_splits_anonymous_shortcode_wrapper_divs_into_panels(self) -> None:
+        """Former elementor-shortcode wrappers become classless divs; h2 must still split panels."""
+        html = (
+            "<h2>5 POWODÓW DLA KTÓRYCH</h2>"
+            "<ul><li>x</li></ul>"
+            '<a href="#">y</a>'
+            "<div>"
+            "<h2>CHCESZ ZASKOCZYĆ DZIECI ?</h2>"
+            "<p>body</p>"
+            "</div>"
+            "<div>"
+            "<h2>NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>"
+            "<p>faq</p>"
+            "</div>"
+        )
+        html = tag_vouchery_reasons_list(html)
+        html = tag_vouchery_offer_section(html)
+        html = tag_vouchery_faq_section(html)
+        out = split_vouchery_content_into_panels(html)
+        self.assertEqual(out.count('<section class="event-detail__panel event-content-block">'), 3)
+        self.assertIn("vouchery-offer-section__title", out)
+        self.assertIn("vouchery-faq-section__title", out)
+
 
 class StripQuickViewTests(SimpleTestCase):
     def test_removes_premium_woo_quick_view_block(self) -> None:

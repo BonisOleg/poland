@@ -250,10 +250,19 @@ def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
 
 
 def _h2_opens_vouchery_v2_section(tag: Tag) -> bool:
-    if tag.name != "h2":
-        return False
-    t = (tag.get_text() or "").strip().lower()
-    return any(m in t for m in VOUCHERY_V2_SECTION_H2_MARKERS)
+    if tag.name == "h2":
+        t = (tag.get_text() or "").strip().lower()
+        return any(m in t for m in VOUCHERY_V2_SECTION_H2_MARKERS)
+    # Anonymous wrapper div left by clean_elementor_content (class stripped from elementor-shortcode)
+    if tag.name == "div" and not tag.get("class"):
+        first_h2 = next(
+            (c for c in tag.children if isinstance(c, Tag) and c.name == "h2"),
+            None,
+        )
+        if first_h2 is not None:
+            t = (first_h2.get_text() or "").strip().lower()
+            return any(m in t for m in VOUCHERY_V2_SECTION_H2_MARKERS)
+    return False
 
 
 def split_vouchery_content_into_panels(
