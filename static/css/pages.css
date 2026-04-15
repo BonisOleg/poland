@@ -1173,7 +1173,11 @@
  * Vouchery product grid (v1 + v2).
  * tag_products_grid() in utils.py adds .vouchery-products-grid to the voucher <ul>.
  * The DB content is already cleaned — no ul.products exists.
+ *
+ * Override .event-detail .event-content-block__body ul:not(.content-icon-list)
+ * which forces display:flex/column — we need higher specificity.
  */
+.event-detail ul.vouchery-products-grid,
 ul.vouchery-products-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1182,6 +1186,7 @@ ul.vouchery-products-grid {
     padding: 0;
     margin: var(--space-lg) 0;
     width: 100%;
+    flex-direction: unset;
 }
 
 ul.vouchery-products-grid::before,
@@ -1189,6 +1194,7 @@ ul.vouchery-products-grid::after {
     display: none;
 }
 
+.event-detail ul.vouchery-products-grid > li,
 ul.vouchery-products-grid > li {
     list-style: none;
     margin: 0;
@@ -1259,12 +1265,14 @@ ul.vouchery-products-grid > li > p:has(> a:only-child) a:hover {
 }
 
 @media (max-width: 900px) {
+    .event-detail ul.vouchery-products-grid,
     ul.vouchery-products-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 520px) {
+    .event-detail ul.vouchery-products-grid,
     ul.vouchery-products-grid {
         grid-template-columns: 1fr;
     }
