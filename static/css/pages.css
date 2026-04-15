@@ -1349,16 +1349,19 @@
 .vouchery-page .event-content-block__body ul.vouchery-products-grid > li {
     list-style: none;
     margin: 0;
-    padding: var(--space-md);
+    padding: var(--space-lg);
     float: none;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     border: 1px solid rgba(255, 179, 71, 0.5);
     border-radius: var(--radius-md);
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.03);
     gap: var(--space-sm);
     position: relative;
+    min-height: 0;
 }
 
 /* v1 layout has no .event-content-block__body; grid <li> still needs positioning for the hit-area */
@@ -1385,7 +1388,14 @@
     pointer-events: auto;
 }
 
-.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:empty {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:empty,
+.event-content--vouchery ul.vouchery-products-grid > li > p:empty {
+    display: none;
+}
+
+/* Woo/import often leaves a spacer <p> before <h2>; :empty misses whitespace-only nodes */
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:has(+ :is(h2, h3)),
+.event-content--vouchery ul.vouchery-products-grid > li > p:has(+ :is(h2, h3)) {
     display: none;
 }
 
@@ -1434,12 +1444,18 @@
     line-height: 1.5;
 }
 
+/* Push the CTA row to the card bottom when grid row heights match (margin on <a> is not a flex item of <li>) */
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:last-of-type:has(> a),
+.event-content--vouchery ul.vouchery-products-grid > li > p:last-of-type:has(> a) {
+    margin-top: auto;
+}
+
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p > a,
 .event-detail.vouchery-page .event-content--vouchery ul.vouchery-products-grid > li > p > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0;
+    padding: 0;
     border: none;
     border-radius: 0;
     color: var(--color-amber);
@@ -1450,7 +1466,6 @@
     letter-spacing: 0.05em;
     text-decoration: none;
     transition: color var(--transition-fast), opacity var(--transition-fast);
-    margin-top: auto;
     background: transparent;
     box-shadow: none;
     gap: 0;
