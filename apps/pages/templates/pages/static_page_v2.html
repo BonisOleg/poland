@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ page.seo_description }}{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<section class="section">
+    <div class="container page-container--narrow">
+        <h1 class="page-title">{{ page.title }}</h1>
+
+        {% if gallery_images %}
+        <div class="vouchery-gallery" aria-label="{% trans 'Galeria zdjęć' %}">
+            {% for image in gallery_images %}
+            <figure class="vouchery-gallery__item">
+                <button class="vouchery-gallery__trigger" data-src="{{ image.src }}" data-alt="{{ image.alt }}" type="button" aria-label="{% trans 'Powiększ' %}: {{ image.alt }}">
+                    <img src="{{ image.src }}" alt="{{ image.alt }}" loading="lazy" class="vouchery-gallery__img">
+                </button>
+            </figure>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="event-content event-content--vouchery"
+             data-vouchery-button-href="/cart/"
+             data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}">
+            {{ content_no_images|safe }}
+        </div>
+
+        {% if page.show_contact_form %}
+        <div class="page-contact-form">
+            <h2>{% trans "Formularz kontaktowy" %}</h2>
+            <form method="post" action="/contact/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>{% trans "Imię i nazwisko" %}</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Email" %}</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Organizacja" %}</label>
+                    <input type="text" name="organization">
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Wiadomość" %}</label>
+                    <textarea name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary">{% trans "Wyślij" %}</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{% static 'js/vouchery-cart.js' %}"></script>
+<script type="module" src="{% static 'js/vouchery-gallery.js' %}"></script>
+{% endblock %}

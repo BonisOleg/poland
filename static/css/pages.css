@@ -1178,6 +1178,105 @@
     margin-right: auto;
 }
 
+/* ─── Vouchery v2: gallery ─── */
+
+.vouchery-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.vouchery-gallery__item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--color-dark-surface);
+}
+
+.vouchery-gallery__trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: zoom-in;
+}
+
+.vouchery-gallery__img {
+    display: block;
+    width: 100%;
+    height: 14rem;
+    object-fit: cover;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.vouchery-gallery__trigger:hover .vouchery-gallery__img,
+.vouchery-gallery__trigger:focus-visible .vouchery-gallery__img {
+    transform: scale(1.04);
+    opacity: 0.9;
+}
+
+/* Lightbox overlay (added by vouchery-gallery.js) */
+.vouchery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.88);
+    cursor: zoom-out;
+}
+
+.vouchery-lightbox__img {
+    max-width: min(90vw, 80rem);
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.vouchery-lightbox__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-white);
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: background 0.2s ease;
+}
+
+.vouchery-lightbox__close:hover,
+.vouchery-lightbox__close:focus-visible {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.vouchery-lightbox__close::before,
+.vouchery-lightbox__close::after {
+    content: "";
+    position: absolute;
+    width: 1.25rem;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+.vouchery-lightbox__close::before {
+    transform: rotate(45deg);
+}
+
+.vouchery-lightbox__close::after {
+    transform: rotate(-45deg);
+}
+
 /* ─── Structured event layout: content blocks ─── */
 
 .event-content-block {

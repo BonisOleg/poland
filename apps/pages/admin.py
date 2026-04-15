@@ -18,13 +18,13 @@ def _apply_ckeditor(form, *base_field_names):
 
 @admin.register(StaticPage)
 class StaticPageAdmin(TranslationAdmin):
-    list_display = ("title", "slug", "page_type", "is_published", "show_contact_form", "sort_order")
+    list_display = ("title", "slug", "page_type", "layout_version", "is_published", "show_contact_form", "sort_order")
     list_filter = ("page_type", "is_published")
     prepopulated_fields = {"slug": ("title",)}
     list_editable = ("is_published",)
     fieldsets = (
         ("Основне", {
-            "fields": ("title", "slug", "page_type", "sort_order", "is_published", "show_contact_form"),
+            "fields": ("title", "slug", "page_type", "layout_version", "sort_order", "is_published", "show_contact_form"),
         }),
         ("Контент", {
             "fields": ("content",),

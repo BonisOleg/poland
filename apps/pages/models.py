@@ -13,6 +13,11 @@ class StaticPage(models.Model):
         choices=[("static", "Статична сторінка"), ("landing", "Лендінг")],
         default="static",
     )
+    layout_version = models.CharField(
+        max_length=10,
+        choices=[("v1", "Класична"), ("v2", "Галерея (нова)")],
+        default="v1",
+    )
     show_contact_form = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
     sort_order = models.IntegerField(default=0)

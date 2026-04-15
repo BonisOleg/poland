@@ -1,11 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from .models import StaticPage
+from .utils import extract_images_from_html
+
+
+def _render_static_page(request, page, extra_ctx=None):
+    ctx = {"page": page, **(extra_ctx or {})}
+    if page.layout_version == "v2":
+        images, content_no_images = extract_images_from_html(page.content)
+        ctx.update({"gallery_images": images, "content_no_images": content_no_images})
+        return render(request, "pages/static_page_v2.html", ctx)
+    return render(request, "pages/static_page.html", ctx)
 
 
 def static_page(request, slug):
     page = get_object_or_404(StaticPage, slug=slug, is_published=True)
-    return render(request, "pages/static_page.html", {"page": page})
+    return _render_static_page(request, page)
 
 
 def catch_all_page(request, slug):
@@ -21,6 +31,6 @@ def catch_all_page(request, slug):
 
     try:
         page = StaticPage.objects.get(slug=slug, is_published=True)
-        return render(request, "pages/static_page.html", {"page": page})
+        return _render_static_page(request, page)
     except StaticPage.DoesNotExist:
         raise Http404
