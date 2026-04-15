@@ -865,17 +865,9 @@
     margin: 0;
     padding: var(--space-lg);
     max-width: var(--content-list-max);
-    background: #121212;
+    background: #212121;
     border: 1px solid rgba(212, 160, 23, 0.55);
     border-radius: var(--radius-md);
-}
-
-.event-detail.vouchery-page .vouchery-faq-body details.content-accordion__item {
-    border-bottom: 1px solid rgba(255, 179, 71, 0.15);
-}
-
-.event-detail.vouchery-page .vouchery-faq-body details.content-accordion__item:last-child {
-    border-bottom: none;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body summary.content-accordion__title {
@@ -946,17 +938,9 @@
     margin: 0;
     padding: var(--space-lg);
     max-width: var(--content-list-max);
-    background: #121212;
+    background: #212121;
     border: 1px solid rgba(212, 160, 23, 0.55);
     border-radius: var(--radius-md);
-}
-
-.event-detail.vouchery-page .vouchery-faq-body .elementor-accordion-item {
-    border-bottom: 1px solid rgba(255, 179, 71, 0.15);
-}
-
-.event-detail.vouchery-page .vouchery-faq-body .elementor-accordion-item:last-child {
-    border-bottom: none;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body .elementor-tab-title {
