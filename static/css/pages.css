@@ -766,6 +766,21 @@
     border-bottom: 1px solid rgba(255, 179, 71, 0.2);
 }
 
+/*
+ * Vouchery layout v2 only: first panel is wrapped with data-vouchery-button-href on .event-content-block__body
+ * (see split_vouchery_content_into_panels). v1 uses .event-content without that class — unchanged.
+ * Lighter lead copy than the global first-<p> block title above.
+ */
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type,
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type {
+    font-weight: var(--fw-regular);
+}
+
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type :is(strong, b),
+.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type :is(strong, b) {
+    font-weight: inherit;
+}
+
 .event-detail .event-content p,
 .event-detail .event-content-block__body p {
     margin-bottom: var(--space-md);
@@ -1257,6 +1272,31 @@
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.03);
     gap: var(--space-sm);
+    position: relative;
+}
+
+/* v1 layout has no .event-content-block__body; grid <li> still needs positioning for the hit-area */
+.event-content--vouchery ul.vouchery-products-grid > li {
+    position: relative;
+}
+
+/* Full-card link (see vouchery-product-cards.js); real links stay on top via pointer-events */
+.event-content--vouchery ul.vouchery-products-grid > li > .vouchery-product-card__hitarea {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    text-decoration: none;
+}
+
+.event-content--vouchery ul.vouchery-products-grid > li > :not(.vouchery-product-card__hitarea) {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.event-content--vouchery ul.vouchery-products-grid > li a {
+    pointer-events: auto;
 }
 
 .vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:empty {
