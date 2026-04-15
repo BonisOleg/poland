@@ -24,6 +24,28 @@ class TagVoucheryReasonsListTests(SimpleTestCase):
         self.assertIn('<ul class="vouchery-reasons-list">', out)
 
 
+class TagVoucheryOfferElementorTests(SimpleTestCase):
+    def test_wraps_following_elementor_widgets_not_only_h2_siblings(self) -> None:
+        """Raw Elementor puts <p> in sibling widgets; h2 has no element siblings."""
+        html = """
+        <div class="elementor-element elementor-widget elementor-widget-heading">
+          <div class="elementor-widget-container">
+            <h2>CHCESZ ZASKOCZYĆ DZIECI ?</h2>
+          </div>
+        </div>
+        <div class="elementor-element elementor-widget elementor-widget-text-editor">
+          <div class="elementor-widget-container"><p>ZAREZERWUJ</p></div>
+        </div>
+        <div class="elementor-element elementor-widget elementor-widget-button">
+          <a class="elementor-button">ZAPYTAJ</a>
+        </div>
+        """
+        out = tag_vouchery_offer_section(html)
+        self.assertIn("vouchery-offer-body", out)
+        self.assertIn("ZAREZERWUJ", out)
+        self.assertIn("ZAPYTAJ", out)
+
+
 class TagVoucheryFaqSectionTests(SimpleTestCase):
     def test_wraps_body_under_faq_heading(self) -> None:
         html = (

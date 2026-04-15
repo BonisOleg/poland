@@ -97,6 +97,51 @@ _FAQ_SECTION_H2_MARKERS: tuple[str, ...] = (
 )
 
 
+def _elementor_widget_ancestor(h2: Tag) -> Tag | None:
+    """Innermost div.elementor-element.elementor-widget wrapping the heading (imported Elementor HTML)."""
+    el: Tag | None = h2.parent
+    while el is not None:
+        cls = el.get("class") or []
+        if "elementor-element" in cls and "elementor-widget" in cls:
+            return el
+        parent = el.parent
+        el = parent if isinstance(parent, Tag) else None
+    return None
+
+
+def _collect_nodes_after_heading(h2: Tag) -> list[Tag]:
+    """Nodes to wrap under the heading: direct siblings (clean HTML) or following Elementor widget columns.
+
+    In raw Elementor markup the <p> and CTA are *not* siblings of <h2>; they sit in the next
+    ``.elementor-element`` widgets. Previously we only walked ``h2.next_sibling``, so ``to_wrap``
+    was empty and no CSS hooks were emitted — the lower blocks looked unchanged.
+    """
+    out: list[Tag] = []
+    sib = h2.next_sibling
+    while sib is not None:
+        nxt = sib.next_sibling
+        if isinstance(sib, Tag):
+            if sib.name == "h2":
+                break
+            out.append(sib)
+        sib = nxt
+    if out:
+        return out
+
+    widget = _elementor_widget_ancestor(h2)
+    if widget is None:
+        return []
+
+    for s in widget.find_next_siblings():
+        if not isinstance(s, Tag):
+            continue
+        # Next layout block that introduces its own heading — start of the following section
+        if s.find("h2") is not None:
+            break
+        out.append(s)
+    return out
+
+
 def tag_vouchery_offer_section(html: str) -> str:
     """Wrap copy + CTA after the «surprise children» heading so CSS can place the divider under h2 only."""
     if not html or not html.strip():
@@ -111,15 +156,7 @@ def tag_vouchery_offer_section(html: str) -> str:
             continue
         if "vouchery-offer-section__title" in (h2.get("class") or []):
             continue
-        to_wrap: list[Tag] = []
-        sib = h2.next_sibling
-        while sib is not None:
-            nxt = sib.next_sibling
-            if isinstance(sib, Tag):
-                if sib.name == "h2":
-                    break
-                to_wrap.append(sib)
-            sib = nxt
+        to_wrap = _collect_nodes_after_heading(h2)
         if not to_wrap:
             continue
         existing = h2.get("class") or []
@@ -145,15 +182,7 @@ def tag_vouchery_faq_section(html: str) -> str:
             continue
         if "vouchery-faq-section__title" in (h2.get("class") or []):
             continue
-        to_wrap: list[Tag] = []
-        sib = h2.next_sibling
-        while sib is not None:
-            nxt = sib.next_sibling
-            if isinstance(sib, Tag):
-                if sib.name == "h2":
-                    break
-                to_wrap.append(sib)
-            sib = nxt
+        to_wrap = _collect_nodes_after_heading(h2)
         if not to_wrap:
             continue
         existing = h2.get("class") or []
