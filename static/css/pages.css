@@ -691,7 +691,11 @@
     border-bottom: none;
 }
 
-/* Vouchery (v1: .event-content--vouchery): outer frame is styled under .vouchery-faq-body; no per-row lines */
+/* Vouchery (v1: .event-content--vouchery): frame is on .vouchery-faq-body; inner accordion has no second border */
+.event-content.event-content--vouchery .vouchery-faq-body .content-accordion {
+    border: none;
+}
+
 .event-content.event-content--vouchery .content-accordion .content-accordion__item {
     border: none;
 }
@@ -846,6 +850,10 @@
 .event-detail.vouchery-page .vouchery-faq-body {
     margin-top: 0;
     margin-bottom: var(--space-md);
+    /* Single outer frame; inner .content-accordion must not add a second (gold) box */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    overflow: hidden;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body > p {
@@ -871,8 +879,8 @@
     padding: var(--space-lg);
     max-width: var(--content-list-max);
     background: #212121;
-    border: 1px solid rgba(212, 160, 23, 0.55);
-    border-radius: var(--radius-md);
+    border: none;
+    border-radius: 0;
 }
 
 /* Override generic .event-content .content-accordion__item when FAQ is not under .event-content (v2 panels) */
@@ -957,8 +965,8 @@
     padding: var(--space-lg);
     max-width: var(--content-list-max);
     background: #212121;
-    border: 1px solid rgba(212, 160, 23, 0.55);
-    border-radius: var(--radius-md);
+    border: none;
+    border-radius: 0;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body .elementor-tab-title {
