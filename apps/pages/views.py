@@ -11,6 +11,7 @@ from .utils import (
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
+    transform_vouchery_faq_editor_list_to_accordion,
 )
 
 
@@ -20,6 +21,7 @@ def _prepare_vouchery_content(html: str) -> str:
     html = tag_vouchery_reasons_list(html)
     html = tag_vouchery_offer_section(html)
     html = tag_vouchery_faq_section(html)
+    html = transform_vouchery_faq_editor_list_to_accordion(html)
     return html
 
 

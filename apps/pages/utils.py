@@ -194,6 +194,89 @@ def tag_vouchery_faq_section(html: str) -> str:
     return str(soup)
 
 
+def _faq_li_to_answer_p(soup: BeautifulSoup, ul: Tag) -> Tag:
+    """Turn the first <li> of a CKEditor FAQ <ul> into a single <p> for .content-accordion styles."""
+    li = ul.find("li", recursive=False)
+    if not li:
+        return soup.new_tag("p")
+    child_tags = [c for c in li.children if isinstance(c, Tag)]
+    if len(child_tags) == 1 and child_tags[0].name == "p":
+        return child_tags[0].extract()
+    p = soup.new_tag("p")
+    for child in list(li.children):
+        p.append(child.extract())
+    return p
+
+
+def _build_faq_details_from_p_and_ul(soup: BeautifulSoup, p_tag: Tag, ul_tag: Tag) -> Tag:
+    details = soup.new_tag("details", attrs={"class": ["content-accordion__item"]})
+    summary = soup.new_tag("summary", attrs={"class": ["content-accordion__title"]})
+    for child in list(p_tag.children):
+        summary.append(child.extract())
+    p_tag.decompose()
+    answer_p = _faq_li_to_answer_p(soup, ul_tag)
+    ul_tag.decompose()
+    details.append(summary)
+    details.append(answer_p)
+    return details
+
+
+def transform_vouchery_faq_editor_list_to_accordion(html: str) -> str:
+    """Convert CKEditor FAQ pattern (direct <p> + <ul><li>answer) into native <details> accordion.
+
+    Skips bodies that already contain .content-accordion or legacy .elementor-accordion.
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for body in soup.find_all("div", class_=lambda c: c and "vouchery-faq-body" in c):
+        if not isinstance(body, Tag):
+            continue
+        if body.select_one(".content-accordion") or body.select_one(".elementor-accordion"):
+            continue
+        elements: list[Tag] = []
+        for child in list(body.children):
+            if isinstance(child, Tag):
+                elements.append(child.extract())
+        if not elements:
+            continue
+        segments: list[tuple] = []
+        i = 0
+        while i < len(elements):
+            if (
+                i + 1 < len(elements)
+                and elements[i].name == "p"
+                and elements[i + 1].name == "ul"
+            ):
+                segments.append(("pair", elements[i], elements[i + 1]))
+                i += 2
+            else:
+                segments.append(("single", elements[i]))
+                i += 1
+        if not any(s[0] == "pair" for s in segments):
+            for el in elements:
+                body.append(el)
+            continue
+        new_children: list[Tag] = []
+        seg_i = 0
+        while seg_i < len(segments):
+            seg = segments[seg_i]
+            if seg[0] == "single":
+                new_children.append(seg[1])
+                seg_i += 1
+                continue
+            accordion = soup.new_tag("div", attrs={"class": ["content-accordion"]})
+            while seg_i < len(segments) and segments[seg_i][0] == "pair":
+                _, p_el, ul_el = segments[seg_i]
+                accordion.append(_build_faq_details_from_p_and_ul(soup, p_el, ul_el))
+                seg_i += 1
+            new_children.append(accordion)
+        for node in new_children:
+            body.append(node)
+    return str(soup)
+
+
 def tag_vouchery_reasons_list(html: str) -> str:
     """Mark the <ul> under the «5 reasons to visit…» heading for list + divider styling."""
     if not html or not html.strip():

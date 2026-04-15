@@ -9,6 +9,7 @@ from apps.pages.utils import (
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
+    transform_vouchery_faq_editor_list_to_accordion,
 )
 
 
@@ -56,6 +57,50 @@ class TagVoucheryFaqSectionTests(SimpleTestCase):
         self.assertIn("vouchery-faq-section__title", out)
         self.assertIn('class="vouchery-faq-body"', out)
         self.assertIn("Question one", out)
+
+
+class TransformVoucheryFaqAccordionTests(SimpleTestCase):
+    def test_ckeditor_p_ul_pairs_become_details_accordion(self) -> None:
+        html = (
+            "<h2>NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>"
+            "<p>Jak wygląda dostawa?</p>"
+            "<ul><li>Odpowiedź pierwsza.</li></ul>"
+            "<p>Drugie pytanie?</p>"
+            "<ul><li><p>Druga odpowiedź.</p></li></ul>"
+        )
+        out = tag_vouchery_faq_section(html)
+        out = transform_vouchery_faq_editor_list_to_accordion(out)
+        self.assertEqual(out.count('class="content-accordion"'), 1)
+        self.assertEqual(out.count("content-accordion__item"), 2)
+        self.assertIn("Jak wygląda dostawa?", out)
+        self.assertIn("Odpowiedź pierwsza.", out)
+        self.assertIn("Drugie pytanie?", out)
+        self.assertIn("Druga odpowiedź.", out)
+        self.assertNotIn("<ul>", out)
+
+    def test_skips_when_content_accordion_already_present(self) -> None:
+        html = (
+            '<div class="vouchery-faq-body">'
+            '<div class="content-accordion">'
+            '<details class="content-accordion__item">'
+            '<summary class="content-accordion__title">Q</summary>'
+            "<p>A</p>"
+            "</details>"
+            "</div>"
+            "</div>"
+        )
+        out = transform_vouchery_faq_editor_list_to_accordion(html)
+        self.assertEqual(out.count('class="content-accordion"'), 1)
+
+    def test_leaves_orphan_paragraph_when_no_following_ul(self) -> None:
+        html = (
+            "<h2>NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>"
+            "<p>Tylko akapit bez listy.</p>"
+        )
+        out = tag_vouchery_faq_section(html)
+        out = transform_vouchery_faq_editor_list_to_accordion(out)
+        self.assertNotIn("content-accordion", out)
+        self.assertIn("Tylko akapit bez listy.", out)
 
 
 class TagVoucheryOfferSectionTests(SimpleTestCase):
