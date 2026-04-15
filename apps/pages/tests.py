@@ -4,6 +4,8 @@ from django.test import SimpleTestCase
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
 from apps.pages.utils import (
+    remove_products_grid_from_html,
+    split_after_first_vouchery_panel,
     split_vouchery_content_into_panels,
     strip_quick_view_from_html,
     tag_vouchery_faq_section,
@@ -127,6 +129,38 @@ class TagVoucheryOfferSectionTests(SimpleTestCase):
         self.assertEqual(out.count("<h2>"), 2)
         self.assertIn("vouchery-offer-body", out)
         self.assertIn("Next section", out)
+
+
+class RemoveProductsGridTests(SimpleTestCase):
+    def test_removes_ul_with_vouchery_products_grid_class(self) -> None:
+        html = (
+            "<p>Intro</p>"
+            '<ul class="vouchery-products-grid"><li><h3><a href="/p/">T</a></h3>'
+            '<p>d</p><p><a href="?add-to-cart=1">a</a></p></li></ul>'
+            "<p>End</p>"
+        )
+        out = remove_products_grid_from_html(html)
+        self.assertNotIn("vouchery-products-grid", out)
+        self.assertIn("Intro", out)
+        self.assertIn("End", out)
+
+
+class SplitAfterFirstVoucheryPanelTests(SimpleTestCase):
+    def test_two_sections_split(self) -> None:
+        html = (
+            '<section class="event-detail__panel event-content-block"><p>First</p></section>'
+            '<section class="event-detail__panel event-content-block"><p>Second</p></section>'
+        )
+        first, rest = split_after_first_vouchery_panel(html)
+        self.assertIn("First", first)
+        self.assertIn("Second", rest)
+        self.assertNotIn("Second", first)
+
+    def test_single_section_returns_full_and_empty_rest(self) -> None:
+        html = '<section class="event-detail__panel event-content-block"><p>Only</p></section>'
+        first, rest = split_after_first_vouchery_panel(html)
+        self.assertIn("Only", first)
+        self.assertEqual(rest, "")
 
 
 class SplitVoucheryPanelsTests(SimpleTestCase):

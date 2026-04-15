@@ -11,7 +11,7 @@
     <div class="container page-container--narrow event-detail{% if page.slug == 'vouchery' %} vouchery-page{% endif %}">
         <h1 class="page-title">{{ page.title }}</h1>
 
-        {% if gallery_images %}
+        {% if gallery_images and page.slug != 'vouchery' %}
         <section class="event-detail__panel event-gallery event-gallery--photo vouchery-page__gallery" aria-label="{% trans 'Galeria zdjęć' %}">
             {% if page.slug != 'vouchery' %}
             <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
@@ -42,8 +42,42 @@
         {% endif %}
 
         {% if page.slug == 'vouchery' %}
-        {# Panels + cart data-* come from split_vouchery_content_into_panels in the view #}
-        {{ content_no_images|safe }}
+        {# Intro panel + voucher slider + remaining panels; cart data-* on first panel from the view #}
+        {{ vouchery_first_panel|safe }}
+        {% if vouchers %}
+        <section class="event-detail__panel event-gallery event-gallery--photo vouchery-card-slider" aria-label="{% trans 'Vouchery' %}">
+            <div class="event-gallery__carousel-wrap">
+                <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="event-gallery__carousel-viewport vouchery-card-slider__viewport">
+                    <div class="event-gallery__carousel vouchery-card-slider__track" data-carousel>
+                        {% for voucher in vouchers %}
+                        <article class="vouchery-card">
+                            {% if voucher.image %}
+                            <img src="{{ voucher.image.url }}" alt="{{ voucher.name }}" class="vouchery-card__image" loading="lazy" width="800" height="450">
+                            {% endif %}
+                            <div class="vouchery-card__body">
+                                <h3 class="vouchery-card__title">{{ voucher.name }}</h3>
+                                {% if voucher.description %}
+                                <p class="vouchery-card__desc">{{ voucher.description }}</p>
+                                {% endif %}
+                                {% if voucher.purchase_url %}
+                                <a href="{{ voucher.purchase_url }}" class="vouchery-card__cta">{% trans "Dodaj do koszyka" %}</a>
+                                {% endif %}
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="event-gallery__dots" aria-hidden="true"></div>
+        </section>
+        {% endif %}
+        {{ vouchery_rest_panels|safe }}
         {% else %}
         <section class="event-detail__panel event-content-block">
             <div class="event-content-block__body">

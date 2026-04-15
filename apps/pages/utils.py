@@ -76,6 +76,53 @@ def tag_products_grid(html: str) -> str:
     return str(soup)
 
 
+def remove_products_grid_from_html(html: str) -> str:
+    """Remove WooCommerce product <ul> tagged with vouchery-products-grid (replaced by DB Voucher slider)."""
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for ul in soup.find_all("ul"):
+        if not isinstance(ul, Tag):
+            continue
+        cls = ul.get("class") or []
+        if isinstance(cls, str):
+            has_grid = "vouchery-products-grid" in cls.split()
+        else:
+            has_grid = "vouchery-products-grid" in cls
+        if has_grid:
+            ul.decompose()
+    return str(soup)
+
+
+def split_after_first_vouchery_panel(html: str) -> tuple[str, str]:
+    """Split vouchery v2 HTML after the first ``section.event-detail__panel`` (intro vs rest).
+
+    Returns (first_panel_html, rest_html). Single-panel pages return (full_html, "").
+    """
+    if not html or not html.strip():
+        return "", ""
+
+    soup = BeautifulSoup(html, "html.parser")
+    sections: list[Tag] = []
+    for child in soup.children:
+        if not isinstance(child, Tag) or child.name != "section":
+            continue
+        cls = child.get("class") or []
+        if isinstance(cls, str):
+            ok = "event-detail__panel" in cls.split()
+        else:
+            ok = "event-detail__panel" in cls
+        if ok:
+            sections.append(child)
+
+    if len(sections) <= 1:
+        return html, ""
+    first_html = str(sections[0])
+    rest_html = "".join(str(s) for s in sections[1:])
+    return first_html, rest_html
+
+
 _REASONS_H2_MARKERS: tuple[str, ...] = (
     "5 powodów",
     "5 reasons",

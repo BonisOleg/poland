@@ -787,7 +787,6 @@
     font-weight: var(--fw-bold);
     line-height: 1.35;
     letter-spacing: 0.05em;
-    text-transform: uppercase;
     text-align: center;
     color: var(--color-amber);
     max-width: var(--content-list-max);
@@ -851,7 +850,6 @@
     font-weight: var(--fw-light);
     line-height: 1.45;
     letter-spacing: 0.03em;
-    text-transform: uppercase;
     color: rgba(255, 255, 255, 0.92);
     margin-bottom: var(--space-md);
     /* Override .event-content-block__body > div > p:first-of-type (lead block) — it added a 2nd line under the intro copy */
@@ -1486,6 +1484,89 @@
 /* Vouchery v2: reuse event-gallery carousel; spacing before body */
 .vouchery-page__gallery {
     margin-bottom: var(--space-xl);
+}
+
+/* Vouchery v2: one-card-wide slider (reuses event-gallery.js + .event-gallery__carousel) */
+.vouchery-card-slider {
+    margin-bottom: var(--space-xl);
+}
+
+.vouchery-card-slider .vouchery-card {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    border: 1px solid rgba(255, 179, 71, 0.5);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+}
+
+.vouchery-card-slider .vouchery-card__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: var(--color-dark-surface);
+}
+
+.vouchery-card-slider .vouchery-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+}
+
+.vouchery-card-slider .vouchery-card__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-white);
+}
+
+.vouchery-card-slider .vouchery-card__desc {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--color-gray-light);
+    line-height: 1.5;
+}
+
+.vouchery-card-slider .vouchery-card__cta {
+    display: block;
+    margin-top: auto;
+    padding: var(--space-sm) var(--space-lg);
+    text-align: center;
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-dark);
+    background: var(--color-amber);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--color-amber);
+    box-shadow: 0 2px 12px rgba(255, 179, 71, 0.35);
+    transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.vouchery-card-slider .vouchery-card__cta:hover {
+    background: transparent;
+    color: var(--color-amber);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 179, 71, 0.25);
+}
+
+.vouchery-card-slider .vouchery-card__cta:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
 }
 
 /*
