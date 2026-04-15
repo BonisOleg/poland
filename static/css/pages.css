@@ -691,6 +691,11 @@
     border-bottom: none;
 }
 
+/* Vouchery (v1: .event-content--vouchery): outer frame is styled under .vouchery-faq-body; no per-row lines */
+.event-content.event-content--vouchery .content-accordion .content-accordion__item {
+    border: none;
+}
+
 .event-content .content-accordion__title {
     padding: var(--space-md);
     font-size: var(--fs-base);
@@ -868,6 +873,12 @@
     background: #212121;
     border: 1px solid rgba(212, 160, 23, 0.55);
     border-radius: var(--radius-md);
+}
+
+/* Override generic .event-content .content-accordion__item when FAQ is not under .event-content (v2 panels) */
+.event-detail.vouchery-page .vouchery-faq-body .content-accordion details.content-accordion__item {
+    border: none;
+    box-shadow: none;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body summary.content-accordion__title {
