@@ -1120,24 +1120,10 @@
     top: 0.75em;
 }
 
-/* Premium Woo Quick View label — bullet replaces FA eye icon */
-.event-content--vouchery .vouchery-quick-view {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-top: var(--space-sm);
-    font-size: var(--fs-sm);
-    color: var(--color-gray-light);
-}
-
-.event-content--vouchery .vouchery-quick-view::before {
-    content: "";
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: var(--radius-full);
-    background: var(--color-white);
-    flex-shrink: 0;
-    opacity: 0.9;
+/* Premium Woo "Quick View" — must not be visible on voucher pages (v1 + v2) */
+.event-content--vouchery .vouchery-quick-view,
+.event-content--vouchery .premium-woo-qv-btn {
+    display: none;
 }
 
 .event-content--vouchery a.vouchery-modal-close {
