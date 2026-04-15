@@ -813,7 +813,7 @@
 .event-detail.vouchery-page .vouchery-offer-body > p {
     font-family: var(--font-heading);
     font-size: 1rem;
-    font-weight: var(--fw-regular);
+    font-weight: var(--fw-light);
     line-height: 1.45;
     letter-spacing: 0.03em;
     text-transform: uppercase;
@@ -822,6 +822,10 @@
     /* Override .event-content-block__body > div > p:first-of-type (lead block) — it added a 2nd line under the intro copy */
     border-bottom: none;
     padding-bottom: 0;
+}
+
+.event-detail.vouchery-page .vouchery-offer-body > p :is(strong, b) {
+    font-weight: inherit;
 }
 
 /* FAQ: heading above line, questions below (tag_vouchery_faq_section) */
@@ -842,7 +846,7 @@
 .event-detail.vouchery-page .vouchery-faq-body > p {
     font-family: var(--font-heading);
     font-size: 0.95rem;
-    font-weight: var(--fw-regular);
+    font-weight: var(--fw-light);
     line-height: 1.55;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -850,6 +854,10 @@
     margin-bottom: var(--space-md);
     border-bottom: none;
     padding-bottom: 0;
+}
+
+.event-detail.vouchery-page .vouchery-faq-body > p :is(strong, b) {
+    font-weight: inherit;
 }
 
 .event-detail .event-content p,
