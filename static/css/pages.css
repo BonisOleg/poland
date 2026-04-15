@@ -802,6 +802,7 @@
     max-width: var(--content-list-max);
     width: 100%;
     box-sizing: border-box;
+    margin-inline: auto;
 }
 
 /* «CHCESZ ZASKOCZYĆ DZIECI?»: divider directly under h2; form/CTA copy in .vouchery-offer-body (tag_vouchery_offer_section) */
@@ -850,10 +851,9 @@
 .event-detail.vouchery-page .vouchery-faq-body {
     margin-top: 0;
     margin-bottom: var(--space-md);
-    /* Single outer frame; inner .content-accordion must not add a second (gold) box */
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-md);
-    overflow: hidden;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body > p {
@@ -877,10 +877,12 @@
 .event-detail.vouchery-page .vouchery-faq-body .content-accordion {
     margin: 0;
     padding: var(--space-lg);
-    max-width: var(--content-list-max);
-    background: #212121;
+    max-width: none;
+    width: 100%;
+    background: transparent;
     border: none;
     border-radius: 0;
+    box-sizing: border-box;
 }
 
 /* Override generic .event-content .content-accordion__item when FAQ is not under .event-content (v2 panels) */
@@ -963,10 +965,12 @@
 .event-detail.vouchery-page .vouchery-faq-body .elementor-accordion {
     margin: 0;
     padding: var(--space-lg);
-    max-width: var(--content-list-max);
-    background: #212121;
+    max-width: none;
+    width: 100%;
+    background: transparent;
     border: none;
     border-radius: 0;
+    box-sizing: border-box;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body .elementor-tab-title {
@@ -1471,6 +1475,7 @@
     box-sizing: border-box;
     padding-bottom: var(--space-md);
     margin-bottom: var(--space-md);
+    margin-inline: auto;
     border-bottom: 1px solid rgba(255, 179, 71, 0.28);
 }
 
@@ -1486,6 +1491,7 @@
     max-width: var(--content-list-max);
     width: 100%;
     box-sizing: border-box;
+    margin-inline: auto;
 }
 
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list > li,
