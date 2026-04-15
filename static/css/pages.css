@@ -1171,14 +1171,13 @@
 
 /*
  * Vouchery product grid (v1 + v2).
- * tag_products_grid() in utils.py adds .vouchery-products-grid to the voucher <ul>.
- * The DB content is already cleaned — no ul.products exists.
+ * tag_products_grid() adds .vouchery-products-grid to the <ul>.
  *
- * Override .event-detail .event-content-block__body ul:not(.content-icon-list)
- * which forces display:flex/column — we need higher specificity.
+ * SPECIFICITY NOTE:
+ *   Conflicting rule: .event-detail .event-content-block__body ul:not(.content-icon-list) = (0,3,1)
+ *   This rule uses .vouchery-page as an extra class → (0,4,1) which unconditionally wins.
  */
-.event-detail ul.vouchery-products-grid,
-ul.vouchery-products-grid {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-lg);
@@ -1186,36 +1185,28 @@ ul.vouchery-products-grid {
     padding: 0;
     margin: var(--space-lg) 0;
     width: 100%;
-    flex-direction: unset;
 }
 
-ul.vouchery-products-grid::before,
-ul.vouchery-products-grid::after {
-    display: none;
-}
-
-.event-detail ul.vouchery-products-grid > li,
-ul.vouchery-products-grid > li {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: var(--space-md);
     float: none;
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(255, 179, 71, 0.5);
     border-radius: var(--radius-md);
-    padding: var(--space-md);
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.03);
     gap: var(--space-sm);
 }
 
-ul.vouchery-products-grid > li > p:empty {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p:empty {
     display: none;
 }
 
-ul.vouchery-products-grid > li h2,
-ul.vouchery-products-grid > li h3 {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h2,
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h3 {
     margin: 0;
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
@@ -1225,22 +1216,20 @@ ul.vouchery-products-grid > li h3 {
     color: var(--color-white);
 }
 
-ul.vouchery-products-grid > li h2 a,
-ul.vouchery-products-grid > li h3 a {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h2 a,
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h3 a {
     color: inherit;
     text-decoration: none;
 }
 
-ul.vouchery-products-grid > li > p {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p {
     margin: 0;
     font-size: var(--fs-sm);
     color: var(--color-gray-light);
     line-height: 1.5;
 }
 
-/* "Dodaj do koszyka" button — lone <a> in its own <p> */
-ul.vouchery-products-grid > li > p > a,
-ul.vouchery-products-grid > li > p:has(> a:only-child) a {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1258,22 +1247,19 @@ ul.vouchery-products-grid > li > p:has(> a:only-child) a {
     margin-top: auto;
 }
 
-ul.vouchery-products-grid > li > p > a:hover,
-ul.vouchery-products-grid > li > p:has(> a:only-child) a:hover {
+.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p > a:hover {
     background: var(--color-amber);
     color: var(--color-dark);
 }
 
 @media (max-width: 900px) {
-    .event-detail ul.vouchery-products-grid,
-    ul.vouchery-products-grid {
+    .vouchery-page .event-content-block__body ul.vouchery-products-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 520px) {
-    .event-detail ul.vouchery-products-grid,
-    ul.vouchery-products-grid {
+    .vouchery-page .event-content-block__body ul.vouchery-products-grid {
         grid-template-columns: 1fr;
     }
 }
