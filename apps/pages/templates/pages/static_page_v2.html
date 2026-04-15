@@ -8,7 +8,7 @@
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
 <section class="section">
-    <div class="container page-container--narrow">
+    <div class="container page-container--narrow event-detail">
         <h1 class="page-title">{{ page.title }}</h1>
 
         {% if gallery_images %}
@@ -39,11 +39,13 @@
         </dialog>
         {% endif %}
 
-        <div class="event-content event-content--vouchery"
-             data-vouchery-button-href="/cart/"
-             data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}">
-            {{ content_no_images|safe }}
-        </div>
+        <section class="event-detail__panel event-content-block">
+            <div class="event-content-block__body event-content--vouchery"
+                 data-vouchery-button-href="/cart/"
+                 data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}">
+                {{ content_no_images|safe }}
+            </div>
+        </section>
 
         {% if page.show_contact_form %}
         <div class="page-contact-form">
