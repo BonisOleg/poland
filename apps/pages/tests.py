@@ -195,3 +195,23 @@ class TransformHtmlVoucheryIconsTests(SimpleTestCase):
         self.assertIn("data-vouchery-cart-widget", out)
         self.assertIn("vouchery-cart-widget", out)
         self.assertNotIn("<i", out)
+
+    def test_elementor_accordion_becomes_details_with_answer(self) -> None:
+        raw = """
+        <div class="elementor-accordion">
+          <div class="elementor-accordion-item">
+            <div class="elementor-tab-title">
+              <a class="elementor-accordion-title">Jak wygląda dostawa?</a>
+            </div>
+            <div class="elementor-tab-content"><p>PDF na email.</p></div>
+          </div>
+        </div>
+        """
+        out = transform_html(raw)
+        self.assertIn("<details", out)
+        self.assertIn('class="content-accordion__item"', out)
+        self.assertIn("<summary", out)
+        self.assertIn("content-accordion__title", out)
+        self.assertIn("Jak wygląda dostawa?", out)
+        self.assertIn("PDF na email.", out)
+        self.assertNotIn("elementor-accordion", out)
