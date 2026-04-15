@@ -1171,6 +1171,63 @@
 }
 
 /*
+ * «5 powodów…» list — tag_vouchery_reasons_list() on <ul>; dividers + bullets + centered PRZEŻYJ link.
+ */
+.event-detail.vouchery-page .event-content-block__body h2:has(+ ul.vouchery-reasons-list),
+.event-detail.vouchery-page .event-content--vouchery h2:has(+ ul.vouchery-reasons-list) {
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(255, 179, 71, 0.28);
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list {
+    display: block;
+    list-style: disc;
+    list-style-position: outside;
+    padding-left: 1.35rem;
+    margin: 0;
+    flex-direction: unset;
+    gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list > li,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list > li {
+    display: list-item;
+    margin-bottom: var(--space-sm);
+    padding-left: 0.35rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.88);
+    text-align: left;
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list > li:last-child,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list > li:last-child {
+    margin-bottom: 0;
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list > li::marker,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list > li::marker {
+    color: var(--color-amber);
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]),
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) {
+    text-align: center;
+    border-top: 1px solid rgba(255, 179, 71, 0.28);
+    padding-top: var(--space-md);
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a {
+    text-align: center;
+}
+
+/*
  * Vouchery product grid (v1 + v2).
  * tag_products_grid() adds .vouchery-products-grid to the <ul>.
  *
@@ -1328,12 +1385,22 @@
 /*
  * «KUP VOUCHER»: у контенті це єдиний <p> з #voucher одразу після іншого <p> (після «4. Data…»).
  * «PRZEŻYJ…» — після </ul> (ul + p). Стилі як у шапці: .btn.btn--primary.btn--sm (components.css).
+ * Кнопка на всю ширину текстового стовпчика блоку (як .btn--block).
  */
+.event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]),
+.event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]) a,
 .event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) a {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     gap: var(--space-sm);
     padding: 0.5rem 1rem;
     border: none;

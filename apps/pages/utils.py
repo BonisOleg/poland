@@ -76,6 +76,37 @@ def tag_products_grid(html: str) -> str:
     return str(soup)
 
 
+_REASONS_H2_MARKERS: tuple[str, ...] = (
+    "5 powodów",
+    "5 reasons",
+    "5 причин",
+)
+
+
+def tag_vouchery_reasons_list(html: str) -> str:
+    """Mark the <ul> under the «5 reasons to visit…» heading for list + divider styling."""
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for h2 in soup.find_all("h2"):
+        if not isinstance(h2, Tag):
+            continue
+        t = (h2.get_text() or "").strip().lower()
+        if not any(m in t for m in _REASONS_H2_MARKERS):
+            continue
+        nxt = h2.find_next_sibling()
+        if not nxt or nxt.name != "ul":
+            continue
+        if "vouchery-products-grid" in (nxt.get("class") or []):
+            continue
+        existing = nxt.get("class") or []
+        if "vouchery-reasons-list" not in existing:
+            nxt["class"] = list(existing) + ["vouchery-reasons-list"]
+        break
+    return str(soup)
+
+
 def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
     """Parse HTML, remove all <img> tags, and return them separately.
 

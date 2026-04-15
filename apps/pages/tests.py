@@ -3,7 +3,23 @@
 from django.test import SimpleTestCase
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
-from apps.pages.utils import split_vouchery_content_into_panels, strip_quick_view_from_html
+from apps.pages.utils import (
+    split_vouchery_content_into_panels,
+    strip_quick_view_from_html,
+    tag_vouchery_reasons_list,
+)
+
+
+class TagVoucheryReasonsListTests(SimpleTestCase):
+    def test_adds_class_to_ul_after_5_powodow_h2(self) -> None:
+        html = (
+            '<h2>5 POWODÓW DLA KTÓRYCH WARTO</h2>'
+            "<ul><li>One</li><li>Two</li></ul>"
+            '<p><a href="#voucher">PRZEŻYJ</a></p>'
+        )
+        out = tag_vouchery_reasons_list(html)
+        self.assertIn("vouchery-reasons-list", out)
+        self.assertIn('<ul class="vouchery-reasons-list">', out)
 
 
 class SplitVoucheryPanelsTests(SimpleTestCase):
