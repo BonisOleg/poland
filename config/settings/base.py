@@ -112,13 +112,52 @@ STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "36")
 
 CKEDITOR_5_CONFIGS = {
     "default": {
+        "extraPlugins": ["Highlight", "FontSize", "SourceEditing"],
         "toolbar": {
             "items": [
                 "heading", "|",
                 "bold", "italic", "underline", "|",
+                "fontSize", "highlight", "|",
                 "link", "bulletedList", "numberedList", "|",
                 "blockQuote", "insertImage", "|",
+                "sourceEditing", "|",
                 "undo", "redo",
+            ],
+        },
+        "fontSize": {
+            "options": [10, 12, 14, "default", 18, 20, 24],
+            "supportAllValues": False,
+        },
+        "highlight": {
+            "options": [
+                {
+                    "model": "yellowMarker",
+                    "class": "marker-yellow",
+                    "title": "Yellow",
+                    "color": "var(--ck-highlight-marker-yellow)",
+                    "type": "marker",
+                },
+                {
+                    "model": "greenMarker",
+                    "class": "marker-green",
+                    "title": "Green",
+                    "color": "var(--ck-highlight-marker-green)",
+                    "type": "marker",
+                },
+                {
+                    "model": "pinkMarker",
+                    "class": "marker-pink",
+                    "title": "Pink",
+                    "color": "var(--ck-highlight-marker-pink)",
+                    "type": "marker",
+                },
+                {
+                    "model": "blueMarker",
+                    "class": "marker-blue",
+                    "title": "Blue",
+                    "color": "var(--ck-highlight-marker-blue)",
+                    "type": "marker",
+                },
             ],
         },
         "height": "400px",
