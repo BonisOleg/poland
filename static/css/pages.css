@@ -753,7 +753,7 @@
 
 /* New layout: first <p> acts as a block title when no h2 is set in CKEditor */
 .event-detail .event-content-block__body > p:first-of-type,
-.event-detail .event-content-block__body > div > p:first-of-type {
+.event-detail .event-content-block__body > div:not(.vouchery-offer-body):not(.vouchery-faq-body) > p:first-of-type {
     font-family: var(--font-heading);
     font-size: 1rem;
     font-weight: var(--fw-bold);
@@ -819,6 +819,9 @@
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.92);
     margin-bottom: var(--space-md);
+    /* Override .event-content-block__body > div > p:first-of-type (lead block) — it added a 2nd line under the intro copy */
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 /* FAQ: heading above line, questions below (tag_vouchery_faq_section) */
@@ -845,6 +848,8 @@
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.88);
     margin-bottom: var(--space-md);
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .event-detail .event-content p,
