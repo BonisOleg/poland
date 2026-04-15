@@ -1289,6 +1289,90 @@
     outline-offset: 3px;
 }
 
+/*
+ * Vouchery: lone <p><a> outside the product grid (e.g. PRZEŻYJ NIEZAPOMNIANE EMOCJE → #voucher).
+ * Same pill rule as elsewhere; needs .event-detail.vouchery-page … (0,4,+) to override (0,3,2).
+ * More specific than the paragraph rule below is ul…>li>p>a for grid rows.
+ */
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.35rem 0;
+    display: inline;
+    gap: 0;
+    color: var(--color-amber);
+    max-width: none;
+    text-align: left;
+    white-space: normal;
+}
+
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a:hover,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a:hover {
+    background: transparent;
+    color: var(--color-amber);
+    border: none;
+    opacity: 0.88;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a:focus-visible,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+}
+
+/*
+ * «KUP VOUCHER»: у контенті це єдиний <p> з #voucher одразу після іншого <p> (після «4. Data…»).
+ * «PRZEŻYJ…» — після </ul> (ul + p). Стилі як у шапці: .btn.btn--primary.btn--sm (components.css).
+ */
+.event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]) a,
+.event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    background: var(--gradient-brand);
+    color: var(--color-white);
+    max-width: 100%;
+    box-sizing: border-box;
+    opacity: 1;
+    text-align: center;
+    box-shadow: none;
+}
+
+.event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]) a:hover,
+.event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) a:hover {
+    background: var(--gradient-brand-hover);
+    color: var(--color-white);
+    border: none;
+    opacity: 1;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]) a:focus-visible,
+.event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) a:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+}
+
 @media (max-width: 900px) {
     .vouchery-page .event-content-block__body ul.vouchery-products-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
