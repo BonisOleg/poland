@@ -1,6 +1,29 @@
 from __future__ import annotations
 
+from html import escape
+
 from bs4 import BeautifulSoup, Tag
+
+# h2 text substrings (lowercase match) that start a new panel on vouchery v2 — PL / EN / RU
+VOUCHERY_V2_SECTION_H2_MARKERS: tuple[str, ...] = (
+    "jak wykorzystać",
+    "how to use",
+    "dlaczego voucher",
+    "why the voucher",
+    "why is the voucher",
+    "5 powodów",
+    "5 reasons",
+    "chcesz zaskoczyć",
+    "want to surprise",
+    "surprise your children",
+    "najczęściej zadawane",
+    "frequently asked",
+    "часто задаваемые",
+    "как использовать",
+    "почему подарочный",
+    "5 причин",
+    "хотите сделать сюрприз",
+)
 
 
 def strip_quick_view_from_html(html: str) -> str:
@@ -82,3 +105,77 @@ def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
                 parent.decompose()
 
     return images, str(soup)
+
+
+def _h2_opens_vouchery_v2_section(tag: Tag) -> bool:
+    if tag.name != "h2":
+        return False
+    t = (tag.get_text() or "").strip().lower()
+    return any(m in t for m in VOUCHERY_V2_SECTION_H2_MARKERS)
+
+
+def split_vouchery_content_into_panels(
+    html: str,
+    *,
+    vouchery_button_href: str = "/cart/",
+    vouchery_button_label: str = "KLIKNIJ PO PREZENT",
+) -> str:
+    """Wrap top-level HTML nodes into stacked event-style panels (vouchery v2).
+
+    Splits before each h2 whose text matches VOUCHERY_V2_SECTION_H2_MARKERS.
+    The first panel gets data attributes for vouchery-cart.js.
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    nodes = [c for c in soup.children if isinstance(c, Tag)]
+    if not nodes:
+        return html
+
+    panels: list[list[Tag]] = []
+    current: list[Tag] = []
+    for node in nodes:
+        if _h2_opens_vouchery_v2_section(node) and current:
+            panels.append(current)
+            current = [node]
+        else:
+            current.append(node)
+    if current:
+        panels.append(current)
+
+    out_parts: list[str] = []
+    for i, panel_nodes in enumerate(panels):
+        chunk = _wrap_vouchery_panel_nodes(
+            panel_nodes,
+            with_cart_data=(i == 0),
+            vouchery_button_href=vouchery_button_href,
+            vouchery_button_label=vouchery_button_label,
+        )
+        if chunk:
+            out_parts.append(chunk)
+    return "\n".join(out_parts) if out_parts else html
+
+
+def _wrap_vouchery_panel_nodes(
+    nodes: list[Tag],
+    *,
+    with_cart_data: bool,
+    vouchery_button_href: str,
+    vouchery_button_label: str,
+) -> str:
+    if not nodes:
+        return ""
+    inner_content = "".join(str(n) for n in nodes)
+    data_attrs = ""
+    if with_cart_data:
+        data_attrs = (
+            f' data-vouchery-button-href="{escape(vouchery_button_href, quote=True)}"'
+            f' data-vouchery-button-label="{escape(vouchery_button_label, quote=True)}"'
+        )
+    return (
+        '<section class="event-detail__panel event-content-block">'
+        '<div class="event-content-block__body event-content--vouchery"'
+        f"{data_attrs}>"
+        f"{inner_content}</div></section>"
+    )

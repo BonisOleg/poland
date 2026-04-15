@@ -39,13 +39,16 @@
         </dialog>
         {% endif %}
 
+        {% if page.slug == 'vouchery' %}
+        {# Panels + cart data-* come from split_vouchery_content_into_panels in the view #}
+        {{ content_no_images|safe }}
+        {% else %}
         <section class="event-detail__panel event-content-block">
-            <div class="event-content-block__body event-content--vouchery"
-                 data-vouchery-button-href="/cart/"
-                 data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}">
+            <div class="event-content-block__body">
                 {{ content_no_images|safe }}
             </div>
         </section>
+        {% endif %}
 
         {% if page.show_contact_form %}
         <div class="page-contact-form">

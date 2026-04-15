@@ -3,7 +3,29 @@
 from django.test import SimpleTestCase
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
-from apps.pages.utils import strip_quick_view_from_html
+from apps.pages.utils import split_vouchery_content_into_panels, strip_quick_view_from_html
+
+
+class SplitVoucheryPanelsTests(SimpleTestCase):
+    def test_splits_pl_section_h2_into_multiple_sections(self) -> None:
+        html = (
+            "<h2>Intro</h2>"
+            "<p>One</p>"
+            "<h2>Jak wykorzystać voucher?</h2>"
+            "<p>Two</p>"
+            "<h2>Dlaczego voucher jest dobrym pomysłem na prezent?</h2>"
+            "<p>Three</p>"
+        )
+        out = split_vouchery_content_into_panels(html, vouchery_button_href="/cart/", vouchery_button_label="L")
+        self.assertEqual(out.count('<section class="event-detail__panel event-content-block">'), 3)
+        self.assertIn("data-vouchery-button-href", out)
+        self.assertIn("Intro", out)
+        self.assertIn("Jak wykorzystać", out)
+
+    def test_single_panel_when_no_section_markers(self) -> None:
+        html = "<h2>Only</h2><p>x</p>"
+        out = split_vouchery_content_into_panels(html)
+        self.assertEqual(out.count("<section"), 1)
 
 
 class StripQuickViewTests(SimpleTestCase):
