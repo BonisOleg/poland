@@ -899,6 +899,13 @@
     background: transparent;
 }
 
+/* base.css :focus-visible applies amber outline to all focusables; <summary> is focusable */
+.event-detail.vouchery-page .vouchery-faq-body summary.content-accordion__title:focus,
+.event-detail.vouchery-page .vouchery-faq-body summary.content-accordion__title:focus-visible {
+    outline: none;
+    outline-offset: 0;
+}
+
 .event-detail.vouchery-page .vouchery-faq-body summary.content-accordion__title::-webkit-details-marker {
     display: none;
 }
@@ -971,6 +978,12 @@
     cursor: pointer;
     list-style: none;
     background: transparent;
+}
+
+.event-detail.vouchery-page .vouchery-faq-body .elementor-tab-title:focus,
+.event-detail.vouchery-page .vouchery-faq-body .elementor-tab-title:focus-visible {
+    outline: none;
+    outline-offset: 0;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body .elementor-accordion-icon {
