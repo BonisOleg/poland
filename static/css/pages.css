@@ -1216,10 +1216,27 @@
     color: var(--color-white);
 }
 
-.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h2 a,
-.vouchery-page .event-content-block__body ul.vouchery-products-grid > li h3 a {
+/* ul… prefix covers v1 (.event-content--vouchery) and v2 (.event-content-block__body) */
+.vouchery-page ul.vouchery-products-grid > li h2 a,
+.vouchery-page ul.vouchery-products-grid > li h3 a {
     color: inherit;
     text-decoration: none;
+    /* Override event-detail pill CTA styles for h2/h3 lone links */
+    border: none;
+    padding: 0;
+    display: inline;
+    background: transparent;
+    max-width: none;
+    box-shadow: none;
+}
+
+.vouchery-page ul.vouchery-products-grid > li h2 a:hover,
+.vouchery-page ul.vouchery-products-grid > li h3 a:hover,
+.vouchery-page ul.vouchery-products-grid > li h2 a:focus-visible,
+.vouchery-page ul.vouchery-products-grid > li h3 a:focus-visible {
+    background: transparent;
+    color: var(--color-white);
+    border: none;
 }
 
 .vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p {
@@ -1229,13 +1246,13 @@
     line-height: 1.5;
 }
 
-.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p > a {
+.vouchery-page ul.vouchery-products-grid > li > p > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 1.1rem;
-    border: 2px solid var(--color-amber);
-    border-radius: var(--radius-full);
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 0;
     color: var(--color-amber);
     font-family: var(--font-heading);
     font-size: var(--fs-xs);
@@ -1243,13 +1260,23 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     text-decoration: none;
-    transition: background var(--transition-base), color var(--transition-fast);
+    transition: color var(--transition-fast), opacity var(--transition-fast);
     margin-top: auto;
+    background: transparent;
+    box-shadow: none;
 }
 
-.vouchery-page .event-content-block__body ul.vouchery-products-grid > li > p > a:hover {
-    background: var(--color-amber);
-    color: var(--color-dark);
+.vouchery-page ul.vouchery-products-grid > li > p > a:hover {
+    background: transparent;
+    color: var(--color-amber);
+    opacity: 0.85;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.vouchery-page ul.vouchery-products-grid > li > p > a:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
 }
 
 @media (max-width: 900px) {
