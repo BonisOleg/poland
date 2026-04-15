@@ -3,6 +3,20 @@
 from django.test import SimpleTestCase
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
+from apps.pages.utils import strip_quick_view_from_html
+
+
+class StripQuickViewTests(SimpleTestCase):
+    def test_removes_premium_woo_quick_view_block(self) -> None:
+        raw = (
+            '<div><div class="premium-woo-qv-btn premium-woo-qv-btn-translate" '
+            'data-product-id="1">Quick View<i class="premium-woo-qv-icon"></i></div>'
+            "<p>Keep</p></div>"
+        )
+        out = strip_quick_view_from_html(raw)
+        self.assertNotIn("Quick View", out)
+        self.assertNotIn("premium-woo-qv", out)
+        self.assertIn("Keep", out)
 
 
 class TransformHtmlVoucheryIconsTests(SimpleTestCase):

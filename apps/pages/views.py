@@ -1,13 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from .models import StaticPage
-from .utils import extract_images_from_html
+from .utils import extract_images_from_html, strip_quick_view_from_html
 
 
 def _render_static_page(request, page, extra_ctx=None):
     ctx = {"page": page, **(extra_ctx or {})}
+    if page.slug == "vouchery" and page.layout_version != "v2":
+        ctx["vouchery_content"] = strip_quick_view_from_html(page.content)
     if page.layout_version == "v2":
         images, content_no_images = extract_images_from_html(page.content)
+        content_no_images = strip_quick_view_from_html(content_no_images)
         ctx.update({"gallery_images": images, "content_no_images": content_no_images})
         return render(request, "pages/static_page_v2.html", ctx)
     return render(request, "pages/static_page.html", ctx)

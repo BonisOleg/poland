@@ -15,7 +15,7 @@
              data-vouchery-button-href="/cart/"
              data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}"
              {% endif %}>
-            {{ page.content|safe }}
+            {% if page.slug == 'vouchery' %}{{ vouchery_content|safe }}{% else %}{{ page.content|safe }}{% endif %}
         </div>
 
         {% if page.show_contact_form %}

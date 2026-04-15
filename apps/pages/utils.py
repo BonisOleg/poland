@@ -3,6 +3,22 @@ from __future__ import annotations
 from bs4 import BeautifulSoup, Tag
 
 
+def strip_quick_view_from_html(html: str) -> str:
+    """Remove WooCommerce / Premium Woo Quick View UI from imported HTML (voucher page)."""
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    # Premium Addons for Elementor (class contains premium-woo-qv…)
+    for el in soup.select('[class*="premium-woo-qv"]'):
+        el.decompose()
+    for el in soup.select(".vouchery-quick-view"):
+        el.decompose()
+    for el in soup.select(".yith-wcqv-button, .yith-quick-view, [data-yith-wcqv]"):
+        el.decompose()
+    return str(soup)
+
+
 def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
     """Parse HTML, remove all <img> tags, and return them separately.
 
