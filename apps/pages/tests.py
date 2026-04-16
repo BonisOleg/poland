@@ -192,6 +192,20 @@ class SplitVoucheryPanelsTests(SimpleTestCase):
         self.assertIn("Intro", out)
         self.assertIn("Jak wykorzystać", out)
 
+    def test_splits_en_section_h2_why_is_a_voucher(self) -> None:
+        html = (
+            "<h2>Give your loved ones unforgettable emotions</h2>"
+            "<p>One</p>"
+            "<h2>HOW TO USE A VOUCHER?</h2>"
+            "<p>Two</p>"
+            "<h2>WHY IS A VOUCHER A GREAT GIFT IDEA?</h2>"
+            "<p>Three</p>"
+        )
+        out = split_vouchery_content_into_panels(html)
+        self.assertEqual(out.count('<section class="event-detail__panel event-content-block">'), 3)
+        self.assertIn("HOW TO USE", out)
+        self.assertIn("WHY IS A VOUCHER", out)
+
     def test_single_panel_when_no_section_markers(self) -> None:
         html = "<h2>Only</h2><p>x</p>"
         out = split_vouchery_content_into_panels(html)

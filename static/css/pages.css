@@ -786,85 +786,7 @@
     padding-bottom: 0;
 }
 
-/*
- * Pierwszy panel: linia «ZAPYTAJ O OFERTĘ» — obramowanie tylko na .event-content-block (border-top amber).
- * Bez dodatkowych linii wewnątrz (wcześniej border-top+bottom na <p> dawał „2 złote paski”).
- * v2: data-vouchery-button-href na .event-content-block__body; link .vouchery-hero-cta-link dodaje vouchery-cart.js
- */
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type,
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type,
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type {
-    max-width: var(--content-list-max);
-    margin-inline: auto;
-    margin-bottom: var(--space-lg);
-    padding: 0;
-    text-align: center;
-    border: none;
-}
-
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link,
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type .vouchery-hero-cta-link,
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    gap: var(--space-sm);
-    padding: 0.5rem 1.25rem;
-    border: none;
-    border-radius: var(--radius-md);
-    font-family: var(--font-heading);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-sm);
-    letter-spacing: 0.03em;
-    text-transform: none;
-    text-decoration: none;
-    white-space: normal;
-    line-height: 1.35;
-    cursor: pointer;
-    transition: background var(--transition-base), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-    background: var(--gradient-brand);
-    color: var(--color-white);
-    box-shadow: none;
-}
-
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link:hover,
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type .vouchery-hero-cta-link:hover,
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link:hover {
-    background: var(--gradient-brand-hover);
-    color: var(--color-white);
-    text-decoration: none;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link:focus-visible,
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type .vouchery-hero-cta-link:focus-visible,
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link:focus-visible {
-    outline: 2px solid var(--color-white);
-    outline-offset: 3px;
-}
-
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link :is(strong, b),
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > div > p:first-of-type .vouchery-hero-cta-link :is(strong, b),
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type .vouchery-hero-cta-link :is(strong, b) {
-    font-weight: inherit;
-    color: inherit;
-}
-
-/* Fallback: JS wyłączone — stary wygląd bez podwójnych linii */
-.event-detail.vouchery-page .event-content-block__body.event-content--vouchery[data-vouchery-button-href] > p:first-of-type:not(:has(.vouchery-hero-cta-link)),
-.event-detail.vouchery-page .event-content.event-content--vouchery[data-vouchery-button-href] > p:first-of-type:not(:has(.vouchery-hero-cta-link)) {
-    font-family: var(--font-heading);
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-bold);
-    line-height: 1.35;
-    letter-spacing: 0.03em;
-    text-align: center;
-    color: var(--color-amber);
-}
+/* Pierwszy panel: intro bez gradientowej CTA (JS nie obwrapuje pierwszego <p> — uniknięcie „pustej” przycisku w EN). */
 
 /* Vouchery main content: no underlines on links (overrides generic event-detail hover rules) */
 .event-detail.vouchery-page .event-content-block__body a,
@@ -921,6 +843,56 @@
 
 .event-detail.vouchery-page .vouchery-offer-body > p :is(strong, b) {
     font-weight: inherit;
+}
+
+/* CTA w sekcji oferty (vouchery-cart.js: .vouchery-cta-gradient-link w ostatnim krótkim <p>) */
+.event-detail.vouchery-page .vouchery-offer-body > p:has(.vouchery-cta-gradient-link) {
+    text-align: center;
+    margin-top: var(--space-md);
+}
+
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: var(--space-sm);
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.03em;
+    text-transform: none;
+    text-decoration: none;
+    white-space: normal;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: background var(--transition-base), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    background: var(--gradient-brand);
+    color: var(--color-white);
+    box-shadow: none;
+}
+
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:hover {
+    background: var(--gradient-brand-hover);
+    color: var(--color-white);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+}
+
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link :is(strong, b) {
+    font-weight: inherit;
+    color: inherit;
 }
 
 /* FAQ: heading above line, questions below (tag_vouchery_faq_section) */

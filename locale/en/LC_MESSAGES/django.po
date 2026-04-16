@@ -176,3 +176,90 @@ msgstr "For children"
 
 msgid "Wyniki wyszukiwania"
 msgstr "Search results"
+
+msgid "Dodaj do koszyka"
+msgstr "Add to cart"
+
+msgid "Vouchery"
+msgstr "Gift vouchers"
+
+msgid "Galeria zdjęć"
+msgstr "Photo gallery"
+
+msgid "Zdjęcia"
+msgstr "Photos"
+
+msgid "Poprzednie"
+msgstr "Previous"
+
+msgid "Następne"
+msgstr "Next"
+
+msgid "Powiększ zdjęcie"
+msgstr "Enlarge photo"
+
+msgid "Podgląd zdjęcia"
+msgstr "Photo preview"
+
+msgid "Zamknij"
+msgstr "Close"
+
+msgid "KLIKNIJ PO PREZENT"
+msgstr "Click for a gift"
+
+msgid "Kup voucher"
+msgstr "Buy voucher"
+
+msgid "Wróć do wyboru voucherów"
+msgstr "Back to gift vouchers"
+
+msgid "Nawigacja"
+msgstr "Navigation"
+
+msgid "Zamówienie"
+msgstr "Order"
+
+msgid "Płatność PayU"
+msgstr "PayU payment"
+
+msgid "Potwierdzenie"
+msgstr "Confirmation"
+
+msgid "Nie udało się połączyć z systemem płatności. Spróbuj ponownie za chwilę."
+msgstr "Could not connect to the payment system. Please try again in a moment."
+
+msgid "Dane zamawiającego"
+msgstr "Your details"
+
+msgid "Zamów i zapłać"
+msgstr "Place order and pay"
+
+msgid "Po kliknięciu zostaniesz przekierowany do bezpiecznej bramki płatniczej PayU."
+msgstr "You will be redirected to the secure PayU payment gateway."
+
+msgid "Płatność zakończona sukcesem"
+msgstr "Payment completed successfully"
+
+msgid "Dziękujemy za zamówienie!"
+msgstr "Thank you for your order!"
+
+msgid "Numer zamówienia"
+msgstr "Order number"
+
+msgid "Twoje zamówienie zostało przyjęte. Potwierdzenie prześlemy e-mailem po zaksięgowaniu płatności."
+msgstr "Your order has been received. We will send confirmation by email once the payment is posted."
+
+msgid "Wróć na stronę główną"
+msgstr "Back to home"
+
+msgid "Płatność anulowana"
+msgstr "Payment cancelled"
+
+msgid "Płatność została anulowana"
+msgstr "Payment was cancelled"
+
+msgid "Twoja płatność nie została zrealizowana. Żadne środki nie zostały pobrane."
+msgstr "Your payment was not completed. No funds were charged."
+
+msgid "Spróbuj ponownie"
+msgstr "Try again"

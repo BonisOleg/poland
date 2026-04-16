@@ -11,6 +11,7 @@ VOUCHERY_V2_SECTION_H2_MARKERS: tuple[str, ...] = (
     "dlaczego voucher",
     "why the voucher",
     "why is the voucher",
+    "why is a voucher",
     "5 powodów",
     "5 reasons",
     "chcesz zaskoczyć",
@@ -130,6 +131,7 @@ _REASONS_H2_MARKERS: tuple[str, ...] = (
     "dlaczego voucher",
     "why the voucher",
     "why is the voucher",
+    "why is a voucher",
     "почему подарочный",
     "give your loved",
 )

@@ -56,31 +56,41 @@ function replaceWithButton(widget, href, label) {
 }
 
 /**
- * First vouchery panel: wrap the hero line (e.g. «ZAPYTAJ O OFERTĘ») in a gradient CTA link.
- * Only runs when the first direct <p> has no link yet.
+ * «CHCESZ ZASKOCZYĆ…» / «ASK FOR AN OFFER» block only: short CTA line → gradient link (#voucher).
+ * Do NOT touch the first intro panel — wrapping its first <p> broke EN (whole block became a button).
  */
-function wrapHeroCtaLink(panelBody) {
-    const href = panelBody.dataset.voucheryButtonHref || "#voucher";
-    const firstP = panelBody.querySelector(":scope > p:first-of-type");
-    if (!firstP || firstP.querySelector("a")) {
-        return;
-    }
-    const a = document.createElement("a");
-    a.href = href;
-    a.className = "vouchery-hero-cta-link";
-    while (firstP.firstChild) {
-        a.appendChild(firstP.firstChild);
-    }
-    firstP.appendChild(a);
+function wrapOfferSectionCta() {
+    const href = "#voucher";
+    document.querySelectorAll(".vouchery-offer-body").forEach((body) => {
+        const candidates = [...body.querySelectorAll(":scope > p")].filter((p) => !p.querySelector("a"));
+        if (!candidates.length) {
+            return;
+        }
+        const targetP = [...candidates].reverse().find((p) => {
+            const t = (p.textContent || "").trim();
+            if (t.length > 220) {
+                return false;
+            }
+            const lower = t.toLowerCase();
+            return /zapytaj o ofert|ask for an offer|ask for offer|request (an? )?offer|poproś o ofert|zamów ofert|inquire about (an? )?offer/i.test(
+                lower,
+            );
+        });
+        if (!targetP) {
+            return;
+        }
+        const a = document.createElement("a");
+        a.href = href;
+        a.className = "vouchery-cta-gradient-link";
+        while (targetP.firstChild) {
+            a.appendChild(targetP.firstChild);
+        }
+        targetP.appendChild(a);
+    });
 }
 
 function init() {
-    const heroPanel = document.querySelector(
-        ".event-content-block__body.event-content--vouchery[data-vouchery-button-href]",
-    );
-    if (heroPanel) {
-        wrapHeroCtaLink(heroPanel);
-    }
+    wrapOfferSectionCta();
 
     const root = document.querySelector(".event-content--vouchery");
     if (!root) {
