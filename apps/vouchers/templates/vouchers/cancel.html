@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Płatność anulowana" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/voucher-checkout.css' %}?v={{ STATIC_ASSET_VERSION }}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="checkout-result checkout-result--cancel">
+            <div class="checkout-result__icon" aria-hidden="true">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+
+            <h1 class="checkout-result__heading">{% trans "Płatność została anulowana" %}</h1>
+
+            <p class="checkout-result__sub">
+                {% trans "Twoja płatność nie została zrealizowana. Żadne środki nie zostały pobrane." %}
+            </p>
+
+            {% if order %}
+            <a href="{{ order.voucher.get_checkout_url }}" class="checkout-result__cta">
+                {% trans "Spróbuj ponownie" %}
+            </a>
+            {% else %}
+            <a href="/" class="checkout-result__cta">
+                {% trans "Wróć na stronę główną" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

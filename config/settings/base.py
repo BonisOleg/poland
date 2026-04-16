@@ -110,6 +110,12 @@ SITE_NAME = "Hype Global Production"
 # Bump after CSS changes so browsers skip cached stylesheets (also run collectstatic on deploy).
 STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "42")
 
+# PayU REST API 2.1 credentials (set in env; defaults point to sandbox)
+PAYU_POS_ID = os.environ.get("PAYU_POS_ID", "")
+PAYU_MD5_KEY = os.environ.get("PAYU_MD5_KEY", "")    # IPN signature verification
+PAYU_MD5_KEY2 = os.environ.get("PAYU_MD5_KEY2", "")  # OAuth2 client_secret
+PAYU_BASE_URL = os.environ.get("PAYU_BASE_URL", "https://secure.snd.payu.com")  # sandbox
+
 CKEDITOR_5_CONFIGS = {
     "default": {
         "extraPlugins": ["Highlight", "FontSize", "SourceEditing"],

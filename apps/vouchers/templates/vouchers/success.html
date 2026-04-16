@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Płatność zakończona sukcesem" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/voucher-checkout.css' %}?v={{ STATIC_ASSET_VERSION }}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="checkout-result checkout-result--success">
+            <div class="checkout-result__icon" aria-hidden="true">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+
+            <h1 class="checkout-result__heading">{% trans "Dziękujemy za zamówienie!" %}</h1>
+
+            {% if order %}
+            <p class="checkout-result__sub">
+                {% blocktrans with name=order.voucher.name email=order.buyer_email %}
+                Voucher <strong>{{ name }}</strong> został zamówiony.<br>
+                Potwierdzenie zostanie wysłane na adres <strong>{{ email }}</strong> po zaksięgowaniu płatności.
+                {% endblocktrans %}
+            </p>
+            <p class="checkout-result__order-id">
+                {% trans "Numer zamówienia" %}: <strong>#{{ order.pk }}</strong>
+            </p>
+            {% else %}
+            <p class="checkout-result__sub">
+                {% trans "Twoje zamówienie zostało przyjęte. Potwierdzenie prześlemy e-mailem po zaksięgowaniu płatności." %}
+            </p>
+            {% endif %}
+
+            <a href="/" class="checkout-result__cta">{% trans "Wróć na stronę główną" %}</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

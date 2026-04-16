@@ -62,9 +62,7 @@
                                 {% if voucher.description %}
                                 <p class="vouchery-card__desc">{{ voucher.description }}</p>
                                 {% endif %}
-                                {% if voucher.purchase_url %}
-                                <a href="{{ voucher.purchase_url }}" class="vouchery-card__cta">{% trans "Dodaj do koszyka" %}</a>
-                                {% endif %}
+                                <a href="{% url 'vouchers:checkout' voucher.slug %}" class="vouchery-card__cta">{% trans "Dodaj do koszyka" %}</a>
                             </div>
                         </article>
                         {% endfor %}

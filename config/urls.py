@@ -16,6 +16,7 @@ urlpatterns += i18n_patterns(
     path("wydarzenia/", include("apps.events.urls")),
     path("aktualnosci/", include("apps.blog.urls")),
     path("reviews/", include("apps.reviews.urls")),
+    path("platnosci/", include("apps.vouchers.urls")),
     path("<slug:slug>/", include("apps.pages.catch_urls")),
     prefix_default_language=False,
 )

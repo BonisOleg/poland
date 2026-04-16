@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Kup voucher" %}: {{ voucher.name }} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ voucher.description|truncatechars:160 }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/voucher-checkout.css' %}?v={{ STATIC_ASSET_VERSION }}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+
+        <nav class="checkout-breadcrumbs" aria-label="{% trans 'Nawigacja' %}">
+            <a href="{% url 'vouchers:checkout' voucher.slug %}" class="checkout-breadcrumbs__item checkout-breadcrumbs__item--current" aria-current="page">{% trans "Voucher" %}</a>
+            <span class="checkout-breadcrumbs__sep" aria-hidden="true">›</span>
+            <span class="checkout-breadcrumbs__item checkout-breadcrumbs__item--dim">{% trans "Płatność PayU" %}</span>
+            <span class="checkout-breadcrumbs__sep" aria-hidden="true">›</span>
+            <span class="checkout-breadcrumbs__item checkout-breadcrumbs__item--dim">{% trans "Potwierdzenie" %}</span>
+        </nav>
+
+        {% if payu_error %}
+        <div class="checkout-alert checkout-alert--error" role="alert">
+            {% trans "Nie udało się połączyć z systemem płatności. Spróbuj ponownie za chwilę." %}
+        </div>
+        {% endif %}
+
+        <div class="checkout-layout">
+
+            {# Left: voucher preview #}
+            <aside class="checkout-preview">
+                {% if voucher.image %}
+                <div class="checkout-preview__image-wrap">
+                    <img
+                        src="{{ voucher.image.url }}"
+                        alt="{{ voucher.name }}"
+                        class="checkout-preview__image"
+                        loading="eager"
+                        width="600"
+                        height="400"
+                    >
+                </div>
+                {% endif %}
+
+                <div class="checkout-preview__body">
+                    <h1 class="checkout-preview__title">{{ voucher.name }}</h1>
+                    {% if voucher.description %}
+                    <p class="checkout-preview__desc">{{ voucher.description }}</p>
+                    {% endif %}
+                    <div class="checkout-preview__price-wrap">
+                        <span class="checkout-preview__price">{{ voucher.price }} {{ voucher.currency }}</span>
+                    </div>
+                </div>
+            </aside>
+
+            {# Right: order form #}
+            <div class="checkout-form-panel">
+                <h2 class="checkout-form-panel__heading">{% trans "Dane zamawiającego" %}</h2>
+
+                <form method="post" action="" class="checkout-form" novalidate>
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="checkout-form__group{% if field.errors %} checkout-form__group--error{% endif %}">
+                        <label class="checkout-form__label" for="{{ field.id_for_label }}">
+                            {{ field.label }}{% if field.field.required %}<span class="checkout-form__required" aria-hidden="true"> *</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                        <span class="checkout-form__error" role="alert">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="checkout-form__submit-wrap">
+                        <button type="submit" class="checkout-form__submit">
+                            <span>{% trans "Zamów i zapłać" %}</span>
+                            <svg class="checkout-form__submit-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+
+                    <p class="checkout-form__note">
+                        {% trans "Po kliknięciu zostaniesz przekierowany do bezpiecznej bramki płatniczej PayU." %}
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
