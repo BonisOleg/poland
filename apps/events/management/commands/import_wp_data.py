@@ -4,6 +4,8 @@ import re
 import shutil
 from datetime import datetime
 
+import requests
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils.text import slugify
@@ -12,6 +14,7 @@ from html import unescape
 from apps.events.models import AgeGroup, Category, City, Event, EventCity
 from apps.pages.models import StaticPage
 from apps.vouchers.models import Voucher
+from apps.vouchers.utils import fetch_url_bytes, voucher_image_filename_from_url
 
 # Slug-pattern → category slug + age_group slug
 SLUG_CATEGORY_MAP = [
@@ -54,6 +57,9 @@ STATIC_SLUGS = {
     "refund_returns", "eventy", "warsztaty", "bilety-na-wydarzenia-teatr-koncerty-spektakle-widowiska-w-twoim-miescie",
 }
 
+# WooCommerce product category slug for gift vouchers (not concerts / other products).
+WOOCOMMERCE_VOUCHER_CATEGORY_SLUG = "voucher"
+
 
 class Command(BaseCommand):
     help = "Import pages from scraped WordPress data"
@@ -64,6 +70,11 @@ class Command(BaseCommand):
             default=os.path.join(settings.BASE_DIR, "scraped_data"),
             help="Path to scraped_data directory",
         )
+        parser.add_argument(
+            "--force-voucher-images",
+            action="store_true",
+            help="Re-download voucher images even if already set",
+        )
 
     def handle(self, *args, **options):
         data_dir = options["data_dir"]
@@ -71,7 +82,7 @@ class Command(BaseCommand):
         self._categories = {c.slug: c for c in Category.objects.all()}
         self._age_groups = {a.slug: a for a in AgeGroup.objects.all()}
         self.import_pages(data_dir)
-        self.import_products(data_dir)
+        self.import_products(data_dir, force_voucher_images=options["force_voucher_images"])
         self.import_menus(data_dir)
         self.stdout.write(self.style.SUCCESS("Import complete!"))
 
@@ -185,7 +196,7 @@ class Command(BaseCommand):
             f"Static: {static_created}, Skipped: {skipped}"
         )
 
-    def import_products(self, data_dir):
+    def import_products(self, data_dir, *, force_voucher_images=False):
         products_file = os.path.join(data_dir, "products.json")
         if not os.path.exists(products_file):
             return
@@ -194,14 +205,23 @@ class Command(BaseCommand):
             products = json.load(f)
 
         count = 0
+        images_ok = 0
+        deactivated = 0
         for p in products:
             name = p.get("name", "")
+            slug = slugify(name)
             prices = p.get("prices", {})
             price_raw = prices.get("price", "0")
             price = int(price_raw) / 100 if price_raw else 0
 
-            Voucher.objects.update_or_create(
-                slug=slugify(name),
+            if not self._is_woocommerce_voucher_product(p):
+                n = Voucher.objects.filter(slug=slug).update(is_active=False)
+                if n:
+                    deactivated += n
+                continue
+
+            voucher, _ = Voucher.objects.update_or_create(
+                slug=slug,
                 defaults={
                     "name_pl": name,
                     "price": price,
@@ -209,9 +229,43 @@ class Command(BaseCommand):
                     "is_active": True,
                 },
             )
+            if self._attach_voucher_image_from_product(
+                voucher, p, force=force_voucher_images
+            ):
+                images_ok += 1
             count += 1
 
         self.stdout.write(f"  Products/Vouchers: {count}")
+        self.stdout.write(f"  Non-voucher rows deactivated: {deactivated}")
+        self.stdout.write(f"  Voucher images downloaded: {images_ok}")
+
+    def _is_woocommerce_voucher_product(self, product):
+        """True if product is in WooCommerce category ``voucher`` (excludes concerts, tests, etc.)."""
+        for cat in product.get("categories") or []:
+            if cat.get("slug") == WOOCOMMERCE_VOUCHER_CATEGORY_SLUG:
+                return True
+        return False
+
+    def _attach_voucher_image_from_product(self, voucher, product, *, force):
+        """Save first WooCommerce product image to ``voucher.image`` when available."""
+        imgs = product.get("images") or []
+        if not imgs:
+            return False
+        src = imgs[0].get("src")
+        if not src:
+            return False
+        if voucher.image and not force:
+            return False
+        try:
+            data = fetch_url_bytes(src)
+        except requests.RequestException as exc:
+            self.stderr.write(f"  Voucher image failed [{voucher.slug}]: {exc}")
+            return False
+        filename = voucher_image_filename_from_url(src, voucher.slug)
+        if voucher.image and force:
+            voucher.image.delete(save=False)
+        voucher.image.save(filename, ContentFile(data), save=True)
+        return True
 
     def import_menus(self, data_dir):
         menus_file = os.path.join(data_dir, "menus.json")

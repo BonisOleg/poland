@@ -5,5 +5,5 @@ from .models import Voucher
 
 @admin.register(Voucher)
 class VoucherAdmin(TranslationAdmin):
-    list_display = ("name", "price", "currency", "is_active")
+    list_display = ("name", "price", "currency", "is_active", "image")
     list_editable = ("is_active", "price")
