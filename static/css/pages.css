@@ -775,6 +775,17 @@
     border-bottom: 1px solid rgba(255, 179, 71, 0.2);
 }
 
+/* Vouchery: sekcja zaczyna się od <h2>, potem treść w <p> — bez „lead title” uppercase na pierwszym akapicie. */
+.event-detail.vouchery-page .event-content-block__body:has(> h2) > p:first-of-type {
+    font-size: var(--fs-base);
+    font-weight: var(--fw-regular);
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
 /*
  * Vouchery hero line («ZAPYTAJ O OFERTĘ»): same band as PRZEŻYJ — centered amber title, rules above + below.
  * v2: first panel has data-vouchery-button-href on .event-content-block__body; v1: on .event-content.
@@ -837,6 +848,8 @@
     border-bottom: 1px solid rgba(255, 179, 71, 0.2);
     color: var(--color-white);
     font-weight: var(--fw-medium);
+    text-transform: none;
+    letter-spacing: 0.02em;
 }
 
 .event-detail.vouchery-page .vouchery-offer-body {
@@ -869,6 +882,8 @@
     border-bottom: 1px solid rgba(255, 179, 71, 0.2);
     color: var(--color-white);
     font-weight: var(--fw-medium);
+    text-transform: none;
+    letter-spacing: 0.02em;
 }
 
 .event-detail.vouchery-page .vouchery-faq-body {
@@ -885,7 +900,7 @@
     font-weight: var(--fw-light);
     line-height: 1.55;
     letter-spacing: 0.02em;
-    text-transform: uppercase;
+    text-transform: none;
     color: rgba(255, 255, 255, 0.88);
     margin-bottom: var(--space-md);
     border-bottom: none;
@@ -925,7 +940,7 @@
     font-weight: var(--fw-light);
     line-height: 1.45;
     letter-spacing: 0.02em;
-    text-transform: uppercase;
+    text-transform: none;
     color: rgba(255, 255, 255, 0.92);
     cursor: pointer;
     list-style: none;
@@ -1007,7 +1022,7 @@
     font-weight: var(--fw-light);
     line-height: 1.45;
     letter-spacing: 0.02em;
-    text-transform: uppercase;
+    text-transform: none;
     color: rgba(255, 255, 255, 0.92);
     cursor: pointer;
     list-style: none;
@@ -1526,8 +1541,8 @@
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    text-transform: none;
+    letter-spacing: 0.02em;
     color: var(--color-white);
 }
 
@@ -1547,8 +1562,8 @@
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: none;
+    letter-spacing: 0.03em;
     color: var(--color-dark);
     background: var(--color-amber);
     border-radius: var(--radius-md);
@@ -1581,6 +1596,8 @@
     margin-bottom: var(--space-md);
     margin-inline: auto;
     border-bottom: 1px solid rgba(255, 179, 71, 0.28);
+    text-transform: none;
+    letter-spacing: 0.02em;
 }
 
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list,
@@ -1606,6 +1623,8 @@
     line-height: 1.55;
     color: rgba(255, 255, 255, 0.88);
     text-align: left;
+    text-transform: none;
+    letter-spacing: normal;
 }
 
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list > li:last-child,
@@ -1618,8 +1637,11 @@
     color: var(--color-amber);
 }
 
+/* Obramowanie nad CTA + szerokość jak lista; gradient na <a> poniżej */
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]),
 .event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) {
+    display: block;
+    width: 100%;
     max-width: var(--content-list-max);
     margin-inline: auto;
     box-sizing: border-box;
@@ -1632,7 +1654,47 @@
 
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a,
 .event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: var(--space-sm);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.03em;
+    text-transform: none;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    background: var(--gradient-brand);
+    color: var(--color-white);
+    max-width: 100%;
+    box-sizing: border-box;
+    opacity: 1;
     text-align: center;
+    box-shadow: none;
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:hover,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:hover {
+    background: var(--gradient-brand-hover);
+    color: var(--color-white);
+    border: none;
+    opacity: 1;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:focus-visible,
+.event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
 }
 
 /*
@@ -1854,8 +1916,8 @@
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
     font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    text-transform: none;
+    letter-spacing: 0.03em;
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;

@@ -26,6 +26,19 @@ class TagVoucheryReasonsListTests(SimpleTestCase):
         self.assertIn("vouchery-reasons-list", out)
         self.assertIn('<ul class="vouchery-reasons-list">', out)
 
+    def test_converts_paragraphs_to_ul_after_dlaczego_voucher_h2(self) -> None:
+        html = (
+            "<h2>DLACZEGO VOUCHER JEST DOBRYM POMYSŁEM?</h2>"
+            "<p>First point.</p>"
+            "<p>Second point.</p>"
+            '<p><a href="#voucher">KUP VOUCHER</a></p>'
+        )
+        out = tag_vouchery_reasons_list(html)
+        self.assertIn('class="vouchery-reasons-list"', out)
+        self.assertIn("<li>First point.</li>", out)
+        self.assertIn("<li>Second point.</li>", out)
+        self.assertIn('<p><a href="#voucher">KUP VOUCHER</a></p>', out)
+
 
 class TagVoucheryOfferElementorTests(SimpleTestCase):
     def test_wraps_following_elementor_widgets_not_only_h2_siblings(self) -> None:
@@ -126,7 +139,7 @@ class TagVoucheryOfferSectionTests(SimpleTestCase):
             "<p>Two</p>"
         )
         out = tag_vouchery_offer_section(html)
-        self.assertEqual(out.count("<h2>"), 2)
+        self.assertEqual(out.count("</h2>"), 2, "Both section headings must remain")
         self.assertIn("vouchery-offer-body", out)
         self.assertIn("Next section", out)
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from html import escape
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 # h2 text substrings (lowercase match) that start a new panel on vouchery v2 — PL / EN / RU
 VOUCHERY_V2_SECTION_H2_MARKERS: tuple[str, ...] = (
@@ -127,6 +127,10 @@ _REASONS_H2_MARKERS: tuple[str, ...] = (
     "5 powodów",
     "5 reasons",
     "5 причин",
+    "dlaczego voucher",
+    "why the voucher",
+    "why is the voucher",
+    "почему подарочный",
 )
 
 # «CHCESZ ZASKOCZYĆ DZIECI?» — PL / EN / RU substrings (lowercase)
@@ -324,8 +328,47 @@ def transform_vouchery_faq_editor_list_to_accordion(html: str) -> str:
     return str(soup)
 
 
+def _next_element_sibling(tag: Tag) -> Tag | None:
+    sib = tag.next_sibling
+    while sib is not None and not isinstance(sib, Tag):
+        sib = sib.next_sibling
+    return sib if isinstance(sib, Tag) else None
+
+
+def _is_vouchery_cta_paragraph(p: Tag) -> bool:
+    """Single-link CTA paragraph (e.g. KUP VOUCHER / PRZEŻYJ) — list conversion stops before it."""
+    if p.name != "p":
+        return False
+    strays = [c for c in p.children if isinstance(c, NavigableString) and str(c).strip()]
+    if strays:
+        return False
+    tags = [c for c in p.children if isinstance(c, Tag)]
+    return len(tags) == 1 and tags[0].name == "a"
+
+
+def _convert_ps_to_vouchery_reasons_ul(soup: BeautifulSoup, h2: Tag) -> None:
+    """Turn consecutive <p> blocks after h2 into <ul class='vouchery-reasons-list'> (orange bullet styling)."""
+    ps: list[Tag] = []
+    sib = _next_element_sibling(h2)
+    while sib is not None and sib.name == "p":
+        if _is_vouchery_cta_paragraph(sib):
+            break
+        ps.append(sib)
+        sib = _next_element_sibling(sib)
+    if not ps:
+        return
+    ul = soup.new_tag("ul", attrs={"class": ["vouchery-reasons-list"]})
+    for p in ps:
+        li = soup.new_tag("li")
+        for child in list(p.children):
+            li.append(child.extract())
+        ul.append(li)
+        p.decompose()
+    h2.insert_after(ul)
+
+
 def tag_vouchery_reasons_list(html: str) -> str:
-    """Mark the <ul> under the «5 reasons to visit…» heading for list + divider styling."""
+    """Tag <ul> or build <ul> from <p> under «5 powodów…» / «Dlaczego voucher…» headings."""
     if not html or not html.strip():
         return html
 
@@ -336,15 +379,18 @@ def tag_vouchery_reasons_list(html: str) -> str:
         t = (h2.get_text() or "").strip().lower()
         if not any(m in t for m in _REASONS_H2_MARKERS):
             continue
-        nxt = h2.find_next_sibling()
-        if not nxt or nxt.name != "ul":
+        nxt = _next_element_sibling(h2)
+        if not nxt:
             continue
-        if "vouchery-products-grid" in (nxt.get("class") or []):
+        if nxt.name == "ul":
+            if "vouchery-products-grid" in (nxt.get("class") or []):
+                continue
+            existing = nxt.get("class") or []
+            if "vouchery-reasons-list" not in existing:
+                nxt["class"] = list(existing) + ["vouchery-reasons-list"]
             continue
-        existing = nxt.get("class") or []
-        if "vouchery-reasons-list" not in existing:
-            nxt["class"] = list(existing) + ["vouchery-reasons-list"]
-        break
+        if nxt.name == "p":
+            _convert_ps_to_vouchery_reasons_ul(soup, h2)
     return str(soup)
 
 
