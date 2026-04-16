@@ -131,6 +131,7 @@ _REASONS_H2_MARKERS: tuple[str, ...] = (
     "why the voucher",
     "why is the voucher",
     "почему подарочный",
+    "give your loved",
 )
 
 # «CHCESZ ZASKOCZYĆ DZIECI?» — PL / EN / RU substrings (lowercase)

@@ -39,7 +39,7 @@ def _render_static_page(request, page, extra_ctx=None):
         if page.slug == "vouchery":
             content_no_images = split_vouchery_content_into_panels(
                 content_no_images,
-                vouchery_button_href="/cart/",
+                vouchery_button_href="#voucher",
                 vouchery_button_label=_("KLIKNIJ PO PREZENT"),
             )
             content_no_images = remove_products_grid_from_html(content_no_images)

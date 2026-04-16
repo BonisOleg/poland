@@ -55,12 +55,38 @@ function replaceWithButton(widget, href, label) {
     return true;
 }
 
+/**
+ * First vouchery panel: wrap the hero line (e.g. «ZAPYTAJ O OFERTĘ») in a gradient CTA link.
+ * Only runs when the first direct <p> has no link yet.
+ */
+function wrapHeroCtaLink(panelBody) {
+    const href = panelBody.dataset.voucheryButtonHref || "#voucher";
+    const firstP = panelBody.querySelector(":scope > p:first-of-type");
+    if (!firstP || firstP.querySelector("a")) {
+        return;
+    }
+    const a = document.createElement("a");
+    a.href = href;
+    a.className = "vouchery-hero-cta-link";
+    while (firstP.firstChild) {
+        a.appendChild(firstP.firstChild);
+    }
+    firstP.appendChild(a);
+}
+
 function init() {
+    const heroPanel = document.querySelector(
+        ".event-content-block__body.event-content--vouchery[data-vouchery-button-href]",
+    );
+    if (heroPanel) {
+        wrapHeroCtaLink(heroPanel);
+    }
+
     const root = document.querySelector(".event-content--vouchery");
     if (!root) {
         return;
     }
-    const fallbackHref = root.dataset.voucheryButtonHref || "/cart/";
+    const fallbackHref = root.dataset.voucheryButtonHref || "#voucher";
     const label = root.dataset.voucheryButtonLabel || "KLIKNIJ PO PREZENT";
     const marked = root.querySelector("[data-vouchery-cart-widget], .vouchery-cart-widget");
     const widget = marked || findCartWidget(root);
