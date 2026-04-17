@@ -17,6 +17,9 @@
 
     --gradient-brand: linear-gradient(90deg, #FFB347, #FF7043, #E91E63);
     --gradient-brand-hover: linear-gradient(90deg, #FFC370, #FF8A65, #F06292);
+    /* /vouchery/ «KLIKNIJ PO PREZENT» — full-width pill (see .vouchery-cart-btn in pages.css) */
+    --gradient-voucher-pill: linear-gradient(90deg, #ffb347 0%, #f53161 100%);
+    --gradient-voucher-pill-hover: linear-gradient(90deg, #ffc370 0%, #ff6b8a 100%);
     --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
 
     /* Ghost CTAs (imported Elementor buttons → a.btn.btn--outline): gold outline, ~10px radius */

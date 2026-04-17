@@ -1,5 +1,5 @@
 /**
- * Replaces the large Elementor cart icon on /vouchery/ with an outline button.
+ * Replaces the large Elementor cart icon on /vouchery/ with a primary gradient pill CTA.
  * Preserves an existing link href from the imported markup when present.
  *
  * Also supports new clean HTML with data-vouchery-cart-widget attribute.
@@ -45,7 +45,7 @@ function replaceWithButton(widget, href, label) {
     const finalHref = resolveHref(widget, href);
     const a = document.createElement("a");
     a.href = finalHref;
-    a.className = "btn btn--outline btn--lg btn--block vouchery-cart-btn";
+    a.className = "btn btn--primary btn--lg btn--block vouchery-cart-btn";
     a.textContent = label;
 
     const container = widget.querySelector(".elementor-widget-container");

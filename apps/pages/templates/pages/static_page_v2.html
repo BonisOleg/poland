@@ -115,7 +115,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="module" src="{% static 'js/vouchery-cart.js' %}"></script>
+<script type="module" src="{% static 'js/vouchery-cart.js' %}?v={{ STATIC_ASSET_VERSION }}"></script>
 {% if page.slug == 'vouchery' %}
 <script type="module" src="{% static 'js/vouchery-product-cards.js' %}"></script>
 <script type="module" src="{% static 'js/vouchery-faq.js' %}"></script>
