@@ -8,7 +8,9 @@ class Voucher(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default="PLN")
-    image = models.ImageField(upload_to="vouchers/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="vouchers/", blank=True, null=True, max_length=255
+    )
     purchase_url = models.URLField(blank=True, max_length=500)
     is_active = models.BooleanField(default=True)
     sort_order = models.IntegerField(default=0)

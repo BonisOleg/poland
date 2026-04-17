@@ -1,4 +1,4 @@
-from django.db import migrations
+from django.db import migrations, models
 
 
 WRONG = "vouchers/bossbarboss_happy_Slovenian_child_traveler_receives_a_gift_cart_c384b8cb-cb4a-4_c8nxrtw.png"
@@ -21,5 +21,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name="voucher",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                max_length=255,
+                null=True,
+                upload_to="vouchers/",
+            ),
+        ),
         migrations.RunPython(forwards, backwards),
     ]
