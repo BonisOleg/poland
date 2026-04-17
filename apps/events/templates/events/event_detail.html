@@ -78,7 +78,7 @@
 {% block content %}
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-<div class="container event-detail">
+<div class="container event-detail" x-data="{ showTickets: false }">
     <div class="hero{% if not event.image and not event_city.og_image %} hero--no-media{% endif %}" data-hero-focal="{{ event.hero_image_focal }}">
         <div class="event-detail__hero-layout">
             {% if event.image %}
@@ -101,10 +101,10 @@
                 </p>
                 {% if event_city.use_new_layout and event_city.biletyna_url %}
                 <div class="hero__cta">
-                    <a href="{{ event_city.biletyna_url }}" class="hero__cta-btn" target="_blank" rel="noopener noreferrer">
+                    <button type="button" class="hero__cta-btn" @click="showTickets = true">
                         {% trans "Kup bilet" %}
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
+                    </button>
                 </div>
                 {% endif %}
             </div>
@@ -161,17 +161,26 @@
     {% endif %}
 
     {% if event_city.biletyna_url %}
-    <div class="event-detail__panel event-detail__panel--cta" x-data="{ showTickets: false }">
+    <div class="event-detail__panel event-detail__panel--cta">
         <button class="btn btn--primary btn--lg btn--block" @click="showTickets = true">
             {% trans "Kup bilet" %}
         </button>
-        <div class="ticket-modal" x-show="showTickets" x-cloak @keydown.escape.window="showTickets = false">
+        <div class="ticket-modal" x-show="showTickets" x-cloak
+             role="dialog" aria-modal="true" aria-label="{% trans 'Kup bilet' %}"
+             @keydown.escape.window="showTickets = false">
             <div class="ticket-modal__content" @click.outside="showTickets = false">
                 <div class="ticket-modal__header">
                     <h3>{% trans "Kup bilet" %}</h3>
-                    <button class="ticket-modal__close" @click="showTickets = false">&times;</button>
+                    <button class="ticket-modal__close" @click="showTickets = false" aria-label="{% trans 'Zamknij' %}">&times;</button>
                 </div>
-                <iframe :src="showTickets ? '{{ event_city.biletyna_url }}' : ''" class="ticket-modal__iframe" title="{% trans 'Kupno biletu' %}"></iframe>
+                <iframe
+                    :src="showTickets ? '{{ event_city.biletyna_url }}' : ''"
+                    class="ticket-modal__iframe"
+                    title="{% trans 'Kupno biletu' %}"
+                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                    referrerpolicy="origin"
+                    loading="lazy"
+                ></iframe>
             </div>
         </div>
     </div>

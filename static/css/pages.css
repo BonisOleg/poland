@@ -385,6 +385,8 @@
     font-family: var(--font-heading);
     font-weight: var(--fw-semibold);
     font-size: var(--fs-sm);
+    appearance: none;
+    cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.07em;
     text-decoration: none;
