@@ -1,8 +1,11 @@
 /**
- * Elementor FAQ markup in .vouchery-faq-body (when clean_elementor_content was not applied).
+ * Legacy Elementor FAQ markup in .vouchery-faq-body (when clean_elementor_content was not applied).
  * Toggles .is-open on .elementor-accordion-item; CSS shows/hides .elementor-tab-content.
+ *
+ * Also supports new clean HTML: <details> with .content-accordion__item (native <details> handling).
  */
-function toggleItem(accordion, item, titleEl) {
+
+function toggleLegacyItem(accordion, item, titleEl) {
     const willOpen = !item.classList.contains("is-open");
     accordion.querySelectorAll(".elementor-accordion-item.is-open").forEach((openItem) => {
         if (openItem !== item) {
@@ -22,7 +25,7 @@ function toggleItem(accordion, item, titleEl) {
     }
 }
 
-function initElementorFaq(accordion) {
+function initLegacyElementorFaq(accordion) {
     accordion.querySelectorAll(".elementor-tab-title").forEach((titleEl) => {
         if (titleEl.getAttribute("aria-expanded") == null) {
             titleEl.setAttribute("aria-expanded", "false");
@@ -42,7 +45,7 @@ function initElementorFaq(accordion) {
         if (!item || !accordion.contains(item)) {
             return;
         }
-        toggleItem(accordion, item, titleEl);
+        toggleLegacyItem(accordion, item, titleEl);
     });
 
     accordion.addEventListener("keydown", (e) => {
@@ -58,7 +61,7 @@ function initElementorFaq(accordion) {
         if (!item || !accordion.contains(item)) {
             return;
         }
-        toggleItem(accordion, item, titleEl);
+        toggleLegacyItem(accordion, item, titleEl);
     });
 }
 
@@ -67,11 +70,12 @@ function init() {
     if (!faqBody) {
         return;
     }
-    const accordion = faqBody.querySelector(".elementor-accordion");
-    if (!accordion) {
+
+    const legacyAccordion = faqBody.querySelector(".elementor-accordion");
+    if (legacyAccordion) {
+        initLegacyElementorFaq(legacyAccordion);
         return;
     }
-    initElementorFaq(accordion);
 }
 
 init();

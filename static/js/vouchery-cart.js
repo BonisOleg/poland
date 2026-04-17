@@ -1,6 +1,8 @@
 /**
  * Replaces the large Elementor cart icon on /vouchery/ with an outline button.
  * Preserves an existing link href from the imported markup when present.
+ *
+ * Also supports new clean HTML with data-vouchery-cart-widget attribute.
  */
 function findCartWidget(root) {
     const icons = [...root.querySelectorAll(".elementor-widget-icon")];
@@ -98,6 +100,7 @@ function init() {
     }
     const fallbackHref = root.dataset.voucheryButtonHref || "#voucher";
     const label = root.dataset.voucheryButtonLabel || "KLIKNIJ PO PREZENT";
+
     const marked = root.querySelector("[data-vouchery-cart-widget], .vouchery-cart-widget");
     const widget = marked || findCartWidget(root);
     if (!widget) {
