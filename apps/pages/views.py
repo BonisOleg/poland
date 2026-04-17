@@ -12,6 +12,7 @@ from .utils import (
     split_after_first_vouchery_panel,
     split_html_by_h2_into_panels,
     split_vouchery_content_into_panels,
+    strip_dla_dzieci_panel_headings,
     strip_elementor_residue,
     strip_quick_view_from_html,
     tag_products_grid,
@@ -59,12 +60,17 @@ def _render_themed_page(request, page):
     else:
         images, videos, html = extract_media_from_html(html)
 
-    # Apply dla-dzieci-specific transformations
+    # dla-dzieci: strip duplicate h1 and empty Galeria panel before split,
+    # then replace city lists (flat HTML level — before panels are built).
     if page.slug == "dla-dzieci":
-        html = transform_dla_dzieci_faq_to_accordion(html)
+        html = strip_dla_dzieci_panel_headings(html)
         html = replace_city_list_with_select(html)
 
     panels_html = split_html_by_h2_into_panels(html)
+
+    # FAQ accordion must run AFTER split so .event-content-block sections exist.
+    if page.slug == "dla-dzieci":
+        panels_html = transform_dla_dzieci_faq_to_accordion(panels_html)
     # Derive slug from page.slug for a stable theme class; keep it simple
     page_theme = page.slug  # e.g. "dla-dzieci"
 

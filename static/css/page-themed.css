@@ -284,32 +284,32 @@
 }
 
 /* ── DLA DZIECI theme ──────────────────────────────────────────────────────
-   Playful, rounded, coral-peach accent (#FF8C69).
+   Amber accent — same palette as vouchery page.
    ─────────────────────────────────────────────────────────────────────────── */
 
 .page-theme--dla-dzieci {
-    --theme-accent: #ff8c69;
+    --theme-accent: var(--color-amber);
     --theme-radius: 1.25rem;
-    --theme-panel-glow: rgba(255, 140, 105, 0.18);
+    --theme-panel-glow: rgba(255, 179, 71, 0.14);
 }
 
 .page-theme--dla-dzieci .event-detail__panel {
     border-radius: var(--theme-radius);
-    border-color: rgba(255, 140, 105, 0.3);
+    border-color: rgba(255, 179, 71, 0.25);
 }
 
 .page-theme--dla-dzieci.event-detail .event-detail__panel:hover {
-    box-shadow: 0 0 0 1px rgba(255, 140, 105, 0.55),
+    box-shadow: 0 0 0 1px var(--color-amber),
                 0 0 28px var(--theme-panel-glow),
                 var(--glass-elev-shadow);
 }
 
 .page-theme--dla-dzieci .event-content-block__body h2 {
     color: var(--theme-accent);
-    border-bottom-color: rgba(255, 140, 105, 0.2);
+    border-bottom-color: rgba(255, 179, 71, 0.2);
 }
 
-/* Custom bullet: star ✦ in coral */
+/* Bullet ✦ */
 .page-theme--dla-dzieci .event-content-block__body ul li::before {
     content: "✦";
     color: var(--theme-accent);
@@ -322,7 +322,6 @@
     color: var(--theme-accent);
 }
 
-/* h2 underline decal */
 .page-theme--dla-dzieci .page-themed__hero-intro {
     border-top-color: var(--theme-accent);
 }
@@ -331,7 +330,6 @@
     border-top-color: var(--theme-accent);
 }
 
-/* Arrow hover: coral */
 .page-theme--dla-dzieci .event-gallery__arrow:hover {
     background: var(--theme-accent);
     border-color: var(--theme-accent);
@@ -345,81 +343,94 @@
                 var(--glass-elev-shadow);
 }
 
-/* Dot active: coral */
 .page-theme--dla-dzieci .event-gallery__dot--active {
     background: var(--theme-accent);
 }
 
-/* Hide duplicate gallery label (first h2 in first content-block is "Galeria") */
-.page-theme--dla-dzieci .event-content-block:first-of-type .event-content-block__body > h2:first-of-type {
-    display: none;
+/* ── dla-dzieci FAQ accordion — style mirrors vouchery FAQ ── */
+
+.page-theme--dla-dzieci .event-content-block__body .content-accordion {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
 }
 
-/* Enhance FAQ section heading for prominence (ZAPYTAJ O PODROBNOŚCI) */
-.page-theme--dla-dzieci .event-content-block .event-content-block__body > h2:nth-of-type(2) {
-    font-size: 1.25rem;
-    font-weight: var(--fw-bold);
-    margin-top: 0;
-    margin-bottom: var(--space-lg);
+.page-theme--dla-dzieci .event-content-block__body .content-accordion details.content-accordion__item {
+    border: none;
+    border-bottom: 1px solid rgba(255, 179, 71, 0.15);
+    box-shadow: none;
 }
 
-/* FAQ accordion styling for dla-dzieci */
-.page-theme--dla-dzieci .content-accordion {
-    border: 1px solid rgba(255, 140, 105, 0.25);
-    border-radius: var(--radius-md);
-}
-
-.page-theme--dla-dzieci .content-accordion__item {
-    border-bottom: 1px solid rgba(255, 140, 105, 0.15);
-}
-
-.page-theme--dla-dzieci .content-accordion__item:last-child {
+.page-theme--dla-dzieci .event-content-block__body .content-accordion details.content-accordion__item:last-child {
     border-bottom: none;
 }
 
-.page-theme--dla-dzieci .content-accordion__title {
-    background: rgba(255, 140, 105, 0.08);
-    color: var(--color-white);
+.page-theme--dla-dzieci .event-content-block__body summary.content-accordion__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-xl) var(--space-md) 0;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
     font-weight: var(--fw-semibold);
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-amber);
     cursor: pointer;
+    list-style: none;
+    background: transparent;
 }
 
-.page-theme--dla-dzieci .content-accordion__title:hover {
-    background: rgba(255, 140, 105, 0.12);
+.page-theme--dla-dzieci .event-content-block__body summary.content-accordion__title:focus,
+.page-theme--dla-dzieci .event-content-block__body summary.content-accordion__title:focus-visible {
+    outline: none;
 }
 
-.page-theme--dla-dzieci .content-accordion__title::-webkit-details-marker {
+.page-theme--dla-dzieci .event-content-block__body summary.content-accordion__title::-webkit-details-marker {
     display: none;
 }
 
-.page-theme--dla-dzieci .content-accordion__title::after {
-    content: "▼";
-    display: inline-block;
-    margin-left: auto;
-    transition: transform var(--transition-fast);
-    font-size: 0.7em;
-    color: var(--theme-accent);
+.page-theme--dla-dzieci .event-content-block__body summary.content-accordion__title::after {
+    content: "+";
+    flex-shrink: 0;
+    width: 1.25rem;
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: var(--fw-regular);
+    color: var(--color-amber);
+    line-height: 1;
+    transition: color var(--transition-fast);
 }
 
-.page-theme--dla-dzieci details[open] > .content-accordion__title::after {
-    transform: rotate(-180deg);
+.page-theme--dla-dzieci .event-content-block__body details[open] > summary.content-accordion__title::after {
+    content: "−";
 }
 
-.page-theme--dla-dzieci .content-accordion__body {
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.6;
+.page-theme--dla-dzieci .event-content-block__body details.content-accordion__item > p {
+    margin: 0;
+    padding: 0 var(--space-xl) var(--space-md) 0;
+    font-size: 0.9rem;
+    font-weight: var(--fw-regular);
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-gray);
 }
 
-/* City dropdown select styling */
+/* ── City dropdown — matches vouchery orange palette ── */
 .dla-dzieci-cities-select {
     display: block;
     width: 100%;
-    max-width: 300px;
+    max-width: 320px;
     padding: 0.75rem 1rem;
     margin: var(--space-md) 0;
     background: var(--color-dark-surface);
     color: var(--color-white);
-    border: 2px solid rgba(255, 140, 105, 0.3);
+    border: 2px solid rgba(255, 179, 71, 0.35);
     border-radius: var(--radius-md);
     font-family: inherit;
     font-size: var(--fs-base);
@@ -428,13 +439,13 @@
 }
 
 .dla-dzieci-cities-select:hover {
-    border-color: var(--theme-accent);
+    border-color: var(--color-amber);
 }
 
 .dla-dzieci-cities-select:focus {
     outline: none;
-    border-color: var(--theme-accent);
-    box-shadow: 0 0 0 3px rgba(255, 140, 105, 0.2);
+    border-color: var(--color-amber);
+    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.2);
 }
 
 .dla-dzieci-cities-select option {

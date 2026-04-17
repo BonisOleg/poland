@@ -694,7 +694,7 @@ def transform_dla_dzieci_faq_to_accordion(html: str) -> str:
         return html
 
     soup = BeautifulSoup(html, "html.parser")
-    faq_markers = ("najczęściej zadawane", "frequently asked", "часто задаваемые")
+    faq_markers = ("najczęściej zadawane", "najczęstsze pytania", "frequently asked", "часто задаваемые", "(faq)")
 
     for section in soup.find_all("section", class_=lambda c: c and "event-content-block" in c):
         if not isinstance(section, Tag):
@@ -754,45 +754,48 @@ def transform_dla_dzieci_faq_to_accordion(html: str) -> str:
     return str(soup)
 
 
-def replace_city_list_with_select(html: str) -> str:
-    """Replace a list of city links at the end of dla-dzieci with a dropdown <select>.
+def _is_city_link_ul(ul: Tag) -> bool:
+    """Return True if all <li> children contain exactly one <a> link (city list pattern)."""
+    lis = [c for c in ul.children if isinstance(c, Tag) and c.name == "li"]
+    if not lis:
+        return False
+    return all(
+        len([t for t in li.children if isinstance(t, Tag)]) == 1
+        and li.find("a") is not None
+        for li in lis
+    )
 
-    Finds the last <ul> containing only <li><a>city</a></li> items and converts it
-    into a themed <select> element for better mobile UX.
+
+def replace_city_list_with_select(html: str) -> str:
+    """Replace ALL city-link lists in dla-dzieci with one combined <select> dropdown.
+
+    Finds every <ul> where all <li> children contain only a single <a> link,
+    collects cities from all of them, inserts a single <select> in place of the
+    first list, and removes all remaining lists.
     """
     if not html or not html.strip():
         return html
 
     soup = BeautifulSoup(html, "html.parser")
-    city_uls: list[Tag] = []
-    for ul in soup.find_all("ul"):
-        if not isinstance(ul, Tag):
-            continue
-        lis = [c for c in ul.children if isinstance(c, Tag) and c.name == "li"]
-        if not lis:
-            continue
-        all_links = all(
-            len([t for t in li.children if isinstance(t, Tag)]) == 1
-            and li.find("a") is not None
-            for li in lis
-        )
-        if all_links:
-            city_uls.append(ul)
+    city_uls: list[Tag] = [ul for ul in soup.find_all("ul") if isinstance(ul, Tag) and _is_city_link_ul(ul)]
 
     if not city_uls:
         return html
 
-    last_ul = city_uls[-1]
+    # Collect cities from ALL lists preserving order
+    seen: set[str] = set()
     cities: list[tuple[str, str]] = []
-    for li in last_ul.find_all("li", recursive=False):
-        if not isinstance(li, Tag):
-            continue
-        a = li.find("a")
-        if a and isinstance(a, Tag):
-            href = a.get("href", "#")
-            text = (a.get_text() or "").strip()
-            if text:
-                cities.append((text, href))
+    for ul in city_uls:
+        for li in ul.find_all("li", recursive=False):
+            if not isinstance(li, Tag):
+                continue
+            a = li.find("a")
+            if a and isinstance(a, Tag):
+                href = str(a.get("href") or "#").strip()
+                text = (a.get_text() or "").strip()
+                if text and href not in seen:
+                    cities.append((text, href))
+                    seen.add(href)
 
     if not cities:
         return html
@@ -801,14 +804,44 @@ def replace_city_list_with_select(html: str) -> str:
         "select",
         attrs={"class": ["dla-dzieci-cities-select"], "data-cities": "true"},
     )
-    option_placeholder = soup.new_tag("option", attrs={"value": "", "selected": ""})
-    option_placeholder.string = "Wybierz miasto..."
-    select.append(option_placeholder)
+    placeholder = soup.new_tag("option", attrs={"value": "", "selected": ""})
+    placeholder.string = "Wybierz miasto..."
+    select.append(placeholder)
 
     for city_name, city_href in cities:
         option = soup.new_tag("option", attrs={"value": city_href})
         option.string = city_name
         select.append(option)
 
-    last_ul.replace_with(select)
+    # Replace first list with the select; remove all remaining lists
+    city_uls[0].replace_with(select)
+    for ul in city_uls[1:]:
+        ul.decompose()
+
+    return str(soup)
+
+
+def strip_dla_dzieci_panel_headings(html: str) -> str:
+    """Remove duplicate top-level headings from dla-dzieci DB content.
+
+    The themed template always renders <h1> from page.title and the gallery
+    section. DB content that also contains an <h1> or <h2>Galeria</h2> at
+    the top level would produce empty/duplicate panels — strip them here.
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    galeria_markers = frozenset(("galeria", "gallery", "галерея"))
+
+    for node in list(soup.children):
+        if not isinstance(node, Tag):
+            continue
+        if node.name == "h1":
+            node.decompose()
+        elif node.name == "h2":
+            text = (node.get_text() or "").strip().lower()
+            if text in galeria_markers:
+                node.decompose()
+
     return str(soup)
