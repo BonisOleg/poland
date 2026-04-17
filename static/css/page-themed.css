@@ -35,37 +35,49 @@
     margin-bottom: var(--space-lg);
 }
 
-/* CTA links inside the intro body that are lone-anchor paragraphs (pill gradient) */
-.page-themed__hero-intro-body p:has(> a:only-child) a {
+/*
+ * Content CTAs — ghost outline (HYPE reference).
+ * Elementor import maps buttons to a.btn.btn--outline; split_html_by_h2 often leaves <a class="btn">
+ * as a *direct* child of the intro/body, so p:has(> a:only-child) alone does not match.
+ * Exclude .page-theme--legal (regulaminy / polityka).
+ */
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body a.btn,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body p:has(> a:only-child) a,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body :is(h2, h3, h4):has(> a:only-child) a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
     margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
     padding: 0.9rem 2.5rem;
-    border-radius: var(--radius-full);
+    border-radius: var(--cta-ghost-radius);
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     text-decoration: none;
-    background: var(--gradient-cta-pill);
-    border: none;
-    color: var(--color-white);
-    transition: background var(--transition-base), transform var(--transition-base),
-        box-shadow var(--transition-base);
+    background: transparent;
+    border: 2px solid var(--cta-ghost-accent);
+    color: var(--cta-ghost-accent);
+    transition: background var(--transition-base), color var(--transition-fast),
+        border-color var(--transition-fast), transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.page-themed__hero-intro-body p:has(> a:only-child) a:hover {
-    background: var(--gradient-cta-pill-hover);
-    color: var(--color-white);
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body a.btn:hover,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body p:has(> a:only-child) a:hover,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body :is(h2, h3, h4):has(> a:only-child) a:hover {
+    background: var(--cta-ghost-accent);
+    color: var(--color-dark);
+    border-color: var(--cta-ghost-accent);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
-.page-themed__hero-intro-body p:has(> a:only-child) a:focus-visible {
-    outline: 2px solid var(--color-white);
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body a.btn:focus-visible,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body p:has(> a:only-child) a:focus-visible,
+.page-themed:not(.page-theme--legal) .page-themed__hero-intro-body :is(h2, h3, h4):has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--cta-ghost-accent);
     outline-offset: 3px;
 }
 
@@ -176,37 +188,43 @@
     text-decoration: underline;
 }
 
-/* Lone-anchor CTA paragraphs inside panels (pill gradient) */
-.page-themed .event-content-block__body p:has(> a:only-child) a {
+.page-themed:not(.page-theme--legal) .event-content-block__body a.btn,
+.page-themed:not(.page-theme--legal) .event-content-block__body p:has(> a:only-child) a,
+.page-themed:not(.page-theme--legal) .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    margin-top: var(--space-xs);
+    margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
     padding: 0.9rem 2.5rem;
-    border-radius: var(--radius-full);
+    border-radius: var(--cta-ghost-radius);
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     text-decoration: none;
-    background: var(--gradient-cta-pill);
-    border: none;
-    color: var(--color-white);
-    transition: background var(--transition-base), transform var(--transition-base),
-        box-shadow var(--transition-base);
+    background: transparent;
+    border: 2px solid var(--cta-ghost-accent);
+    color: var(--cta-ghost-accent);
+    transition: background var(--transition-base), color var(--transition-fast),
+        border-color var(--transition-fast), transform var(--transition-base), box-shadow var(--transition-base);
 }
 
-.page-themed .event-content-block__body p:has(> a:only-child) a:hover {
-    background: var(--gradient-cta-pill-hover);
-    color: var(--color-white);
+.page-themed:not(.page-theme--legal) .event-content-block__body a.btn:hover,
+.page-themed:not(.page-theme--legal) .event-content-block__body p:has(> a:only-child) a:hover,
+.page-themed:not(.page-theme--legal) .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:hover {
+    background: var(--cta-ghost-accent);
+    color: var(--color-dark);
+    border-color: var(--cta-ghost-accent);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
-.page-themed .event-content-block__body p:has(> a:only-child) a:focus-visible {
-    outline: 2px solid var(--color-white);
+.page-themed:not(.page-theme--legal) .event-content-block__body a.btn:focus-visible,
+.page-themed:not(.page-theme--legal) .event-content-block__body p:has(> a:only-child) a:focus-visible,
+.page-themed:not(.page-theme--legal) .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--cta-ghost-accent);
     outline-offset: 3px;
 }
 

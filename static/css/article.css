@@ -187,34 +187,42 @@
     border-color: var(--color-amber);
 }
 
-/* ── Imported HTML: lone-link CTA (pill gradient) — overrides pages.css event-detail outline ── */
+/* ── Imported CTAs (ghost outline) — beats pages.css; includes direct a.btn (see page-themed.css) ── */
 
+.article-detail.event-detail .event-content a.btn,
 .article-detail.event-detail .event-content p:has(> a:only-child) a,
 .article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a,
+.article-detail.event-detail .event-content-block__body a.btn,
 .article-detail.event-detail .event-content-block__body p:has(> a:only-child) a,
 .article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a {
     padding: 0.9rem 2.5rem;
-    background: var(--gradient-cta-pill);
-    border: none;
-    color: var(--color-white);
-    transition: background var(--transition-base), transform var(--transition-base),
-        box-shadow var(--transition-base);
+    border-radius: var(--cta-ghost-radius);
+    background: transparent;
+    border: 2px solid var(--cta-ghost-accent);
+    color: var(--cta-ghost-accent);
+    transition: background var(--transition-base), color var(--transition-fast),
+        border-color var(--transition-fast), transform var(--transition-base), box-shadow var(--transition-base);
 }
 
+.article-detail.event-detail .event-content a.btn:hover,
 .article-detail.event-detail .event-content p:has(> a:only-child) a:hover,
 .article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a:hover,
+.article-detail.event-detail .event-content-block__body a.btn:hover,
 .article-detail.event-detail .event-content-block__body p:has(> a:only-child) a:hover,
 .article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:hover {
-    background: var(--gradient-cta-pill-hover);
-    color: var(--color-white);
+    background: var(--cta-ghost-accent);
+    color: var(--color-dark);
+    border-color: var(--cta-ghost-accent);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
+.article-detail.event-detail .event-content a.btn:focus-visible,
 .article-detail.event-detail .event-content p:has(> a:only-child) a:focus-visible,
 .article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a:focus-visible,
+.article-detail.event-detail .event-content-block__body a.btn:focus-visible,
 .article-detail.event-detail .event-content-block__body p:has(> a:only-child) a:focus-visible,
 .article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:focus-visible {
-    outline: 2px solid var(--color-white);
+    outline: 2px solid var(--cta-ghost-accent);
     outline-offset: 3px;
 }

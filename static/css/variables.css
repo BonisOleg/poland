@@ -17,10 +17,11 @@
 
     --gradient-brand: linear-gradient(90deg, #FFB347, #FF7043, #E91E63);
     --gradient-brand-hover: linear-gradient(90deg, #FFC370, #FF8A65, #F06292);
-    /* Themed pages + blog article CTAs (lone-link pill buttons) — matches marketing mockup */
-    --gradient-cta-pill: linear-gradient(90deg, #ffb144 0%, #ff2e63 100%);
-    --gradient-cta-pill-hover: linear-gradient(90deg, #ffc575 0%, #ff5588 100%);
     --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
+
+    /* Ghost CTAs (imported Elementor buttons → a.btn.btn--outline): gold outline, ~10px radius */
+    --cta-ghost-accent: #d29b54;
+    --cta-ghost-radius: 0.625rem;
 
     --font-heading: 'Montserrat', sans-serif;
     --font-body: 'Inter', sans-serif;
