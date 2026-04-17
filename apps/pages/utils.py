@@ -557,12 +557,36 @@ def extract_media_from_html(html: str) -> tuple[list[dict[str, str]], list[dict[
     return images, videos, str(soup)
 
 
+def _themed_panel_inner_is_effectively_empty(inner: str) -> bool:
+    """True if panel HTML has no visible text and no embedded media (themed pages).
+
+    Used to avoid emitting empty <section.event-detail__panel> wrappers after images
+    are extracted to the gallery or Elementor residue is stripped. Does not treat
+    SEO-critical text inside <script>/<style> as content (those are removed first).
+    """
+    if not inner or not inner.strip():
+        return True
+    soup = BeautifulSoup(inner, "html.parser")
+    for tag in soup.find_all(["script", "style"]):
+        tag.decompose()
+    text = soup.get_text()
+    normalized = text.replace("\xa0", " ").replace("\u200b", "").strip()
+    if normalized:
+        return False
+    if soup.find(["img", "video", "iframe", "picture", "svg", "canvas", "object", "audio"]):
+        return False
+    return True
+
+
 def split_html_by_h2_into_panels(html: str) -> str:
     """Split flat HTML into stacked event-style panels, each starting at a top-level <h2>.
 
     Content before the first <h2> → section.event-detail__panel.page-themed__hero-intro
     Each subsequent group starting at <h2> → section.event-detail__panel.event-content-block
                                                > div.event-content-block__body
+
+    Panels whose inner HTML is effectively empty (no text, no media) are omitted so
+    the template does not render blank bordered boxes (e.g. after gallery extraction).
 
     The function works on top-level nodes only (same as split_vouchery_content_into_panels).
     """
@@ -588,6 +612,8 @@ def split_html_by_h2_into_panels(html: str) -> str:
     parts: list[str] = []
     for i, panel_nodes in enumerate(panels):
         inner = "".join(str(n) for n in panel_nodes)
+        if _themed_panel_inner_is_effectively_empty(inner):
+            continue
         if i == 0:
             parts.append(
                 '<section class="event-detail__panel page-themed__hero-intro">'

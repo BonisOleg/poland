@@ -435,6 +435,21 @@ class SplitHtmlByH2IntoPanelsTests(SimpleTestCase):
         self.assertIn("Only paragraph", out)
         self.assertNotIn("event-content-block", out)
 
+    def test_empty_chunk_before_first_h2_emits_no_hero_panel(self) -> None:
+        """Gallery-only intro in DB becomes empty after extract_media; avoid blank section."""
+        html = "<p></p><h2>Real section</h2><p>Body</p>"
+        out = split_html_by_h2_into_panels(html)
+        self.assertNotIn("page-themed__hero-intro", out)
+        self.assertIn("event-content-block", out)
+        self.assertIn("Real section", out)
+        self.assertIn("Body", out)
+
+    def test_whitespace_only_before_h2_emits_no_hero_panel(self) -> None:
+        html = "<p>   </p><h2>Next</h2><p>Text</p>"
+        out = split_html_by_h2_into_panels(html)
+        self.assertNotIn("page-themed__hero-intro", out)
+        self.assertIn("Next", out)
+
 
 # ---------------------------------------------------------------------------
 # Smoke tests for themed page views
