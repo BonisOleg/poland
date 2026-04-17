@@ -99,7 +99,7 @@
                         {{ event_city.city.name }}
                     {% endif %}
                 </p>
-                {% if event_city.use_new_layout and event_city.biletyna_url %}
+                {% if event_city.biletyna_url %}
                 <div class="hero__cta">
                     <button type="button" class="hero__cta-btn" @click="showTickets = true">
                         {% trans "Kup bilet" %}
