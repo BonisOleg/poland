@@ -20,8 +20,8 @@
     /* /vouchery/ «KLIKNIJ PO PREZENT» — full-width pill (see .vouchery-cart-btn in pages.css) */
     --gradient-voucher-pill: linear-gradient(90deg, #ffb347 0%, #f53161 100%);
     --gradient-voucher-pill-hover: linear-gradient(90deg, #ffc370 0%, #ff6b8a 100%);
-    --voucher-cta-pad-y: 0.45rem;
-    --voucher-cta-pad-x: clamp(1.75rem, 6vw, 3.5rem);
+    --voucher-cta-pad-y: 0.32rem;
+    --voucher-cta-pad-x: clamp(2rem, 8vw, 4rem);
     --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
 
     --font-heading: 'Montserrat', sans-serif;
