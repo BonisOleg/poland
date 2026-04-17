@@ -22,10 +22,6 @@
     --gradient-voucher-pill-hover: linear-gradient(90deg, #ffc370 0%, #ff6b8a 100%);
     --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
 
-    /* Ghost CTAs (imported Elementor buttons → a.btn.btn--outline): gold outline, ~10px radius */
-    --cta-ghost-accent: #d29b54;
-    --cta-ghost-radius: 0.625rem;
-
     --font-heading: 'Montserrat', sans-serif;
     --font-body: 'Inter', sans-serif;
 

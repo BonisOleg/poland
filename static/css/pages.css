@@ -1437,11 +1437,11 @@
     transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-/* Vouchery: cart icon replaced by JS with .btn.btn--primary (see vouchery-cart.js) */
-.event-content--vouchery .vouchery-cart-btn {
-    max-width: 22rem;
-    margin-left: auto;
-    margin-right: auto;
+/*
+ * Vouchery: gradient pill for all .btn in intro (DB often keeps btn--outline; JS may miss if no cart widget).
+ * .vouchery-cart-btn = JS replacement (narrow column).
+ */
+.event-detail.vouchery-page .event-content--vouchery a.btn {
     border-radius: var(--radius-full);
     background: var(--gradient-voucher-pill);
     color: var(--color-white);
@@ -1452,16 +1452,22 @@
         box-shadow var(--transition-base), color var(--transition-fast);
 }
 
-.event-content--vouchery .vouchery-cart-btn:hover {
+.event-detail.vouchery-page .event-content--vouchery a.btn:hover {
     background: var(--gradient-voucher-pill-hover);
     color: var(--color-white);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
-.event-content--vouchery .vouchery-cart-btn:focus-visible {
+.event-detail.vouchery-page .event-content--vouchery a.btn:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
+}
+
+.event-content--vouchery .vouchery-cart-btn {
+    max-width: 22rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Vouchery v2: reuse event-gallery carousel; spacing before body */
@@ -1833,8 +1839,9 @@
  * Same pill rule as elsewhere; needs .event-detail.vouchery-page … (0,4,+) to override (0,3,2).
  * More specific than the paragraph rule below is ul…>li>p>a for grid rows.
  */
-.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a,
-.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a {
+/* Inline gold links only — not real buttons (.btn gets gradient from rules above) */
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child):not(:has(> a.btn)) a,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child):not(:has(> a.btn)) a {
     border: none;
     box-shadow: none;
     border-radius: 0;
@@ -1848,8 +1855,8 @@
     white-space: normal;
 }
 
-.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a:hover,
-.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a:hover {
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child):not(:has(> a.btn)) a:hover,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child):not(:has(> a.btn)) a:hover {
     background: transparent;
     color: var(--color-amber);
     border: none;
@@ -1857,8 +1864,8 @@
     text-decoration: none;
 }
 
-.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child) a:focus-visible,
-.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child) a:focus-visible {
+.event-detail.vouchery-page .event-content-block__body p:has(> a:only-child):not(:has(> a.btn)) a:focus-visible,
+.event-detail.vouchery-page .event-content--vouchery p:has(> a:only-child):not(:has(> a.btn)) a:focus-visible {
     outline: 2px solid var(--color-amber);
     outline-offset: 3px;
 }
