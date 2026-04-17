@@ -1,8 +1,17 @@
 from unittest.mock import MagicMock, patch
 
 from django.test import SimpleTestCase
+from django.urls import resolve
 
 from apps.vouchers.utils import fetch_url_bytes, voucher_image_filename_from_url
+
+
+class MediaUrlRoutingTests(SimpleTestCase):
+    """/media/ must not be captured by <slug:slug>/ (slug can be 'media')."""
+
+    def test_media_resolves_to_static_serve(self) -> None:
+        match = resolve("/media/vouchers/Voucher-2120.png")
+        self.assertEqual(match.func.__name__, "serve")
 
 
 class VoucherImageFilenameTests(SimpleTestCase):

@@ -1,14 +1,25 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
+from django.views.static import serve
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("feeds/", include("apps.events.feed_urls")),
+]
+
+# 1) django.conf.urls.static.static() is a no-op when DEBUG=False (Django 5+), so never use it for prod media.
+# 2) Must be before `<slug:slug>/` — "media" is a valid slug and would steal /media/vouchers/…
+_media = settings.MEDIA_URL.strip("/")
+urlpatterns += [
+    re_path(
+        rf"^{_media}/(?P<path>.*)$",
+        serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
 ]
 
 urlpatterns += i18n_patterns(
@@ -24,7 +35,3 @@ urlpatterns += i18n_patterns(
 urlpatterns += [
     path("", include("apps.seo.urls")),
 ]
-
-# User uploads (voucher images, etc.): stable /media/… URLs for SEO; avoid hashed static names.
-# On high traffic, move to S3 and set MEDIA_URL; keep same path suffixes to preserve rankings.
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
