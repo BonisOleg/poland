@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_date
 from django.utils.translation import gettext as _
 
+from .content_parser import build_detail_sections
 from .models import EventCity, Category, City, AgeGroup
 
 
@@ -110,12 +111,17 @@ def event_detail(request, slug):
     )
     related = ec.get_related_events(6)
     reviews = ec.reviews.filter(is_approved=True)[:10]
+    parsed = build_detail_sections(ec)
 
     return render(request, "events/event_detail.html", {
         "event_city": ec,
         "event": ec.event,
         "related_events": related,
         "reviews": reviews,
+        "intro_html": parsed.intro_html,
+        "photos": parsed.photos,
+        "videos": parsed.videos,
+        "blocks": parsed.blocks,
     })
 
 

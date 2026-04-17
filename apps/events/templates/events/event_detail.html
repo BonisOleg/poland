@@ -177,97 +177,87 @@
     </div>
     {% endif %}
 
-    {% if event_city.use_new_layout %}
-        {% with photos=event_city.images.all %}
-        {% if photos %}
-        <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
-            <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
-            <div class="event-gallery__carousel-wrap">
-                <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <div class="event-gallery__carousel-viewport">
-                    <div class="event-gallery__carousel" data-carousel>
-                        {% for photo in photos %}
-                        {% if photo.src %}
-                        <button class="event-gallery__thumb-btn" data-lightbox-src="{{ photo.src }}" data-lightbox-alt="{{ photo.alt_text|default:event_city.get_display_title }}" aria-label="{% trans 'Powiększ zdjęcie' %}">
-                            <img src="{{ photo.src }}" alt="{{ photo.alt_text|default:event_city.get_display_title }}" class="event-gallery__thumb" loading="lazy">
-                        </button>
+    {% if intro_html %}
+    <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
+    {% endif %}
+
+    {% if photos %}
+    <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
+        <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
+        <div class="event-gallery__carousel-wrap">
+            <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="event-gallery__carousel-viewport">
+                <div class="event-gallery__carousel" data-carousel>
+                    {% for photo in photos %}
+                    <button class="event-gallery__thumb-btn" data-lightbox-src="{{ photo.src }}" data-lightbox-alt="{{ photo.alt|default:event_city.get_display_title }}" aria-label="{% trans 'Powiększ zdjęcie' %}">
+                        <img src="{{ photo.src }}" alt="{{ photo.alt|default:event_city.get_display_title }}" class="event-gallery__thumb" loading="lazy">
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+        <div class="event-gallery__dots" aria-hidden="true"></div>
+    </section>
+    <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+        <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+        <img src="" alt="" class="event-lightbox__img">
+    </dialog>
+    {% endif %}
+
+    {% for block in blocks %}
+    <section class="event-detail__panel event-content-block">
+        {% if block.title %}<h2 class="event-content-block__title">{{ block.title }}</h2>{% endif %}
+        {% if block.body_html %}
+        <div class="event-content-block__body">{{ block.body_html|safe }}</div>
+        {% endif %}
+        {% if block.button_text and block.button_url %}
+        <div class="event-content-block__cta">
+            <a href="{{ block.button_url }}" class="btn btn--outline-amber">{{ block.button_text }}</a>
+        </div>
+        {% endif %}
+    </section>
+    {% endfor %}
+
+    {% if videos %}
+    <section class="event-detail__panel event-gallery event-gallery--video" aria-label="{% trans 'Galeria wideo' %}">
+        <h2 class="event-gallery__title">{% trans "Wideo" %}</h2>
+        <div class="event-gallery__carousel-wrap">
+            <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="event-gallery__carousel-viewport">
+                <div class="event-gallery__carousel event-gallery__carousel--video" data-carousel>
+                    {% for video in videos %}
+                    <div class="event-gallery__video-item">
+                        {% if video.video_url %}
+                        <video class="event-gallery__iframe" controls preload="metadata" title="{{ video.title|default:event_city.get_display_title }}">
+                            <source src="{{ video.video_url }}">
+                        </video>
+                        {% elif video.embed_url %}
+                        <iframe
+                            src="{{ video.embed_url }}"
+                            title="{{ video.title|default:event_city.get_display_title }}"
+                            class="event-gallery__iframe"
+                            allowfullscreen
+                            loading="lazy"
+                            sandbox="allow-scripts allow-same-origin allow-presentation"
+                        ></iframe>
                         {% endif %}
-                        {% endfor %}
                     </div>
+                    {% endfor %}
                 </div>
-                <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
             </div>
-            <div class="event-gallery__dots" aria-hidden="true"></div>
-        </section>
-        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
-            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
-            <img src="" alt="" class="event-lightbox__img">
-        </dialog>
-        {% endif %}
-        {% endwith %}
-
-        {% for block in event_city.content_blocks.all %}
-        <section class="event-detail__panel event-content-block">
-            {% if block.title %}<h2 class="event-content-block__title">{{ block.title }}</h2>{% endif %}
-            {% if block.body %}
-            <div class="event-content-block__body">{{ block.body|safe }}</div>
-            {% endif %}
-
-            {% if block.button_text and block.button_url %}
-            <div class="event-content-block__cta">
-                <a href="{{ block.button_url }}" class="btn btn--outline-amber">{{ block.button_text }}</a>
-            </div>
-            {% endif %}
-        </section>
-        {% endfor %}
-
-
-        {% with videos=event_city.videos.all %}
-        {% if videos %}
-        <section class="event-detail__panel event-gallery event-gallery--video" aria-label="{% trans 'Galeria wideo' %}">
-            <h2 class="event-gallery__title">{% trans "Wideo" %}</h2>
-            <div class="event-gallery__carousel-wrap">
-                <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <div class="event-gallery__carousel-viewport">
-                    <div class="event-gallery__carousel event-gallery__carousel--video" data-carousel>
-                        {% for video in videos %}
-                        <div class="event-gallery__video-item">
-                            {% if video.video_file %}
-                            <video class="event-gallery__iframe" controls preload="metadata" title="{{ video.title|default:event_city.get_display_title }}">
-                                <source src="{{ video.video_file.url }}">
-                            </video>
-                            {% elif video.embed_url %}
-                            <iframe
-                                src="{{ video.embed_url }}"
-                                title="{{ video.title|default:event_city.get_display_title }}"
-                                class="event-gallery__iframe"
-                                allowfullscreen
-                                loading="lazy"
-                                sandbox="allow-scripts allow-same-origin allow-presentation"
-                            ></iframe>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
-            <div class="event-gallery__dots" aria-hidden="true"></div>
-        </section>
-        {% endif %}
-        {% endwith %}
-    {% else %}
-    <div class="event-detail__panel event-content">
-        {{ event_city.content_html|safe }}
-    </div>
+            <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+        </div>
+        <div class="event-gallery__dots" aria-hidden="true"></div>
+    </section>
     {% endif %}
 
     {% if related_events %}
@@ -299,7 +289,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/countdown.js' %}" defer></script>
-{% if event_city.use_new_layout %}
+{% if photos or videos %}
 <script src="{% static 'js/event-gallery.js' %}" defer></script>
 {% endif %}
 {% endblock %}

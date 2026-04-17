@@ -107,3 +107,103 @@ class EventDetailHeroFocalTests(TestCase):
         self.assertContains(response, 'class="hero__title-line"')
         self.assertContains(response, "Hero focal test")
         self.assertContains(response, "hero__subtitle-line")
+
+
+LEGACY_CONTENT_HTML = """
+<div><video autoplay loop muted></video></div>
+<h2>Duplicate Hero Title</h2>
+<a href="https://iframe423.biletyna.pl/event/view/id/1" target="_blank">
+<span><span>KUP BILET 17:00</span></span>
+</a>
+<h2>Main description heading</h2>
+<p>Opening paragraph with <strong>meaningful</strong> copy.</p>
+<h3>● Szalona piana: wyrazisty eksperyment z setkami litrów piany</h3>
+<h3>● Ciekły azot: mgła i wybuch azotowy</h3>
+<div class="e-hosted-video">
+  <video controls src="https://example.com/promo.mp4" poster="https://example.com/poster.jpg"></video>
+</div>
+<h2>Galeria</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><figure><img alt="Photo1" data-src="https://example.com/img1.jpg"></figure></div>
+    <div class="swiper-slide"><figure><img alt="Photo2" data-src="https://example.com/img2.jpg"></figure></div>
+  </div>
+  <div role="button" tabindex="0">
+    <svg class="e-font-icon-svg e-eicon-chevron-left"><path d="M1"/></svg>
+  </div>
+  <div role="button" tabindex="0">
+    <svg class="e-font-icon-svg e-eicon-chevron-right"><path d="M1"/></svg>
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+<h2>REKOMENDACJE​</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><img data-src="https://example.com/recommend1.jpg"></div>
+  </div>
+</div>
+<h2>5 POWODÓW</h2>
+<ul class="content-icon-list">
+  <li class="content-icon-list__item"><span class="content-icon-list__text">Świetna zabawa</span></li>
+</ul>
+<a href="https://example.com/more" target="_blank"><span><span>PRZEŻYJ EMOCJE</span></span></a>
+"""
+
+
+class EventDetailLegacyLayoutTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Warszawa", slug="warszawa")
+        cls.event = Event.objects.create(
+            title="Duplicate Hero Title",
+            slug="legacy-layout-test",
+        )
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="legacy-layout-test-wawa",
+            is_published=True,
+            use_new_layout=False,
+            biletyna_url="https://iframe423.biletyna.pl/event/view/id/1",
+            content_html=LEGACY_CONTENT_HTML,
+        )
+
+    def setUp(self):
+        self.response = self.client.get(f"/{self.ec.slug}/")
+
+    def test_returns_200(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_hero_and_schema_preserved(self):
+        self.assertContains(self.response, 'class="hero__title-line"')
+        self.assertContains(self.response, "Duplicate Hero Title")
+        self.assertContains(self.response, '"@type": "Event"')
+        self.assertContains(self.response, '"position": 1')
+        self.assertContains(self.response, '"position": 3')
+
+    def test_photo_gallery_uses_src_not_data_src(self):
+        self.assertContains(self.response, "event-gallery--photo")
+        self.assertContains(self.response, 'src="https://example.com/img1.jpg"')
+        self.assertContains(self.response, 'src="https://example.com/img2.jpg"')
+        self.assertNotContains(self.response, 'data-src="https://example.com/img1.jpg"')
+
+    def test_video_section_rendered(self):
+        self.assertContains(self.response, "event-gallery--video")
+        self.assertContains(self.response, 'src="https://example.com/promo.mp4"')
+
+    def test_elementor_cruft_stripped(self):
+        self.assertNotContains(self.response, "e-eicon-chevron")
+        self.assertNotContains(self.response, "swiper-slide")
+        self.assertNotContains(self.response, "swiper-pagination")
+        self.assertNotContains(self.response, "REKOMENDACJE")
+        self.assertNotContains(self.response, "recommend1.jpg")
+
+    def test_duplicate_cta_removed(self):
+        body = self.response.content.decode()
+        self.assertEqual(body.count("KUP BILET 17:00"), 0)
+
+    def test_content_block_with_cta_rendered(self):
+        self.assertContains(self.response, "event-content-block")
+        self.assertContains(self.response, "5 POWODÓW")
+        self.assertContains(self.response, "PRZEŻYJ EMOCJE")
+        self.assertContains(self.response, "btn--outline-amber")
