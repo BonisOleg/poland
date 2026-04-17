@@ -695,6 +695,19 @@
                 var(--glass-elev-shadow);
 }
 
+.page-themed__images {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.page-themed__image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+}
+
 .page-theme--legal .event-content-block__body h2 {
     color: var(--theme-accent);
     border-bottom-color: rgba(255, 179, 71, 0.15);
