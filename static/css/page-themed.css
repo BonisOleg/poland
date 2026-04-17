@@ -674,3 +674,86 @@
 .page-themed script {
     display: none;
 }
+
+
+/* ── LEGAL theme (regulaminy / polityka-prywatnosci) ──────────────────── */
+
+.page-theme--legal {
+    --theme-accent: var(--color-amber);
+    --theme-radius: 0.75rem;
+    --theme-panel-glow: rgba(255, 179, 71, 0.10);
+}
+
+.page-theme--legal .event-detail__panel {
+    border-radius: var(--theme-radius);
+    border-color: rgba(255, 179, 71, 0.20);
+}
+
+.page-theme--legal.event-detail .event-detail__panel:hover {
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+.page-theme--legal .event-content-block__body h2 {
+    color: var(--theme-accent);
+    border-bottom-color: rgba(255, 179, 71, 0.15);
+}
+
+/* Bullet › for ul (suitable for legal lists) */
+.page-theme--legal .event-content-block__body ul li::before {
+    content: "›";
+    color: var(--theme-accent);
+    font-size: 1em;
+    font-weight: var(--fw-bold);
+    margin-top: 0;
+}
+
+/* Numbered badge bullets for ordered lists */
+.page-theme--legal .event-content-block__body ol {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--space-md) 0;
+    counter-reset: legal-counter;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.page-theme--legal .event-content-block__body ol li {
+    counter-increment: legal-counter;
+    padding-left: 2.25rem;
+    position: relative;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.page-theme--legal .event-content-block__body ol li::before {
+    content: counter(legal-counter);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--radius-full);
+    background: var(--color-amber);
+    color: var(--color-dark);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: var(--fw-bold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-theme--legal .page-themed__hero-intro {
+    border-top-color: var(--theme-accent);
+}
+
+.page-theme--legal .event-content-block {
+    border-top-color: var(--theme-accent);
+}
+
+.page-theme--legal .event-gallery__dot--active {
+    background: var(--theme-accent);
+}

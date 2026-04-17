@@ -432,7 +432,10 @@ def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
 # Themed pages helpers (dla-dzieci, dla-szkol, dla-firm)
 # ---------------------------------------------------------------------------
 
-_THEMED_SLUGS: frozenset[str] = frozenset({"dla-dzieci", "dla-szkol", "dla-firm"})
+_THEMED_SLUGS: frozenset[str] = frozenset({
+    "dla-dzieci", "dla-szkol", "dla-firm",
+    "regulaminy", "polityka-prywatnosci",
+})
 
 
 def strip_elementor_residue(html: str) -> str:

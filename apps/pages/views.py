@@ -24,6 +24,9 @@ from .utils import (
 )
 
 
+_LEGAL_SLUGS: frozenset[str] = frozenset({"regulaminy", "polityka-prywatnosci"})
+
+
 def _prepare_vouchery_content(html: str) -> str:
     html = strip_quick_view_from_html(html)
     html = tag_products_grid(html)
@@ -71,8 +74,8 @@ def _render_themed_page(request, page):
     # FAQ accordion must run AFTER split so .event-content-block sections exist.
     if page.slug == "dla-dzieci":
         panels_html = transform_dla_dzieci_faq_to_accordion(panels_html)
-    # Derive slug from page.slug for a stable theme class; keep it simple
-    page_theme = page.slug  # e.g. "dla-dzieci"
+
+    page_theme = "legal" if page.slug in _LEGAL_SLUGS else page.slug
 
     ctx = {
         "page": page,
