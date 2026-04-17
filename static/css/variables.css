@@ -20,8 +20,6 @@
     /* /vouchery/ «KLIKNIJ PO PREZENT» — full-width pill (see .vouchery-cart-btn in pages.css) */
     --gradient-voucher-pill: linear-gradient(90deg, #ffb347 0%, #f53161 100%);
     --gradient-voucher-pill-hover: linear-gradient(90deg, #ffc370 0%, #ff6b8a 100%);
-    /* Vouchery content CTAs: wide bar, low height (ref. marketing blocks) */
-    --voucher-cta-radius: 0.75rem;
     --voucher-cta-pad-y: 0.45rem;
     --voucher-cta-pad-x: clamp(1.75rem, 6vw, 3.5rem);
     --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #141414 100%);
@@ -59,6 +57,8 @@
     --radius-lg: 1rem;
     --radius-xl: 1.5rem;
     --radius-full: 9999px;
+    /* After --radius-full: Vouchery CTAs pill + wide/low padding */
+    --voucher-cta-radius: var(--radius-full);
 
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
