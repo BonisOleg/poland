@@ -74,8 +74,11 @@ function wrapOfferSectionCta() {
                 return false;
             }
             const lower = t.toLowerCase();
-            return /zapytaj o ofert|ask for an offer|ask for offer|request (an? )?offer|poproś o ofert|zamów ofert|inquire about (an? )?offer/i.test(
-                lower,
+            return (
+                /zapytaj o szczeg[oó]ł[y]?/i.test(lower) ||
+                /zapytaj o ofert|ask for an offer|ask for offer|request (an? )?offer|poproś o ofert|zamów ofert|inquire about (an? )?offer|ask for details/i.test(
+                    lower,
+                )
             );
         });
         if (!targetP) {
@@ -91,8 +94,35 @@ function wrapOfferSectionCta() {
     });
 }
 
+/**
+ * «OFERTA SPECJALNA…» / DLA SZKÓŁ / DLA FIRM: short lines «ZAPYTAJ O SZCZEGÓŁY» are plain <p> text in DB
+ * (not in .vouchery-offer-body). Wrap them so .vouchery-cta-gradient-link styles apply.
+ */
+function wrapZapytajSzczegolyParagraphs() {
+    document.querySelectorAll(".event-content--vouchery").forEach((root) => {
+        root.querySelectorAll("p").forEach((p) => {
+            if (p.querySelector("a")) {
+                return;
+            }
+            const t = (p.textContent || "").trim();
+            if (t.length > 160) {
+                return;
+            }
+            if (!/zapytaj\s+o\s+szczeg[oó]ł[y]?/i.test(t)) {
+                return;
+            }
+            const a = document.createElement("a");
+            a.href = "#voucher";
+            a.className = "vouchery-cta-gradient-link";
+            a.textContent = t;
+            p.replaceChildren(a);
+        });
+    });
+}
+
 function init() {
     wrapOfferSectionCta();
+    wrapZapytajSzczegolyParagraphs();
 
     const root = document.querySelector(".event-content--vouchery");
     if (!root) {

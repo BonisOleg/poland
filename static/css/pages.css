@@ -847,13 +847,15 @@
     font-weight: inherit;
 }
 
-/* CTA w sekcji oferty (vouchery-cart.js: .vouchery-cta-gradient-link w ostatnim krótkim <p>) */
-.event-detail.vouchery-page .vouchery-offer-body > p:has(.vouchery-cta-gradient-link) {
+/* CTA: vouchery-cart.js — .vouchery-offer-body (oferta) oraz .event-content--vouchery (ZAPYTAJ O SZCZEGÓŁY w innych panelach) */
+.event-detail.vouchery-page .vouchery-offer-body > p:has(.vouchery-cta-gradient-link),
+.event-detail.vouchery-page .event-content--vouchery p:has(> a.vouchery-cta-gradient-link) {
     text-align: center;
     margin-top: var(--space-md);
 }
 
-.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link {
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link,
+.event-detail.vouchery-page .event-content--vouchery a.vouchery-cta-gradient-link {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -867,8 +869,8 @@
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
     font-size: var(--fs-sm);
-    letter-spacing: 0.03em;
-    text-transform: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     text-decoration: none;
     white-space: normal;
     line-height: 1.35;
@@ -879,7 +881,8 @@
     box-shadow: none;
 }
 
-.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:hover {
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:hover,
+.event-detail.vouchery-page .event-content--vouchery a.vouchery-cta-gradient-link:hover {
     background: var(--gradient-voucher-pill-hover);
     color: var(--color-white);
     text-decoration: none;
@@ -887,12 +890,14 @@
     box-shadow: var(--shadow-md);
 }
 
-.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:focus-visible {
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:focus-visible,
+.event-detail.vouchery-page .event-content--vouchery a.vouchery-cta-gradient-link:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
 }
 
-.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link :is(strong, b) {
+.event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link :is(strong, b),
+.event-detail.vouchery-page .event-content--vouchery a.vouchery-cta-gradient-link :is(strong, b) {
     font-weight: inherit;
     color: inherit;
 }
