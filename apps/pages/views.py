@@ -8,6 +8,7 @@ from .utils import (
     extract_images_from_html,
     extract_media_from_html,
     remove_products_grid_from_html,
+    replace_city_list_with_select,
     split_after_first_vouchery_panel,
     split_html_by_h2_into_panels,
     split_vouchery_content_into_panels,
@@ -17,6 +18,7 @@ from .utils import (
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
+    transform_dla_dzieci_faq_to_accordion,
     transform_vouchery_faq_editor_list_to_accordion,
 )
 
@@ -56,6 +58,11 @@ def _render_themed_page(request, page):
         images, videos = images_from_db, videos_from_db
     else:
         images, videos, html = extract_media_from_html(html)
+
+    # Apply dla-dzieci-specific transformations
+    if page.slug == "dla-dzieci":
+        html = transform_dla_dzieci_faq_to_accordion(html)
+        html = replace_city_list_with_select(html)
 
     panels_html = split_html_by_h2_into_panels(html)
     # Derive slug from page.slug for a stable theme class; keep it simple

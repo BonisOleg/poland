@@ -102,4 +102,15 @@
     };
 
     document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+
+    // ── City select dropdown (dla-dzieci page) ────────────────
+    const citySelect = document.querySelector('.dla-dzieci-cities-select');
+    if (citySelect) {
+        citySelect.addEventListener('change', (e) => {
+            const url = e.target.value;
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    }
 })();

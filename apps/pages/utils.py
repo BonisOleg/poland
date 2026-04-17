@@ -682,3 +682,133 @@ def _wrap_vouchery_panel_nodes(
         f"{data_attrs}>"
         f"{inner_content}</div></section>"
     )
+
+
+def transform_dla_dzieci_faq_to_accordion(html: str) -> str:
+    """Convert dla-dzieci FAQ section from h3 + p pairs into native <details> accordion.
+
+    Detects the FAQ section by h2 or h3 text containing "najczęściej zadawane" or similar,
+    then transforms following h3 (question) + p (answer) pairs into <details> elements.
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    faq_markers = ("najczęściej zadawane", "frequently asked", "часто задаваемые")
+
+    for section in soup.find_all("section", class_=lambda c: c and "event-content-block" in c):
+        if not isinstance(section, Tag):
+            continue
+        body = section.find("div", class_=lambda c: c and "event-content-block__body" in c)
+        if not isinstance(body, Tag):
+            continue
+        
+        # Find FAQ marker (h2 or h3 with "najczęściej zadawane" text)
+        h_marker = None
+        h_marker_idx = -1
+        all_children = [c for c in body.children if isinstance(c, Tag)]
+        
+        for idx, child in enumerate(all_children):
+            if child.name in ("h2", "h3"):
+                text = (child.get_text() or "").strip().lower()
+                if any(m in text for m in faq_markers):
+                    h_marker = child
+                    h_marker_idx = idx
+                    break
+        
+        if h_marker_idx == -1:
+            continue
+        if body.select_one(".content-accordion"):
+            continue
+
+        # Collect h3+p pairs after the FAQ marker
+        pairs: list[tuple[Tag, Tag]] = []
+        i = h_marker_idx + 1
+        while i + 1 < len(all_children):
+            if all_children[i].name == "h3" and all_children[i + 1].name == "p":
+                pairs.append((all_children[i], all_children[i + 1]))
+                i += 2
+            else:
+                i += 1
+
+        if not pairs:
+            continue
+
+        # Build accordion
+        accordion = soup.new_tag("div", attrs={"class": ["content-accordion"]})
+        for h3_el, p_el in pairs:
+            details = soup.new_tag("details", attrs={"class": ["content-accordion__item"]})
+            summary = soup.new_tag("summary", attrs={"class": ["content-accordion__title"]})
+            # Copy h3 content to summary
+            for child in list(h3_el.children):
+                summary.append(child.extract())
+            details.append(summary)
+            # Add paragraph as body
+            details.append(p_el.extract())
+            accordion.append(details)
+            h3_el.decompose()
+
+        # Insert accordion after FAQ marker
+        h_marker.insert_after(accordion)
+
+    return str(soup)
+
+
+def replace_city_list_with_select(html: str) -> str:
+    """Replace a list of city links at the end of dla-dzieci with a dropdown <select>.
+
+    Finds the last <ul> containing only <li><a>city</a></li> items and converts it
+    into a themed <select> element for better mobile UX.
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    city_uls: list[Tag] = []
+    for ul in soup.find_all("ul"):
+        if not isinstance(ul, Tag):
+            continue
+        lis = [c for c in ul.children if isinstance(c, Tag) and c.name == "li"]
+        if not lis:
+            continue
+        all_links = all(
+            len([t for t in li.children if isinstance(t, Tag)]) == 1
+            and li.find("a") is not None
+            for li in lis
+        )
+        if all_links:
+            city_uls.append(ul)
+
+    if not city_uls:
+        return html
+
+    last_ul = city_uls[-1]
+    cities: list[tuple[str, str]] = []
+    for li in last_ul.find_all("li", recursive=False):
+        if not isinstance(li, Tag):
+            continue
+        a = li.find("a")
+        if a and isinstance(a, Tag):
+            href = a.get("href", "#")
+            text = (a.get_text() or "").strip()
+            if text:
+                cities.append((text, href))
+
+    if not cities:
+        return html
+
+    select = soup.new_tag(
+        "select",
+        attrs={"class": ["dla-dzieci-cities-select"], "data-cities": "true"},
+    )
+    option_placeholder = soup.new_tag("option", attrs={"value": "", "selected": ""})
+    option_placeholder.string = "Wybierz miasto..."
+    select.append(option_placeholder)
+
+    for city_name, city_href in cities:
+        option = soup.new_tag("option", attrs={"value": city_href})
+        option.string = city_name
+        select.append(option)
+
+    last_ul.replace_with(select)
+    return str(soup)

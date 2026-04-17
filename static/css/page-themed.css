@@ -350,6 +350,98 @@
     background: var(--theme-accent);
 }
 
+/* Hide duplicate gallery label (first h2 in first content-block is "Galeria") */
+.page-theme--dla-dzieci .event-content-block:first-of-type .event-content-block__body > h2:first-of-type {
+    display: none;
+}
+
+/* Enhance FAQ section heading for prominence (ZAPYTAJ O PODROBNOŚCI) */
+.page-theme--dla-dzieci .event-content-block .event-content-block__body > h2:nth-of-type(2) {
+    font-size: 1.25rem;
+    font-weight: var(--fw-bold);
+    margin-top: 0;
+    margin-bottom: var(--space-lg);
+}
+
+/* FAQ accordion styling for dla-dzieci */
+.page-theme--dla-dzieci .content-accordion {
+    border: 1px solid rgba(255, 140, 105, 0.25);
+    border-radius: var(--radius-md);
+}
+
+.page-theme--dla-dzieci .content-accordion__item {
+    border-bottom: 1px solid rgba(255, 140, 105, 0.15);
+}
+
+.page-theme--dla-dzieci .content-accordion__item:last-child {
+    border-bottom: none;
+}
+
+.page-theme--dla-dzieci .content-accordion__title {
+    background: rgba(255, 140, 105, 0.08);
+    color: var(--color-white);
+    font-weight: var(--fw-semibold);
+    cursor: pointer;
+}
+
+.page-theme--dla-dzieci .content-accordion__title:hover {
+    background: rgba(255, 140, 105, 0.12);
+}
+
+.page-theme--dla-dzieci .content-accordion__title::-webkit-details-marker {
+    display: none;
+}
+
+.page-theme--dla-dzieci .content-accordion__title::after {
+    content: "▼";
+    display: inline-block;
+    margin-left: auto;
+    transition: transform var(--transition-fast);
+    font-size: 0.7em;
+    color: var(--theme-accent);
+}
+
+.page-theme--dla-dzieci details[open] > .content-accordion__title::after {
+    transform: rotate(-180deg);
+}
+
+.page-theme--dla-dzieci .content-accordion__body {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+}
+
+/* City dropdown select styling */
+.dla-dzieci-cities-select {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1rem;
+    margin: var(--space-md) 0;
+    background: var(--color-dark-surface);
+    color: var(--color-white);
+    border: 2px solid rgba(255, 140, 105, 0.3);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: var(--fs-base);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.dla-dzieci-cities-select:hover {
+    border-color: var(--theme-accent);
+}
+
+.dla-dzieci-cities-select:focus {
+    outline: none;
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 0 3px rgba(255, 140, 105, 0.2);
+}
+
+.dla-dzieci-cities-select option {
+    background: var(--color-dark-surface);
+    color: var(--color-white);
+}
+
 
 /* ── DLA SZKOL theme ──────────────────────────────────────────────────────
    Structured/educational: sharp left border, indigo+amber accents.
