@@ -455,35 +455,29 @@
 
 
 /* ── DLA SZKOL theme ──────────────────────────────────────────────────────
-   Structured/educational: sharp left border, indigo+amber accents.
+   Amber accent — same palette as vouchery / dla-dzieci pages.
    ─────────────────────────────────────────────────────────────────────────── */
 
 .page-theme--dla-szkol {
     --theme-accent: var(--color-amber);
-    --theme-secondary: #7c8cff;
-    --theme-radius: 0.5rem;
-    --theme-panel-glow: rgba(124, 140, 255, 0.15);
+    --theme-radius: 1.25rem;
+    --theme-panel-glow: rgba(255, 179, 71, 0.14);
 }
 
 .page-theme--dla-szkol .event-detail__panel {
     border-radius: var(--theme-radius);
-    border-left: 4px solid var(--theme-secondary);
-    border-color: rgba(124, 140, 255, 0.35);
-    border-left-color: var(--theme-secondary);
+    border-color: rgba(255, 179, 71, 0.25);
 }
 
 .page-theme--dla-szkol.event-detail .event-detail__panel:hover {
-    box-shadow: 0 0 0 1px rgba(124, 140, 255, 0.5),
+    box-shadow: 0 0 0 1px var(--color-amber),
                 0 0 28px var(--theme-panel-glow),
                 var(--glass-elev-shadow);
 }
 
 .page-theme--dla-szkol .event-content-block__body h2 {
-    color: var(--theme-secondary);
-    border-bottom-color: rgba(124, 140, 255, 0.2);
-    font-size: 1rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    color: var(--theme-accent);
+    border-bottom-color: rgba(255, 179, 71, 0.2);
 }
 
 /* Numbered badge bullets for ordered lists */
@@ -523,44 +517,43 @@
     justify-content: center;
 }
 
-/* ul bullet: indigo square */
+/* ul bullet: amber star (mirrors dla-dzieci) */
 .page-theme--dla-szkol .event-content-block__body ul li::before {
-    content: "▪";
-    color: var(--theme-secondary);
-    font-size: 0.8em;
-    margin-top: 0.3em;
+    content: "✦";
+    color: var(--theme-accent);
+    font-size: 0.65em;
+    margin-top: 0.4em;
 }
 
 .page-theme--dla-szkol .event-content-block__body .content-icon-list__item::before {
-    content: "▪";
-    color: var(--theme-secondary);
-    font-size: 0.8em;
+    content: "✦";
+    color: var(--theme-accent);
 }
 
 .page-theme--dla-szkol .page-themed__hero-intro {
-    border-top-color: var(--theme-secondary);
+    border-top-color: var(--theme-accent);
 }
 
 .page-theme--dla-szkol .event-content-block {
-    border-top-color: var(--theme-secondary);
+    border-top-color: var(--theme-accent);
 }
 
 .page-theme--dla-szkol .event-gallery__arrow:hover {
-    background: var(--theme-secondary);
-    border-color: var(--theme-secondary);
-    color: var(--color-white);
+    background: var(--theme-accent);
+    border-color: var(--theme-accent);
+    color: var(--color-dark);
 }
 
 .page-theme--dla-szkol .event-gallery--video:hover,
 .page-theme--dla-szkol .event-gallery--photo:hover {
-    border-color: var(--theme-secondary);
-    box-shadow: 0 0 0 1px var(--theme-secondary),
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 0 1px var(--theme-accent),
                 0 0 28px var(--theme-panel-glow),
                 var(--glass-elev-shadow);
 }
 
 .page-theme--dla-szkol .event-gallery__dot--active {
-    background: var(--theme-secondary);
+    background: var(--theme-accent);
 }
 
 
