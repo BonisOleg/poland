@@ -861,9 +861,9 @@
     max-width: 100%;
     box-sizing: border-box;
     gap: var(--space-sm);
-    padding: 0.5rem 1.25rem;
+    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--voucher-cta-radius);
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
     font-size: var(--fs-sm);
@@ -874,13 +874,13 @@
     line-height: 1.35;
     cursor: pointer;
     transition: background var(--transition-base), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-    background: var(--gradient-brand);
+    background: var(--gradient-voucher-pill);
     color: var(--color-white);
     box-shadow: none;
 }
 
 .event-detail.vouchery-page .vouchery-offer-body .vouchery-cta-gradient-link:hover {
-    background: var(--gradient-brand-hover);
+    background: var(--gradient-voucher-pill-hover);
     color: var(--color-white);
     text-decoration: none;
     transform: translateY(-1px);
@@ -1442,11 +1442,11 @@
  * .vouchery-cart-btn = JS replacement (narrow column).
  */
 .event-detail.vouchery-page .event-content--vouchery a.btn {
-    border-radius: var(--radius-full);
+    border-radius: var(--voucher-cta-radius);
     background: var(--gradient-voucher-pill);
     color: var(--color-white);
     border: none;
-    padding: 1rem 2.5rem;
+    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
     letter-spacing: 0.06em;
     transition: background var(--transition-base), transform var(--transition-base),
         box-shadow var(--transition-base), color var(--transition-fast);
@@ -1465,7 +1465,7 @@
 }
 
 .event-content--vouchery .vouchery-cart-btn {
-    max-width: 22rem;
+    max-width: min(100%, 32rem);
     margin-left: auto;
     margin-right: auto;
 }
@@ -1638,19 +1638,19 @@
     justify-content: center;
     width: 100%;
     gap: var(--space-sm);
-    padding: 0.5rem 1rem;
+    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--voucher-cta-radius);
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
-    font-size: var(--fs-xs);
-    letter-spacing: 0.03em;
-    text-transform: none;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     text-decoration: none;
-    white-space: nowrap;
+    white-space: normal;
     cursor: pointer;
     transition: all var(--transition-base);
-    background: var(--gradient-brand);
+    background: var(--gradient-voucher-pill);
     color: var(--color-white);
     max-width: 100%;
     box-sizing: border-box;
@@ -1661,7 +1661,7 @@
 
 .event-detail.vouchery-page .event-content-block__body ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:hover,
 .event-detail.vouchery-page .event-content--vouchery ul.vouchery-reasons-list + p:has(> a[href="#voucher"]) a:hover {
-    background: var(--gradient-brand-hover);
+    background: var(--gradient-voucher-pill-hover);
     color: var(--color-white);
     border: none;
     opacity: 1;
@@ -1882,9 +1882,9 @@
     justify-content: center;
     width: 100%;
     gap: var(--space-sm);
-    padding: 0.65rem 1.25rem;
+    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--voucher-cta-radius);
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
     font-size: var(--fs-sm);
@@ -1937,19 +1937,19 @@
     justify-content: center;
     width: 100%;
     gap: var(--space-sm);
-    padding: 0.5rem 1rem;
+    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--voucher-cta-radius);
     font-family: var(--font-heading);
     font-weight: var(--fw-bold);
-    font-size: var(--fs-xs);
-    text-transform: none;
-    letter-spacing: 0.03em;
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     text-decoration: none;
-    white-space: nowrap;
+    white-space: normal;
     cursor: pointer;
     transition: all var(--transition-base);
-    background: var(--gradient-brand);
+    background: var(--gradient-voucher-pill);
     color: var(--color-white);
     max-width: 100%;
     box-sizing: border-box;
@@ -1960,7 +1960,7 @@
 
 .event-detail.vouchery-page .event-content-block__body p + p:has(> a[href="#voucher"]) a:hover,
 .event-detail.vouchery-page .event-content--vouchery p + p:has(> a[href="#voucher"]) a:hover {
-    background: var(--gradient-brand-hover);
+    background: var(--gradient-voucher-pill-hover);
     color: var(--color-white);
     border: none;
     opacity: 1;
