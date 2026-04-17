@@ -1,38 +1,52 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Aktualności" %} — {{ SITE_NAME }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/article.css' %}?v={{ STATIC_ASSET_VERSION }}">
+{% endblock %}
+
 {% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
 <section class="section">
     <div class="container">
         <h1 class="section__title text-gradient">{% trans "Aktualności" %}</h1>
         <div class="grid grid--articles">
             {% for article in page_obj %}
-            <a href="{{ article.get_absolute_url }}" class="card">
+            <a href="{{ article.get_absolute_url }}" class="card article-card">
                 {% if article.image %}
-                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="card__image" loading="lazy">
+                <img src="{{ article.image.url }}"
+                     alt="{{ article.title }}"
+                     class="card__image article-card__image"
+                     loading="lazy">
+                {% else %}
+                <div class="article-card__image-placeholder"></div>
                 {% endif %}
                 <div class="card__body">
                     <div class="card__date">{{ article.published_at|date:"d.m.Y" }}</div>
-                    <h2 class="card__title" style="font-size: var(--fs-lg);">{{ article.title }}</h2>
+                    <h2 class="card__title">{{ article.title }}</h2>
                     {% if article.excerpt %}
-                        <p class="text-gray" style="font-size: var(--fs-sm);">{{ article.excerpt|truncatewords:25 }}</p>
+                    <p class="article-card__excerpt">{{ article.excerpt|truncatewords:25 }}</p>
                     {% endif %}
                 </div>
             </a>
             {% empty %}
-                <p class="text-gray">{% trans "Brak aktualności." %}</p>
+            <p class="text-gray grid__empty">{% trans "Brak aktualności." %}</p>
             {% endfor %}
         </div>
 
         {% if page_obj.has_other_pages %}
-        <div class="flex flex--center" style="margin-top: var(--space-xl); gap: var(--space-sm);">
+        <div class="article-pagination">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn--outline btn--sm">&laquo;</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn--outline btn--sm">&laquo;</a>
             {% endif %}
+            <span class="article-pagination__info">
+                {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn--outline btn--sm">&raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn--outline btn--sm">&raquo;</a>
             {% endif %}
         </div>
         {% endif %}

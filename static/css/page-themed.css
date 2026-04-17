@@ -708,6 +708,20 @@
     border-radius: var(--radius-md);
 }
 
+.page-themed__flags {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.page-themed__flag {
+    display: block;
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
 .page-theme--legal .event-content-block__body h2 {
     color: var(--theme-accent);
     border-bottom-color: rgba(255, 179, 71, 0.15);

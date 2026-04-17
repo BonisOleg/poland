@@ -18,15 +18,27 @@
         {# ── Photo gallery ──────────────────────────────────────────── #}
         {% if images %}
             {% if page_theme == "legal" %}
-                {# For legal pages, display images without gallery carousel #}
-                <div class="event-detail__panel page-themed__images">
-                    {% for image in images %}
-                    <img src="{{ image.src }}"
-                         alt="{{ image.alt|default:page.title }}"
-                         class="page-themed__image"
-                         loading="lazy">
-                    {% endfor %}
-                </div>
+                {% if page.slug == "regulaminy" %}
+                    {# For regulaminy: show only 2 small flag images #}
+                    <div class="page-themed__flags">
+                        {% for image in images|slice:":2" %}
+                        <img src="{{ image.src }}"
+                             alt="{{ image.alt|default:page.title }}"
+                             class="page-themed__flag"
+                             loading="lazy">
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {# For other legal pages, display images normally #}
+                    <div class="event-detail__panel page-themed__images">
+                        {% for image in images %}
+                        <img src="{{ image.src }}"
+                             alt="{{ image.alt|default:page.title }}"
+                             class="page-themed__image"
+                             loading="lazy">
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% else %}
                 <section class="event-detail__panel event-gallery event-gallery--photo page-themed__gallery" aria-label="{% trans 'Galeria zdjęć' %}">
                     <h2 class="event-gallery__title">{% trans "Galeria" %}</h2>

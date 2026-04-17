@@ -1,0 +1,188 @@
+/*
+ * article.css
+ * Styles for blog article list (/aktualnosci/) and detail (/aktualnosci/<slug>/) pages.
+ * Loaded only via {% block extra_css %} — zero interference with other pages.
+ * All rules scoped under .article-card, .article-pagination, or .article-detail.
+ */
+
+/* ── Article list: 3-column grid at 1024px ─────────────────────────────── */
+
+@media (min-width: 1024px) {
+    .grid--articles {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-lg);
+    }
+}
+
+/* ── Article card (extends .card) ──────────────────────────────────────── */
+
+.article-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--color-dark-border);
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base),
+                border-color var(--transition-base);
+}
+
+.article-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-amber);
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 24px rgba(255, 179, 71, 0.12),
+                var(--glass-elev-shadow);
+}
+
+.article-card__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+.article-card__image-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--color-dark-border);
+}
+
+.article-card__excerpt {
+    font-size: var(--fs-sm);
+    color: var(--color-gray);
+    line-height: 1.55;
+    margin-top: var(--space-xs);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Pagination ─────────────────────────────────────────────────────────── */
+
+.article-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.article-pagination__info {
+    font-size: var(--fs-sm);
+    color: var(--color-gray);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-medium);
+}
+
+/* ── Article detail: outer container ───────────────────────────────────── */
+
+.article-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-3xl);
+    max-width: 900px;
+}
+
+/* ── Hero panel ─────────────────────────────────────────────────────────── */
+
+.article-detail__hero {
+    padding: 0;
+    overflow: hidden;
+    border-top: 3px solid var(--color-amber);
+}
+
+.article-detail__hero-image-wrap {
+    width: 100%;
+    overflow: hidden;
+    max-height: 420px;
+}
+
+.article-detail__hero-image {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+.article-detail__hero-body {
+    padding: var(--space-xl) var(--space-lg);
+}
+
+@media (min-width: 768px) {
+    .article-detail__hero-body {
+        padding: var(--space-xl) var(--space-2xl);
+    }
+}
+
+.article-detail__date {
+    display: block;
+    font-size: var(--fs-xs);
+    font-family: var(--font-heading);
+    font-weight: var(--fw-semibold);
+    color: var(--color-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+}
+
+.article-detail__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+    line-height: 1.25;
+    margin: 0 0 var(--space-md);
+}
+
+.article-detail__excerpt {
+    font-size: var(--fs-xl);
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin: 0;
+    font-weight: var(--fw-light);
+}
+
+/* ── Gallery amber accents ──────────────────────────────────────────────── */
+
+.article-detail .event-gallery--photo:hover,
+.article-detail .event-gallery--video:hover {
+    border-color: var(--color-amber);
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 28px rgba(255, 179, 71, 0.12),
+                var(--glass-elev-shadow);
+}
+
+.article-detail .event-gallery__arrow:hover {
+    background: var(--color-amber);
+    border-color: var(--color-amber);
+    color: var(--color-dark);
+}
+
+.article-detail .event-gallery__dot--active {
+    background: var(--color-amber);
+}
+
+/* ── Content block amber top-border ─────────────────────────────────────── */
+
+.article-detail .event-content-block {
+    border-top: 2px solid var(--color-amber);
+    padding-inline: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+    .article-detail .event-content-block {
+        padding-inline: var(--space-2xl);
+    }
+}
+
+.article-detail .event-content-block:hover {
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 28px rgba(255, 179, 71, 0.10),
+                var(--glass-elev-shadow);
+    border-color: var(--color-amber);
+}
