@@ -1,12 +1,15 @@
 """Tests for pages app."""
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
 from apps.pages.utils import (
+    extract_media_from_html,
     remove_products_grid_from_html,
     split_after_first_vouchery_panel,
+    split_html_by_h2_into_panels,
     split_vouchery_content_into_panels,
+    strip_elementor_residue,
     strip_quick_view_from_html,
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
@@ -321,3 +324,174 @@ class TransformHtmlVoucheryIconsTests(SimpleTestCase):
         self.assertIn("Jak wygląda dostawa?", out)
         self.assertIn("PDF na email.", out)
         self.assertNotIn("elementor-accordion", out)
+
+
+# ---------------------------------------------------------------------------
+# Themed pages utils
+# ---------------------------------------------------------------------------
+
+class StripElementorResidueTests(SimpleTestCase):
+    def test_removes_premium_title_container(self) -> None:
+        html = (
+            '<div class="premium-title-container style9">'
+            '<h2 class="premium-title-header">R<span class="premium-title-style9-letter">R</span></h2>'
+            "</div>"
+            "<p>Keep me</p>"
+        )
+        out = strip_elementor_residue(html)
+        self.assertNotIn("premium-title-container", out)
+        self.assertNotIn("premium-title-style9-letter", out)
+        self.assertIn("Keep me", out)
+
+    def test_unwraps_role_button_anchor_without_href(self) -> None:
+        html = '<a role="button"><span><span>REPERTUAR</span></span></a>'
+        out = strip_elementor_residue(html)
+        self.assertNotIn('<a role="button">', out)
+        self.assertIn("REPERTUAR", out)
+
+    def test_keeps_anchor_with_href_hash(self) -> None:
+        html = '<a href="#">ZAREZERWUJ BILETY</a>'
+        out = strip_elementor_residue(html)
+        self.assertIn('<a href="#">', out)
+        self.assertIn("ZAREZERWUJ BILETY", out)
+
+    def test_removes_empty_divs(self) -> None:
+        html = "<h2>Title</h2><div></div><p>Body</p>"
+        out = strip_elementor_residue(html)
+        self.assertNotIn("<div></div>", out)
+        self.assertIn("Title", out)
+        self.assertIn("Body", out)
+
+
+class ExtractMediaFromHtmlTests(SimpleTestCase):
+    def test_extracts_img(self) -> None:
+        html = '<p><img src="https://example.com/img.jpg" alt="Test photo"></p><p>Body</p>'
+        images, videos, cleaned = extract_media_from_html(html)
+        self.assertEqual(len(images), 1)
+        self.assertEqual(images[0]["src"], "https://example.com/img.jpg")
+        self.assertEqual(images[0]["alt"], "Test photo")
+        self.assertNotIn("<img", cleaned)
+        self.assertIn("Body", cleaned)
+
+    def test_extracts_video_src(self) -> None:
+        html = (
+            '<div class="e-hosted-video">'
+            '<video controls src="https://example.com/vid.mp4"></video>'
+            "</div>"
+            "<p>Body</p>"
+        )
+        images, videos, cleaned = extract_media_from_html(html)
+        self.assertEqual(len(videos), 1)
+        self.assertEqual(videos[0]["video_url"], "https://example.com/vid.mp4")
+        self.assertNotIn("<video", cleaned)
+        self.assertIn("Body", cleaned)
+
+    def test_extracts_iframe_embed(self) -> None:
+        html = (
+            '<div><iframe src="https://youtube.com/embed/abc123"></iframe></div>'
+            "<p>Body</p>"
+        )
+        images, videos, cleaned = extract_media_from_html(html)
+        self.assertEqual(len(videos), 1)
+        self.assertIn("embed_url", videos[0])
+        self.assertEqual(videos[0]["embed_url"], "https://youtube.com/embed/abc123")
+        self.assertNotIn("<iframe", cleaned)
+
+    def test_ignores_biletyna_iframe(self) -> None:
+        html = '<div><iframe src="https://biletyna.pl/widget?id=1"></iframe></div><p>Body</p>'
+        images, videos, cleaned = extract_media_from_html(html)
+        self.assertEqual(len(videos), 0)
+
+
+class SplitHtmlByH2IntoPanelsTests(SimpleTestCase):
+    def test_content_before_first_h2_becomes_hero_intro(self) -> None:
+        html = "<p>Subtitle</p><a href='#'>CTA</a><h2>Section One</h2><p>Body one</p>"
+        out = split_html_by_h2_into_panels(html)
+        self.assertIn("page-themed__hero-intro", out)
+        self.assertIn("Subtitle", out)
+        self.assertIn("CTA", out)
+
+    def test_each_h2_starts_a_new_panel(self) -> None:
+        html = (
+            "<h2>First</h2><p>A</p>"
+            "<h2>Second</h2><p>B</p>"
+            "<h2>Third</h2><p>C</p>"
+        )
+        out = split_html_by_h2_into_panels(html)
+        # First h2 → hero-intro; remaining 2 → event-content-block panels.
+        self.assertEqual(out.count("event-content-block__body"), 2)
+        self.assertIn("page-themed__hero-intro-body", out)
+        self.assertIn("First", out)
+        self.assertIn("B", out)
+        self.assertIn("Third", out)
+
+    def test_empty_html_returns_empty(self) -> None:
+        self.assertEqual(split_html_by_h2_into_panels(""), "")
+
+    def test_no_h2_entire_content_in_hero_intro(self) -> None:
+        html = "<p>Only paragraph</p>"
+        out = split_html_by_h2_into_panels(html)
+        self.assertIn("page-themed__hero-intro", out)
+        self.assertIn("Only paragraph", out)
+        self.assertNotIn("event-content-block", out)
+
+
+# ---------------------------------------------------------------------------
+# Smoke tests for themed page views
+# ---------------------------------------------------------------------------
+
+class ThemedPageSmokeTests(TestCase):
+    fixtures: list = []
+
+    def setUp(self) -> None:
+        from apps.pages.models import StaticPage
+        for slug, title in [
+            ("dla-dzieci", "Dla dzieci"),
+            ("dla-szkol", "Dla szkół"),
+            ("dla-firm", "Dla firm"),
+            ("vouchery", "Vouchery"),
+        ]:
+            StaticPage.objects.get_or_create(
+                slug=slug,
+                defaults={
+                    "title": title,
+                    "content": f"<h2>{title}</h2><p>Test content for {slug}.</p>",
+                    "is_published": True,
+                    "layout_version": "v2" if slug == "vouchery" else "v1",
+                },
+            )
+
+    def test_dla_dzieci_returns_200_with_theme_class(self) -> None:
+        resp = self.client.get("/dla-dzieci/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "page-theme--dla-dzieci")
+
+    def test_dla_szkol_returns_200_with_theme_class(self) -> None:
+        resp = self.client.get("/dla-szkol/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "page-theme--dla-szkol")
+
+    def test_dla_firm_returns_200_with_theme_class(self) -> None:
+        resp = self.client.get("/dla-firm/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "page-theme--dla-firm")
+
+    def test_themed_pages_have_no_premium_title_residue(self) -> None:
+        for slug in ("dla-dzieci", "dla-szkol", "dla-firm"):
+            page = __import__("apps.pages.models", fromlist=["StaticPage"]).StaticPage.objects.get(slug=slug)
+            page.content = (
+                '<div class="premium-title-container style9">'
+                '<h2>R<span class="premium-title-style9-letter">R</span></h2></div>'
+                "<h2>Section</h2><p>Body</p>"
+            )
+            page.save()
+            resp = self.client.get(f"/{slug}/")
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotContains(resp, "premium-title-style9-letter")
+
+    def test_vouchery_still_uses_v2_template(self) -> None:
+        resp = self.client.get("/vouchery/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertNotContains(resp, "page-theme--")
+        # v2 template renders vouchery-page class
+        self.assertContains(resp, "vouchery-page")

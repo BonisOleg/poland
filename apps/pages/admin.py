@@ -1,10 +1,16 @@
 from django.contrib import admin
 from django.conf import settings
-from modeltranslation.admin import TranslationAdmin
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 from django_ckeditor_5.widgets import CKEditor5Widget
-from .models import StaticPage
+from .models import PageMedia, StaticPage
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
+
+
+class PageMediaInline(TranslationStackedInline):
+    model = PageMedia
+    extra = 1
+    fields = ("kind", "image", "video_file", "video_embed_url", "caption", "sort_order")
 
 
 def _apply_ckeditor(form, *base_field_names):
@@ -18,6 +24,8 @@ def _apply_ckeditor(form, *base_field_names):
 
 @admin.register(StaticPage)
 class StaticPageAdmin(TranslationAdmin):
+    inlines = [PageMediaInline]
+
     list_display = ("title", "slug", "page_type", "layout_version", "is_published", "show_contact_form", "sort_order")
     list_filter = ("page_type", "is_published")
     prepopulated_fields = {"slug": ("title",)}

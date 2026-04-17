@@ -34,3 +34,25 @@ class StaticPage(models.Model):
 
     def get_absolute_url(self):
         return f"/{self.slug}/"
+
+
+class PageMedia(models.Model):
+    KIND_IMAGE = "image"
+    KIND_VIDEO = "video"
+    KIND_CHOICES = [(KIND_IMAGE, "Zdjęcie"), (KIND_VIDEO, "Wideo")]
+
+    page = models.ForeignKey(StaticPage, on_delete=models.CASCADE, related_name="media")
+    kind = models.CharField(max_length=10, choices=KIND_CHOICES, default=KIND_IMAGE)
+    image = models.ImageField(upload_to="pages/media/", blank=True, null=True)
+    video_file = models.FileField(upload_to="pages/media/", blank=True, null=True)
+    video_embed_url = models.URLField(blank=True)
+    caption = models.CharField(max_length=300, blank=True)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Медіа сторінки"
+        verbose_name_plural = "Медіа сторінок"
+        ordering = ["sort_order", "id"]
+
+    def __str__(self):
+        return f"{self.get_kind_display()} — {self.page.slug} #{self.sort_order}"

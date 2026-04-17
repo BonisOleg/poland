@@ -1,0 +1,580 @@
+/*
+ * page-themed.css
+ * Styles for dla-dzieci, dla-szkol, dla-firm pages (static_page_themed.html).
+ * Loaded only on these 3 pages via {% block extra_css %}.
+ *
+ * Rules are always scoped under .page-themed or .page-theme--{slug}
+ * to guarantee zero interference with vouchery-page, event_detail or any other page.
+ */
+
+/* ── Shared base (all themed pages) ───────────────────────────────────────── */
+
+.page-themed.event-detail {
+    gap: var(--space-lg);
+}
+
+/* Hero-intro panel: the content before the first h2 (CTA buttons, subtitle lines) */
+.page-themed__hero-intro {
+    border-top: 3px solid var(--theme-accent, var(--color-amber));
+    padding: var(--space-xl) var(--space-lg);
+}
+
+.page-themed__hero-intro-body {
+    font-size: var(--fs-base);
+    line-height: 1.7;
+    color: var(--color-gray-light);
+}
+
+/* First child in intro: large display subtitle */
+.page-themed__hero-intro-body > p:first-child {
+    font-family: var(--font-heading);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-semibold);
+    color: var(--color-white);
+    line-height: 1.4;
+    margin-bottom: var(--space-lg);
+}
+
+/* CTA links inside the intro body that are lone-anchor paragraphs */
+.page-themed__hero-intro-body p:has(> a:only-child) a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    background: transparent;
+    border: 2px solid var(--theme-accent, var(--color-amber));
+    color: var(--theme-accent, var(--color-amber));
+    transition: background var(--transition-base), color var(--transition-fast);
+}
+
+.page-themed__hero-intro-body p:has(> a:only-child) a:hover {
+    background: var(--theme-accent, var(--color-amber));
+    color: var(--color-dark);
+}
+
+.page-themed__hero-intro-body p:has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--theme-accent, var(--color-amber));
+    outline-offset: 3px;
+}
+
+/* Gallery panels: spacing */
+.page-themed__gallery {
+    margin-bottom: 0;
+}
+
+/* Content panels from split_html_by_h2_into_panels */
+.page-themed .event-content-block {
+    border-top: 2px solid var(--theme-accent, var(--color-amber));
+    padding-inline: var(--space-lg);
+    transition: box-shadow var(--transition-base);
+}
+
+@media (min-width: 768px) {
+    .page-themed .event-content-block {
+        padding-inline: var(--space-2xl);
+    }
+}
+
+.page-themed .event-content-block:hover {
+    box-shadow: 0 0 0 1px var(--theme-accent, var(--color-amber)),
+                0 0 28px rgba(255, 179, 71, 0.12),
+                var(--glass-elev-shadow);
+}
+
+.page-themed .event-content-block__body {
+    font-size: var(--fs-base);
+    line-height: 1.78;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.page-themed .event-content-block__body > :first-child {
+    margin-top: 0;
+}
+
+/* h2 inside panels */
+.page-themed .event-content-block__body h2 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: var(--fw-bold);
+    color: var(--theme-accent, var(--color-amber));
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-themed .event-content-block__body h3 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: var(--fw-semibold);
+    color: var(--color-white);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+/* Paragraphs */
+.page-themed .event-content-block__body p {
+    margin-bottom: var(--space-md);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.page-themed .event-content-block__body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Lists: base reset (each theme customises further) */
+.page-themed .event-content-block__body ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--space-md) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.page-themed .event-content-block__body ul li {
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* city/links ul (flat multi-column lists at end of dla-dzieci) */
+.page-themed .event-content-block__body ul:has(> li > a) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-md);
+}
+
+.page-themed .event-content-block__body ul:has(> li > a) li {
+    padding-left: 0;
+}
+
+.page-themed .event-content-block__body ul:has(> li > a) li a {
+    color: var(--theme-accent, var(--color-amber));
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.page-themed .event-content-block__body ul:has(> li > a) li a:hover {
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+/* Lone-anchor CTA paragraphs inside panels */
+.page-themed .event-content-block__body p:has(> a:only-child) a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    background: transparent;
+    border: 2px solid var(--theme-accent, var(--color-amber));
+    color: var(--theme-accent, var(--color-amber));
+    transition: background var(--transition-base), color var(--transition-fast);
+}
+
+.page-themed .event-content-block__body p:has(> a:only-child) a:hover {
+    background: var(--theme-accent, var(--color-amber));
+    color: var(--color-dark);
+}
+
+.page-themed .event-content-block__body p:has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--theme-accent, var(--color-amber));
+    outline-offset: 3px;
+}
+
+/* content-icon-list: used by dla-dzieci/szkol/firm for bullet lists */
+.page-themed .event-content-block__body .content-icon-list {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--space-md) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.page-themed .event-content-block__body .content-icon-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding-left: 0;
+}
+
+/* Icon placeholder: hidden (icons were empty Elementor spans) */
+.page-themed .event-content-block__body .content-icon-list__icon {
+    display: none;
+}
+
+/* Bullet via ::before on li (theme-specific colour applied per theme below) */
+.page-themed .event-content-block__body .content-icon-list__item::before {
+    content: "●";
+    flex-shrink: 0;
+    font-size: 0.55em;
+    margin-top: 0.55em;
+    color: var(--theme-accent, var(--color-amber));
+}
+
+.page-themed .event-content-block__body .content-icon-list__text {
+    flex: 1;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* video / iframe inside panels */
+.page-themed .event-content-block__body video,
+.page-themed .event-content-block__body iframe {
+    display: block;
+    width: 100%;
+    max-width: 36rem;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border: 0;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+}
+
+/* Contact form panel */
+.page-themed__contact-panel {
+    border-top: 2px solid var(--theme-accent, var(--color-amber));
+}
+
+.page-themed__contact-title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+    margin-bottom: var(--space-lg);
+}
+
+.page-themed__contact-form {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* e-hosted-video wrapper from WordPress: make it behave */
+.page-themed .event-content-block__body .e-hosted-video {
+    margin: var(--space-lg) 0;
+}
+
+.page-themed .event-content-block__body .e-hosted-video video {
+    max-width: 36rem;
+}
+
+/* ── DLA DZIECI theme ──────────────────────────────────────────────────────
+   Playful, rounded, coral-peach accent (#FF8C69).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.page-theme--dla-dzieci {
+    --theme-accent: #ff8c69;
+    --theme-radius: 1.25rem;
+    --theme-panel-glow: rgba(255, 140, 105, 0.18);
+}
+
+.page-theme--dla-dzieci .event-detail__panel {
+    border-radius: var(--theme-radius);
+    border-color: rgba(255, 140, 105, 0.3);
+}
+
+.page-theme--dla-dzieci.event-detail .event-detail__panel:hover {
+    box-shadow: 0 0 0 1px rgba(255, 140, 105, 0.55),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+.page-theme--dla-dzieci .event-content-block__body h2 {
+    color: var(--theme-accent);
+    border-bottom-color: rgba(255, 140, 105, 0.2);
+}
+
+/* Custom bullet: star ✦ in coral */
+.page-theme--dla-dzieci .event-content-block__body ul li::before {
+    content: "✦";
+    color: var(--theme-accent);
+    font-size: 0.65em;
+    margin-top: 0.4em;
+}
+
+.page-theme--dla-dzieci .event-content-block__body .content-icon-list__item::before {
+    content: "✦";
+    color: var(--theme-accent);
+}
+
+/* h2 underline decal */
+.page-theme--dla-dzieci .page-themed__hero-intro {
+    border-top-color: var(--theme-accent);
+}
+
+.page-theme--dla-dzieci .event-content-block {
+    border-top-color: var(--theme-accent);
+}
+
+/* Arrow hover: coral */
+.page-theme--dla-dzieci .event-gallery__arrow:hover {
+    background: var(--theme-accent);
+    border-color: var(--theme-accent);
+    color: var(--color-dark);
+}
+
+.page-theme--dla-dzieci .event-gallery--photo:hover {
+    border-color: var(--theme-accent);
+    box-shadow: 0 0 0 1px var(--theme-accent),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+/* Dot active: coral */
+.page-theme--dla-dzieci .event-gallery__dot--active {
+    background: var(--theme-accent);
+}
+
+
+/* ── DLA SZKOL theme ──────────────────────────────────────────────────────
+   Structured/educational: sharp left border, indigo+amber accents.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.page-theme--dla-szkol {
+    --theme-accent: var(--color-amber);
+    --theme-secondary: #7c8cff;
+    --theme-radius: 0.5rem;
+    --theme-panel-glow: rgba(124, 140, 255, 0.15);
+}
+
+.page-theme--dla-szkol .event-detail__panel {
+    border-radius: var(--theme-radius);
+    border-left: 4px solid var(--theme-secondary);
+    border-color: rgba(124, 140, 255, 0.35);
+    border-left-color: var(--theme-secondary);
+}
+
+.page-theme--dla-szkol.event-detail .event-detail__panel:hover {
+    box-shadow: 0 0 0 1px rgba(124, 140, 255, 0.5),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+.page-theme--dla-szkol .event-content-block__body h2 {
+    color: var(--theme-secondary);
+    border-bottom-color: rgba(124, 140, 255, 0.2);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Numbered badge bullets for ordered lists */
+.page-theme--dla-szkol .event-content-block__body ol {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--space-md) 0;
+    counter-reset: szkol-counter;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.page-theme--dla-szkol .event-content-block__body ol li {
+    counter-increment: szkol-counter;
+    padding-left: 2.25rem;
+    position: relative;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.page-theme--dla-szkol .event-content-block__body ol li::before {
+    content: counter(szkol-counter);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--radius-full);
+    background: var(--color-amber);
+    color: var(--color-dark);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: var(--fw-bold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ul bullet: indigo square */
+.page-theme--dla-szkol .event-content-block__body ul li::before {
+    content: "▪";
+    color: var(--theme-secondary);
+    font-size: 0.8em;
+    margin-top: 0.3em;
+}
+
+.page-theme--dla-szkol .event-content-block__body .content-icon-list__item::before {
+    content: "▪";
+    color: var(--theme-secondary);
+    font-size: 0.8em;
+}
+
+.page-theme--dla-szkol .page-themed__hero-intro {
+    border-top-color: var(--theme-secondary);
+}
+
+.page-theme--dla-szkol .event-content-block {
+    border-top-color: var(--theme-secondary);
+}
+
+.page-theme--dla-szkol .event-gallery__arrow:hover {
+    background: var(--theme-secondary);
+    border-color: var(--theme-secondary);
+    color: var(--color-white);
+}
+
+.page-theme--dla-szkol .event-gallery--video:hover,
+.page-theme--dla-szkol .event-gallery--photo:hover {
+    border-color: var(--theme-secondary);
+    box-shadow: 0 0 0 1px var(--theme-secondary),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+.page-theme--dla-szkol .event-gallery__dot--active {
+    background: var(--theme-secondary);
+}
+
+
+/* ── DLA FIRM theme ───────────────────────────────────────────────────────
+   Corporate minimal: sharp corners, amber accent, uppercase headings.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.page-theme--dla-firm {
+    --theme-accent: var(--color-amber);
+    --theme-radius: 0.25rem;
+    --theme-panel-glow: rgba(255, 179, 71, 0.12);
+}
+
+.page-theme--dla-firm .event-detail__panel {
+    border-radius: var(--theme-radius);
+    border-color: rgba(255, 179, 71, 0.25);
+}
+
+.page-theme--dla-firm.event-detail .event-detail__panel:hover {
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+.page-theme--dla-firm .event-content-block__body h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-amber);
+    border-bottom-color: rgba(255, 179, 71, 0.2);
+}
+
+.page-theme--dla-firm .event-content-block__body h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: var(--fs-sm);
+    color: var(--color-amber);
+}
+
+/* ul: left bar instead of bullets */
+.page-theme--dla-firm .event-content-block__body ul {
+    gap: var(--space-xs);
+}
+
+.page-theme--dla-firm .event-content-block__body ul li {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(255, 179, 71, 0.4);
+    list-style: none;
+}
+
+.page-theme--dla-firm .event-content-block__body ul li::before {
+    display: none;
+}
+
+.page-theme--dla-firm .event-content-block__body .content-icon-list__item {
+    padding-left: 1rem;
+    border-left: 2px solid rgba(255, 179, 71, 0.4);
+}
+
+.page-theme--dla-firm .event-content-block__body .content-icon-list__item::before {
+    display: none;
+}
+
+.page-theme--dla-firm .page-themed__hero-intro {
+    border-top-color: var(--color-amber);
+}
+
+.page-theme--dla-firm .event-content-block {
+    border-top-color: var(--color-amber);
+}
+
+/* CTA buttons: filled amber */
+.page-theme--dla-firm .page-themed__hero-intro-body p:has(> a:only-child) a,
+.page-theme--dla-firm .event-content-block__body p:has(> a:only-child) a {
+    background: var(--color-amber);
+    color: var(--color-dark);
+    border-color: var(--color-amber);
+}
+
+.page-theme--dla-firm .page-themed__hero-intro-body p:has(> a:only-child) a:hover,
+.page-theme--dla-firm .event-content-block__body p:has(> a:only-child) a:hover {
+    background: transparent;
+    color: var(--color-amber);
+}
+
+/* Arrow + dots */
+.page-theme--dla-firm .event-gallery__dot--active {
+    background: var(--color-amber);
+}
+
+.page-theme--dla-firm .event-gallery--photo:hover,
+.page-theme--dla-firm .event-gallery--video:hover {
+    border-color: var(--color-amber);
+    box-shadow: 0 0 0 1px var(--color-amber),
+                0 0 28px var(--theme-panel-glow),
+                var(--glass-elev-shadow);
+}
+
+/* Suppress Elementor residue still in DB (defensive) */
+.page-themed .premium-title-container,
+.page-themed .premium-title-style9-letter,
+.page-themed i[class*="fa-"],
+.page-themed i[class*="eicon"],
+.page-themed [class*="premium-woo"] {
+    display: none;
+}
+
+/* Biletyna iframe block: full-width responsive */
+.page-themed #biletyna_iframe {
+    width: 100%;
+    min-height: 480px;
+    border: none;
+    border-radius: var(--radius-md);
+    display: block;
+    margin: var(--space-lg) 0;
+}
+
+/* Embedded <script> tags produce no visual output; ignore */
+.page-themed script {
+    display: none;
+}

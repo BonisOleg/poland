@@ -428,6 +428,179 @@ def extract_images_from_html(html: str) -> tuple[list[dict[str, str]], str]:
     return images, str(soup)
 
 
+# ---------------------------------------------------------------------------
+# Themed pages helpers (dla-dzieci, dla-szkol, dla-firm)
+# ---------------------------------------------------------------------------
+
+_THEMED_SLUGS: frozenset[str] = frozenset({"dla-dzieci", "dla-szkol", "dla-firm"})
+
+
+def strip_elementor_residue(html: str) -> str:
+    """Remove leftover Elementor widgets that have no semantic value.
+
+    Targets (safe to remove — purely decorative or broken):
+    - .premium-title-container (animated letter spans)
+    - spacer <div> / <div></div> with no content
+    - <a role="button"> without href (dead CTA buttons from Elementor import)
+    - empty <span> inside .content-icon-list__icon (icon placeholder)
+
+    Leaves intact:
+    - <a href="..."> even if href="#" (CTA stubs to be resolved later)
+    - all h1/h2/h3/p/ul/li/video/iframe — SEO-critical nodes
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 1. Remove premium-title-container (animated letter-by-letter spans)
+    for el in soup.select(".premium-title-container"):
+        el.decompose()
+
+    # 2. Unwrap <a role="button"> without an href (renders as nothing useful)
+    for a in soup.find_all("a"):
+        if not isinstance(a, Tag):
+            continue
+        href = (a.get("href") or "").strip()
+        role = (a.get("role") or "").strip().lower()
+        if role == "button" and not href:
+            a.unwrap()
+
+    # 3. Remove spacer <div> elements that have no meaningful content
+    for div in soup.find_all("div"):
+        if not isinstance(div, Tag):
+            continue
+        if div.get("class"):
+            continue
+        text = div.get_text(strip=True)
+        if not text and not div.find(["img", "video", "iframe", "picture", "svg"]):
+            div.decompose()
+
+    # 4. Remove empty spans inside .content-icon-list__icon (icon placeholders)
+    for span in soup.select(".content-icon-list__icon span"):
+        if isinstance(span, Tag) and not span.get_text(strip=True) and not span.find(True):
+            span.decompose()
+
+    return str(soup)
+
+
+def extract_media_from_html(html: str) -> tuple[list[dict[str, str]], list[dict[str, str]], str]:
+    """Extract all <img>, <video>, and <iframe> from HTML, return them and cleaned HTML.
+
+    Returns:
+        (images, videos, cleaned_html)
+        images: list of {"src": ..., "alt": ...}
+        videos: list of {"video_url": ...} or {"embed_url": ...} (mutually exclusive keys)
+    """
+    if not html or not html.strip():
+        return [], [], html
+
+    soup = BeautifulSoup(html, "html.parser")
+    images: list[dict[str, str]] = []
+    videos: list[dict[str, str]] = []
+
+    # --- images ---
+    for img in soup.find_all("img"):
+        if not isinstance(img, Tag):
+            continue
+        src = (img.get("src") or "").strip()
+        if not src:
+            img.decompose()
+            continue
+        alt = (img.get("alt") or "").strip()
+        images.append({"src": src, "alt": alt})
+        parent = img.parent
+        img.decompose()
+        if parent and isinstance(parent, Tag) and parent.name in ("a", "p", "figure", "div", "li"):
+            if not parent.get_text(strip=True) and not parent.find(True):
+                parent.decompose()
+
+    # --- videos ---
+    for video in soup.find_all("video"):
+        if not isinstance(video, Tag):
+            continue
+        src = (video.get("src") or "").strip()
+        if not src:
+            source = video.find("source")
+            if isinstance(source, Tag):
+                src = (source.get("src") or "").strip()
+        if src:
+            videos.append({"video_url": src})
+        parent = video.parent
+        video.decompose()
+        if parent and isinstance(parent, Tag) and parent.name in ("div", "p", "figure"):
+            if not parent.get_text(strip=True) and not parent.find(True):
+                parent.decompose()
+
+    # --- iframes (embeds) — only non-biletyna ones counted as gallery media ---
+    _BILETYNA_HOSTS = {"biletyna.pl", "biletyna.com"}
+    for iframe in soup.find_all("iframe"):
+        if not isinstance(iframe, Tag):
+            continue
+        src = (iframe.get("src") or "").strip()
+        if not src:
+            continue
+        from urllib.parse import urlparse
+        host = urlparse(src).netloc.lstrip("www.")
+        if host in _BILETYNA_HOSTS:
+            continue
+        videos.append({"embed_url": src})
+        parent = iframe.parent
+        iframe.decompose()
+        if parent and isinstance(parent, Tag) and parent.name in ("div", "p", "figure"):
+            if not parent.get_text(strip=True) and not parent.find(True):
+                parent.decompose()
+
+    return images, videos, str(soup)
+
+
+def split_html_by_h2_into_panels(html: str) -> str:
+    """Split flat HTML into stacked event-style panels, each starting at a top-level <h2>.
+
+    Content before the first <h2> → section.event-detail__panel.page-themed__hero-intro
+    Each subsequent group starting at <h2> → section.event-detail__panel.event-content-block
+                                               > div.event-content-block__body
+
+    The function works on top-level nodes only (same as split_vouchery_content_into_panels).
+    """
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    nodes = [c for c in soup.children if isinstance(c, Tag)]
+    if not nodes:
+        return html
+
+    panels: list[list[Tag]] = []
+    current: list[Tag] = []
+    for node in nodes:
+        if node.name == "h2" and current:
+            panels.append(current)
+            current = [node]
+        else:
+            current.append(node)
+    if current:
+        panels.append(current)
+
+    parts: list[str] = []
+    for i, panel_nodes in enumerate(panels):
+        inner = "".join(str(n) for n in panel_nodes)
+        if i == 0:
+            parts.append(
+                '<section class="event-detail__panel page-themed__hero-intro">'
+                f'<div class="page-themed__hero-intro-body">{inner}</div>'
+                "</section>"
+            )
+        else:
+            parts.append(
+                '<section class="event-detail__panel event-content-block">'
+                f'<div class="event-content-block__body">{inner}</div>'
+                "</section>"
+            )
+
+    return "\n".join(parts) if parts else html
+
+
 def _h2_opens_vouchery_v2_section(tag: Tag) -> bool:
     if tag.name == "h2":
         t = (tag.get_text() or "").strip().lower()

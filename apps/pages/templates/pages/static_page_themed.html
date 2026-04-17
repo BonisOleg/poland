@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ page.seo_description }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/page-themed.css' %}?v={{ STATIC_ASSET_VERSION }}">
+{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<section class="section">
+    <div class="container page-container--narrow event-detail page-themed page-theme--{{ page_theme|slugify }}">
+        <h1 class="page-title">{{ page.title }}</h1>
+
+        {# ── Photo gallery ──────────────────────────────────────────── #}
+        {% if images %}
+        <section class="event-detail__panel event-gallery event-gallery--photo page-themed__gallery" aria-label="{% trans 'Galeria zdjęć' %}">
+            <h2 class="event-gallery__title">{% trans "Galeria" %}</h2>
+            <div class="event-gallery__carousel-wrap">
+                <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="event-gallery__carousel-viewport">
+                    <div class="event-gallery__carousel" data-carousel>
+                        {% for image in images %}
+                        <button class="event-gallery__thumb-btn" type="button"
+                                data-lightbox-src="{{ image.src }}"
+                                data-lightbox-alt="{{ image.alt|default:page.title }}"
+                                aria-label="{% trans 'Powiększ zdjęcie' %}">
+                            <img src="{{ image.src }}"
+                                 alt="{{ image.alt|default:page.title }}"
+                                 class="event-gallery__thumb"
+                                 loading="lazy">
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="event-gallery__dots" aria-hidden="true"></div>
+        </section>
+        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+            <img src="" alt="" class="event-lightbox__img">
+        </dialog>
+        {% endif %}
+
+        {# ── Video gallery ──────────────────────────────────────────── #}
+        {% if videos %}
+        <section class="event-detail__panel event-gallery event-gallery--video page-themed__gallery" aria-label="{% trans 'Galeria wideo' %}">
+            <h2 class="event-gallery__title">{% trans "Wideo" %}</h2>
+            <div class="event-gallery__carousel-wrap">
+                <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="event-gallery__carousel-viewport">
+                    <div class="event-gallery__carousel event-gallery__carousel--video" data-carousel>
+                        {% for vid in videos %}
+                        <div class="event-gallery__video-item">
+                            {% if vid.video_url %}
+                            <video class="event-gallery__iframe" controls preload="metadata" title="{{ page.title }}">
+                                <source src="{{ vid.video_url }}">
+                            </video>
+                            {% elif vid.embed_url %}
+                            <iframe src="{{ vid.embed_url }}"
+                                    title="{{ page.title }}"
+                                    class="event-gallery__iframe"
+                                    allowfullscreen
+                                    loading="lazy"
+                                    sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="event-gallery__arrow event-gallery__arrow--next" aria-label="{% trans 'Następne' %}" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="event-gallery__dots" aria-hidden="true"></div>
+        </section>
+        {% if not images %}
+        {# Lightbox rendered once; photo gallery already renders it when images present #}
+        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+            <img src="" alt="" class="event-lightbox__img">
+        </dialog>
+        {% endif %}
+        {% endif %}
+
+        {# ── Content panels (hero-intro + h2-split sections) ──────── #}
+        {{ panels_html|safe }}
+
+        {# ── Optional contact form ─────────────────────────────────── #}
+        {% if page.show_contact_form %}
+        <section class="event-detail__panel page-themed__contact-panel">
+            <h2 class="page-themed__contact-title">{% trans "Formularz kontaktowy" %}</h2>
+            <form method="post" action="/contact/" class="page-themed__contact-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="themed-name">{% trans "Imię i nazwisko" %}</label>
+                    <input type="text" id="themed-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="themed-email">{% trans "Email" %}</label>
+                    <input type="email" id="themed-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="themed-org">{% trans "Organizacja" %}</label>
+                    <input type="text" id="themed-org" name="organization">
+                </div>
+                <div class="form-group">
+                    <label for="themed-msg">{% trans "Wiadomość" %}</label>
+                    <textarea id="themed-msg" name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary">{% trans "Wyślij" %}</button>
+            </form>
+        </section>
+        {% endif %}
+
+    </div>{# /.container #}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/event-gallery.js' %}" defer></script>
+{% endblock %}

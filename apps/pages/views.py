@@ -4,10 +4,14 @@ from django.utils.translation import gettext as _
 
 from .models import StaticPage
 from .utils import (
+    _THEMED_SLUGS,
     extract_images_from_html,
+    extract_media_from_html,
     remove_products_grid_from_html,
     split_after_first_vouchery_panel,
+    split_html_by_h2_into_panels,
     split_vouchery_content_into_panels,
+    strip_elementor_residue,
     strip_quick_view_from_html,
     tag_products_grid,
     tag_vouchery_faq_section,
@@ -27,8 +31,50 @@ def _prepare_vouchery_content(html: str) -> str:
     return html
 
 
+def _render_themed_page(request, page):
+    """Render dla-dzieci / dla-szkol / dla-firm with the themed layout."""
+    html = strip_elementor_residue(page.content)
+
+    db_media = list(page.media.all())
+    if db_media:
+        # DB media is authoritative — just strip media tags from html to avoid duplication
+        images_from_db = [
+            {"src": m.image.url, "alt": m.caption or page.title}
+            for m in db_media
+            if m.kind == "image" and m.image
+        ]
+        videos_from_db = []
+        for m in db_media:
+            if m.kind != "video":
+                continue
+            if m.video_file:
+                videos_from_db.append({"video_url": m.video_file.url})
+            elif m.video_embed_url:
+                videos_from_db.append({"embed_url": m.video_embed_url})
+        # Strip media tags from html so they're not duplicated inside panels
+        _, _, html = extract_media_from_html(html)
+        images, videos = images_from_db, videos_from_db
+    else:
+        images, videos, html = extract_media_from_html(html)
+
+    panels_html = split_html_by_h2_into_panels(html)
+    # Derive slug from page.slug for a stable theme class; keep it simple
+    page_theme = page.slug  # e.g. "dla-dzieci"
+
+    ctx = {
+        "page": page,
+        "page_theme": page_theme,
+        "panels_html": panels_html,
+        "images": images,
+        "videos": videos,
+    }
+    return render(request, "pages/static_page_themed.html", ctx)
+
+
 def _render_static_page(request, page, extra_ctx=None):
     ctx = {"page": page, **(extra_ctx or {})}
+    if page.slug in _THEMED_SLUGS:
+        return _render_themed_page(request, page)
     if page.slug == "vouchery" and page.layout_version != "v2":
         ctx["vouchery_content"] = _prepare_vouchery_content(page.content)
     if page.layout_version == "v2":
