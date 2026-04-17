@@ -91,34 +91,34 @@ def _render_static_page(request, page, extra_ctx=None):
     ctx = {"page": page, **(extra_ctx or {})}
     if page.slug in _THEMED_SLUGS:
         return _render_themed_page(request, page)
-    if page.slug == "vouchery" and page.layout_version != "v2":
-        ctx["vouchery_content"] = _prepare_vouchery_content(page.content)
-    if page.layout_version == "v2":
+    if page.slug == "vouchery":
         from apps.vouchers.models import Voucher
 
         images, content_no_images = extract_images_from_html(page.content)
         content_no_images = _prepare_vouchery_content(content_no_images)
-        if page.slug == "vouchery":
-            content_no_images = split_vouchery_content_into_panels(
-                content_no_images,
-                vouchery_button_href="#voucher",
-                vouchery_button_label=_("KLIKNIJ PO PREZENT"),
-            )
-            content_no_images = remove_products_grid_from_html(content_no_images)
-            vouchery_first_panel, vouchery_rest_panels = split_after_first_vouchery_panel(
-                content_no_images
-            )
-            vouchers = Voucher.objects.filter(is_active=True).order_by("sort_order", "price")
-            ctx.update(
-                {
-                    "gallery_images": images,
-                    "vouchery_first_panel": vouchery_first_panel,
-                    "vouchery_rest_panels": vouchery_rest_panels,
-                    "vouchers": vouchers,
-                }
-            )
-        else:
-            ctx.update({"gallery_images": images, "content_no_images": content_no_images})
+        content_no_images = split_vouchery_content_into_panels(
+            content_no_images,
+            vouchery_button_href="#voucher",
+            vouchery_button_label=_("KLIKNIJ PO PREZENT"),
+        )
+        content_no_images = remove_products_grid_from_html(content_no_images)
+        vouchery_first_panel, vouchery_rest_panels = split_after_first_vouchery_panel(
+            content_no_images
+        )
+        vouchers = Voucher.objects.filter(is_active=True).order_by("sort_order", "price")
+        ctx.update(
+            {
+                "gallery_images": images,
+                "vouchery_first_panel": vouchery_first_panel,
+                "vouchery_rest_panels": vouchery_rest_panels,
+                "vouchers": vouchers,
+            }
+        )
+        return render(request, "pages/static_page_v2.html", ctx)
+    if page.layout_version == "v2":
+        images, content_no_images = extract_images_from_html(page.content)
+        content_no_images = _prepare_vouchery_content(content_no_images)
+        ctx.update({"gallery_images": images, "content_no_images": content_no_images})
         return render(request, "pages/static_page_v2.html", ctx)
     return render(request, "pages/static_page.html", ctx)
 

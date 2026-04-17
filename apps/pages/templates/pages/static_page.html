@@ -8,14 +8,10 @@
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
 <section class="section">
-    <div class="container page-container--narrow{% if page.slug == 'vouchery' %} vouchery-page event-detail{% endif %}">
+    <div class="container page-container--narrow">
         <h1 class="page-title">{{ page.title }}</h1>
-        <div class="event-content{% if page.slug == 'vouchery' %} event-content--vouchery{% endif %}"
-             {% if page.slug == 'vouchery' %}
-             data-vouchery-button-href="/cart/"
-             data-vouchery-button-label="{% trans 'KLIKNIJ PO PREZENT' %}"
-             {% endif %}>
-            {% if page.slug == 'vouchery' %}{{ vouchery_content|safe }}{% else %}{{ page.content|safe }}{% endif %}
+        <div class="event-content">
+            {{ page.content|safe }}
         </div>
 
         {% if page.show_contact_form %}
@@ -45,12 +41,4 @@
         {% endif %}
     </div>
 </section>
-{% endblock %}
-
-{% block extra_js %}
-{% if page.slug == 'vouchery' %}
-<script type="module" src="{% static 'js/vouchery-cart.js' %}"></script>
-<script type="module" src="{% static 'js/vouchery-product-cards.js' %}"></script>
-<script type="module" src="{% static 'js/vouchery-faq.js' %}"></script>
-{% endif %}
 {% endblock %}
