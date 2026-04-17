@@ -85,6 +85,7 @@ def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedCont
     _extract_and_drop_rekomendacje(soup)
     _extract_videos(soup, videos)
     _extract_swiper_galleries(soup, photos)
+    _extract_wp_gallery_columns(soup, photos)
     _extract_premium_banner_images(soup, photos)
     _drop_duplicate_headings(soup, ec)
     _drop_duplicate_ctas(soup, ec)
@@ -302,28 +303,74 @@ def _extract_swiper_galleries(soup: BeautifulSoup, photos: list[dict]) -> None:
         carousel.decompose()
 
 
+def _extract_wp_gallery_columns(soup: BeautifulSoup, photos: list[dict]) -> None:
+    """Extract images from WordPress gallery shortcode blocks
+    (`<div class="gallery galleryid-... gallery-columns-...">`) and remove the block.
+
+    WP renders each item as:
+        <figure class="gallery-item">
+          <div class="gallery-icon">
+            <a href="full-size.jpg"><img src="thumb.jpg" alt="..."></a>
+          </div>
+        </figure>
+
+    We prefer the `href` (full-resolution) over `src` (thumbnail).
+    """
+    for gallery in list(soup.select("div[class*='gallery-columns']")):
+        for item in gallery.select(".gallery-item"):
+            anchor = item.find("a")
+            img = item.find("img")
+            if not img:
+                continue
+            # Prefer the anchor href (full image) over the thumbnail src
+            href = (anchor.get("href") or "").strip() if anchor else ""
+            src = href if href and not href.startswith("#") else _image_src(img)
+            if not src:
+                continue
+            photos.append({"src": src, "alt": (img.get("alt") or "").strip()})
+
+        # Drop a preceding "Galeria" heading
+        prev = gallery.find_previous_sibling()
+        # The WP gallery is sometimes wrapped in an extra <div> inserted by transform_html
+        parent = gallery.parent
+        if isinstance(parent, Tag) and parent.name == "div" and not parent.get("class"):
+            actual_prev = parent.find_previous_sibling()
+            if isinstance(actual_prev, Tag) and actual_prev.name in {"h2", "h3"}:
+                if actual_prev.get_text(" ", strip=True).lower().strip() in _DROP_HEADINGS:
+                    actual_prev.decompose()
+            parent.decompose()
+        else:
+            if isinstance(prev, Tag) and prev.name in {"h2", "h3"}:
+                if prev.get_text(" ", strip=True).lower().strip() in _DROP_HEADINGS:
+                    prev.decompose()
+            gallery.decompose()
+
+
 def _extract_premium_banner_images(soup: BeautifulSoup, photos: list[dict]) -> None:
-    """Premium-banner images are decorative promo frames; do NOT add to gallery,
-    just unwrap so the banner's copy survives as a clean content block."""
+    """Premium-banner images are decorative promo frames with accompanying text.
+    We clean up Elementor-specific attributes/classes, then simply unwrap the
+    banner container so the image and caption text become siblings inside the
+    parent content block — no wrapping <figure> that would clip the text via
+    max-height/overflow."""
     for banner in list(soup.select(".premium-banner-ib")):
-        # Collect anchor & ensure image src is present (kept inline — CSS hides it
-        # if desired later). For now we just unwrap so children become siblings.
         for tag in banner.find_all(True):
-            if isinstance(tag, Tag):
-                for attr in list(tag.attrs):
-                    if attr.startswith("data-") or attr in {"decoding", "loading", "fetchpriority", "srcset", "sizes"}:
-                        del tag.attrs[attr]
-        # Unwrap nested desc wrappers
+            if not isinstance(tag, Tag):
+                continue
+            for attr in list(tag.attrs):
+                if attr.startswith("data-") or attr in {
+                    "decoding", "loading", "fetchpriority", "srcset", "sizes",
+                }:
+                    del tag.attrs[attr]
+        # Flatten desc wrappers
         for desc in banner.select(".premium-banner-ib-desc, .premium-banner-ib-content"):
             desc.unwrap()
-        for cls in ("premium-banner-ib-title", "premium_banner_title"):
-            for el in banner.select(f".{cls}"):
-                _set_class(el, None)
-        # Replace banner div with a simple figure containing its children
-        figure = soup.new_tag("figure", attrs={"class": "event-content-block__figure"})
-        for child in list(banner.children):
-            figure.append(child.extract() if isinstance(child, Tag) else child)
-        banner.replace_with(figure)
+        # Drop Elementor-specific class names from title elements
+        for el in banner.select(".premium-banner-ib-title, .premium_banner_title"):
+            _set_class(el, None)
+        # Unwrap the banner container itself — children become siblings in the
+        # parent block, so CSS max-height/overflow on .event-content-block__figure
+        # (which no longer wraps them) cannot clip the caption text.
+        banner.unwrap()
 
 
 def _drop_duplicate_headings(soup: BeautifulSoup, ec: "EventCity | None") -> None:

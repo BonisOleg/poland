@@ -286,3 +286,99 @@ class EventDetailSiblingGalleryFallbackTests(TestCase):
         self.assertContains(response, "event-gallery--photo")
         self.assertContains(response, "https://sibling.example.com/a.jpg")
         self.assertContains(response, "https://sibling.example.com/b.jpg")
+
+
+WP_GALLERY_CONTENT_HTML = """
+<h2>Główny opis</h2>
+<p>Ciekawy spektakl dla całej rodziny.</p>
+<h2>Galeria</h2>
+<div>
+<div class="gallery galleryid-1234 gallery-columns-5 gallery-size-full" id="gallery-1">
+  <figure class="gallery-item">
+    <div class="gallery-icon landscape">
+      <a href="https://example.com/full/photo1.jpg">
+        <img src="https://example.com/thumb/photo1-300x169.jpg" alt="Spektakl foto 1">
+      </a>
+    </div>
+  </figure>
+  <figure class="gallery-item">
+    <div class="gallery-icon landscape">
+      <a href="https://example.com/full/photo2.jpg">
+        <img src="https://example.com/thumb/photo2-300x169.jpg" alt="Spektakl foto 2">
+      </a>
+    </div>
+  </figure>
+</div>
+</div>
+"""
+
+PREMIUM_BANNER_CONTENT_HTML = """
+<h2>Oferta grupowa</h2>
+<div class="premium-banner-ib premium-banner-min-height">
+  <img alt="" src="https://example.com/banner.jpg" width="1920" height="1080"/>
+  <div class="premium-banner-ib-desc">
+    <h3 class="premium-banner-ib-title">DLA SZKÓŁ</h3>
+    <div class="premium-banner-ib-content">
+      <p>Jesteś przedstawicielem szkoły? Mamy specjalną ofertę.</p>
+    </div>
+  </div>
+</div>
+"""
+
+
+class EventDetailWpGalleryTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Tarnów", slug="tarnow-wp")
+        cls.event = Event.objects.create(title="WP Gallery Test", slug="wp-gallery-test")
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="wp-gallery-test-tarnow",
+            is_published=True,
+            use_new_layout=False,
+            content_html=WP_GALLERY_CONTENT_HTML,
+        )
+
+    def test_wp_gallery_columns_extracted_into_photo_carousel(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "event-gallery--photo")
+        # Full-size href is used, not the thumbnail src
+        self.assertContains(response, "https://example.com/full/photo1.jpg")
+        self.assertContains(response, "https://example.com/full/photo2.jpg")
+        # Raw gallery-columns markup is removed from body
+        self.assertNotContains(response, "gallery-columns-5")
+        self.assertNotContains(response, "gallery-item")
+
+    def test_galeria_heading_removed(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        body = response.content.decode()
+        # The "Galeria" h2 heading must not appear in the rendered content
+        self.assertNotIn("<h2>Galeria</h2>", body)
+
+
+class EventDetailPremiumBannerTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Kraków", slug="krakow-banner")
+        cls.event = Event.objects.create(title="Banner Test", slug="banner-test")
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="banner-test-krakow",
+            is_published=True,
+            use_new_layout=False,
+            content_html=PREMIUM_BANNER_CONTENT_HTML,
+        )
+
+    def test_banner_caption_text_not_hidden_in_figure(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        # Caption text must be visible (not inside clipped <figure>)
+        self.assertContains(response, "DLA SZKÓŁ")
+        self.assertContains(response, "Mamy specjalną ofertę")
+        # Banner image must be present inline
+        self.assertContains(response, "https://example.com/banner.jpg")
+        # No wrapping figure with overflow-hiding class
+        self.assertNotContains(response, 'class="event-content-block__figure"')
