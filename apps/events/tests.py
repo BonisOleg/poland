@@ -207,3 +207,82 @@ class EventDetailLegacyLayoutTests(TestCase):
         self.assertContains(self.response, "5 POWODÓW")
         self.assertContains(self.response, "PRZEŻYJ EMOCJE")
         self.assertContains(self.response, "btn--outline-amber")
+
+
+ORPHAN_CONTENT_HTML = """
+<h2>Main description heading</h2>
+<p>Important paragraph.</p>
+<h2>Galeria</h2>
+<p><img alt="DSC_3193"/></p>
+<p><img alt="DG1P9985"/></p>
+<p><img alt="IMG_0077"/></p>
+"""
+
+SIBLING_CONTENT_HTML = """
+<h2>Main description heading</h2>
+<p>Important paragraph.</p>
+<h2>Galeria</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><img alt="DSC_3193" data-src="https://sibling.example.com/a.jpg"></div>
+    <div class="swiper-slide"><img alt="DG1P9985" data-src="https://sibling.example.com/b.jpg"></div>
+  </div>
+</div>
+"""
+
+
+class EventDetailOrphanImgTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Gdańsk", slug="gdansk-orphan")
+        cls.event = Event.objects.create(title="Orphan Test", slug="orphan-test")
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="orphan-test-gdansk",
+            is_published=True,
+            use_new_layout=False,
+            content_html=ORPHAN_CONTENT_HTML,
+        )
+
+    def test_orphan_images_do_not_leak_alt_text(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode()
+        # Alt-only <img> without src/data-src must not render at all
+        self.assertNotIn('alt="DSC_3193"', body)
+        self.assertNotIn('alt="DG1P9985"', body)
+        self.assertNotIn('alt="IMG_0077"', body)
+        # No photo gallery without a real sibling fallback
+        self.assertNotContains(response, "event-gallery--photo")
+
+
+class EventDetailSiblingGalleryFallbackTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city_a = City.objects.create(name="Szczecin", slug="szczecin-sib")
+        cls.city_b = City.objects.create(name="Gdańsk", slug="gdansk-sib")
+        cls.event = Event.objects.create(title="Sibling Test", slug="sibling-test")
+        cls.sibling = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city_a,
+            slug="sibling-test-szczecin",
+            is_published=True,
+            use_new_layout=False,
+            content_html=SIBLING_CONTENT_HTML,
+        )
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city_b,
+            slug="sibling-test-gdansk",
+            is_published=True,
+            use_new_layout=False,
+            content_html=ORPHAN_CONTENT_HTML,
+        )
+
+    def test_sibling_gallery_falls_back_for_orphan_event(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "event-gallery--photo")
+        self.assertContains(response, "https://sibling.example.com/a.jpg")
+        self.assertContains(response, "https://sibling.example.com/b.jpg")

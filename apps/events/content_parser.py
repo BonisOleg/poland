@@ -91,6 +91,7 @@ def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedCont
     _drop_empty_nav_buttons(soup)
     _drop_elementor_chevron_svgs(soup)
     _bullet_h3_to_ul(soup)
+    _drop_orphan_images(soup)
     _drop_empty_containers(soup)
 
     photos = _dedupe_photos(photos, ec)
@@ -104,14 +105,82 @@ def build_detail_sections(ec: "EventCity") -> ParsedContent:
     """Return ParsedContent regardless of which layout the EventCity uses.
 
     For `use_new_layout=True` we read model relations; otherwise we parse
-    `content_html`. Consumers (template) always see the same shape.
+    `content_html`. If the event-city has no media of its own we fall back
+    to the first sibling EventCity (same Event) that does, so events like
+    a concert tour share gallery/video assets city-to-city even when one
+    city's import was truncated.
     """
-    model_photos = [
+    parsed, model_blocks = _collect_sections(ec)
+
+    if not parsed.photos or not parsed.videos:
+        for sibling in _iter_siblings(ec):
+            sib_photos, sib_videos = _collect_media(sibling)
+            if not parsed.photos and sib_photos:
+                parsed.photos = sib_photos
+            if not parsed.videos and sib_videos:
+                parsed.videos = sib_videos
+            if parsed.photos and parsed.videos:
+                break
+
+    parsed.blocks = parsed.blocks + model_blocks
+    return parsed
+
+
+def _collect_sections(ec: "EventCity") -> tuple[ParsedContent, list[dict]]:
+    """Build ParsedContent from the event-city's own data (content_html + model
+    relations). Content blocks from the model are returned separately so the
+    caller can append them after any sibling-media fallback logic."""
+    model_photos, model_videos = _model_media(ec)
+    model_blocks = _model_blocks(ec)
+
+    if ec.use_new_layout:
+        return (
+            ParsedContent(
+                intro_html="",
+                photos=model_photos,
+                videos=model_videos,
+                blocks=[],
+            ),
+            model_blocks,
+        )
+
+    parsed = parse_legacy_content(ec.content_html or "", ec)
+    parsed.photos = _dedupe_photos(parsed.photos + model_photos, ec)
+    parsed.videos = _dedupe_videos(parsed.videos + model_videos)
+    return parsed, model_blocks
+
+
+def _collect_media(ec: "EventCity") -> tuple[list[dict], list[dict]]:
+    """Return (photos, videos) only — used for sibling fallback. Ignores blocks
+    and intro_html: sibling text stays local to that city for SEO relevance."""
+    model_photos, model_videos = _model_media(ec)
+    if ec.use_new_layout:
+        return model_photos, model_videos
+    parsed = parse_legacy_content(ec.content_html or "", ec)
+    photos = _dedupe_photos(parsed.photos + model_photos, ec)
+    videos = _dedupe_videos(parsed.videos + model_videos)
+    return photos, videos
+
+
+def _iter_siblings(ec: "EventCity"):
+    """Up to 20 published sibling EventCity objects of the same Event."""
+    if not ec.event_id:
+        return []
+    return (
+        ec.__class__.objects.filter(event_id=ec.event_id, is_published=True)
+        .exclude(pk=ec.pk)
+        .select_related("event", "city", "venue")
+        .prefetch_related("images", "videos")[:20]
+    )
+
+
+def _model_media(ec: "EventCity") -> tuple[list[dict], list[dict]]:
+    photos = [
         {"src": p.src, "alt": p.alt_text or ec.get_display_title()}
         for p in ec.images.all()
         if p.src
     ]
-    model_videos = [
+    videos = [
         {
             "embed_url": v.embed_url or "",
             "video_url": v.video_file.url if v.video_file else "",
@@ -120,7 +189,11 @@ def build_detail_sections(ec: "EventCity") -> ParsedContent:
         for v in ec.videos.all()
         if v.embed_url or v.video_file
     ]
-    model_blocks = [
+    return photos, videos
+
+
+def _model_blocks(ec: "EventCity") -> list[dict]:
+    return [
         {
             "title": b.title,
             "body_html": b.body or "",
@@ -129,20 +202,6 @@ def build_detail_sections(ec: "EventCity") -> ParsedContent:
         }
         for b in ec.content_blocks.all()
     ]
-
-    if ec.use_new_layout:
-        return ParsedContent(
-            intro_html="",
-            photos=model_photos,
-            videos=model_videos,
-            blocks=model_blocks,
-        )
-
-    parsed = parse_legacy_content(ec.content_html or "", ec)
-    parsed.photos = _dedupe_photos(parsed.photos + model_photos, ec)
-    parsed.videos = _dedupe_videos(parsed.videos + model_videos)
-    parsed.blocks = parsed.blocks + model_blocks
-    return parsed
 
 
 # ── passes ────────────────────────────────────────────────────────────────
@@ -375,6 +434,18 @@ def _bullet_h3_to_ul(soup: BeautifulSoup) -> None:
         # refresh headings list index
         nodes = list(soup.find_all("h3"))
         i = 0
+
+
+def _drop_orphan_images(soup: BeautifulSoup) -> None:
+    """Remove <img> tags that have no URL source — they render nothing useful
+    and would otherwise leak their `alt` text into content blocks (happens on
+    events with a truncated WP import, e.g. sn-gdansk)."""
+    for img in list(soup.find_all("img")):
+        if not isinstance(img, Tag):
+            continue
+        if _image_src(img):
+            continue
+        img.decompose()
 
 
 def _drop_empty_containers(soup: BeautifulSoup) -> None:
