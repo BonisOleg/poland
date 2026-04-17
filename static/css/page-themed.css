@@ -48,10 +48,11 @@
     justify-content: center;
     gap: var(--space-sm);
     margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    padding: 0.9rem 2.5rem;
-    border-radius: var(--radius-full);
+    padding: var(--voucher-cta-pad-y, 0.32rem) var(--voucher-cta-pad-x, 2rem);
+    border-radius: var(--voucher-cta-radius, var(--radius-full));
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
+    line-height: 1.25;
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -194,10 +195,11 @@
     justify-content: center;
     gap: var(--space-sm);
     margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    padding: 0.9rem 2.5rem;
-    border-radius: var(--radius-full);
+    padding: var(--voucher-cta-pad-y, 0.32rem) var(--voucher-cta-pad-x, 2rem);
+    border-radius: var(--voucher-cta-radius, var(--radius-full));
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
+    line-height: 1.25;
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
