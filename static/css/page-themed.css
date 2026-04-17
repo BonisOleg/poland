@@ -35,34 +35,37 @@
     margin-bottom: var(--space-lg);
 }
 
-/* CTA links inside the intro body that are lone-anchor paragraphs */
+/* CTA links inside the intro body that are lone-anchor paragraphs (pill gradient) */
 .page-themed__hero-intro-body p:has(> a:only-child) a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
     margin: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    padding: 0.6rem 1.4rem;
+    padding: 0.9rem 2.5rem;
     border-radius: var(--radius-full);
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-decoration: none;
-    background: transparent;
-    border: 2px solid var(--theme-accent, var(--color-amber));
-    color: var(--theme-accent, var(--color-amber));
-    transition: background var(--transition-base), color var(--transition-fast);
+    background: var(--gradient-cta-pill);
+    border: none;
+    color: var(--color-white);
+    transition: background var(--transition-base), transform var(--transition-base),
+        box-shadow var(--transition-base);
 }
 
 .page-themed__hero-intro-body p:has(> a:only-child) a:hover {
-    background: var(--theme-accent, var(--color-amber));
-    color: var(--color-dark);
+    background: var(--gradient-cta-pill-hover);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .page-themed__hero-intro-body p:has(> a:only-child) a:focus-visible {
-    outline: 2px solid var(--theme-accent, var(--color-amber));
+    outline: 2px solid var(--color-white);
     outline-offset: 3px;
 }
 
@@ -173,34 +176,37 @@
     text-decoration: underline;
 }
 
-/* Lone-anchor CTA paragraphs inside panels */
+/* Lone-anchor CTA paragraphs inside panels (pill gradient) */
 .page-themed .event-content-block__body p:has(> a:only-child) a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
     margin-top: var(--space-xs);
-    padding: 0.6rem 1.4rem;
+    padding: 0.9rem 2.5rem;
     border-radius: var(--radius-full);
     font-family: var(--font-heading);
     font-size: var(--fs-sm);
     font-weight: var(--fw-bold);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-decoration: none;
-    background: transparent;
-    border: 2px solid var(--theme-accent, var(--color-amber));
-    color: var(--theme-accent, var(--color-amber));
-    transition: background var(--transition-base), color var(--transition-fast);
+    background: var(--gradient-cta-pill);
+    border: none;
+    color: var(--color-white);
+    transition: background var(--transition-base), transform var(--transition-base),
+        box-shadow var(--transition-base);
 }
 
 .page-themed .event-content-block__body p:has(> a:only-child) a:hover {
-    background: var(--theme-accent, var(--color-amber));
-    color: var(--color-dark);
+    background: var(--gradient-cta-pill-hover);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .page-themed .event-content-block__body p:has(> a:only-child) a:focus-visible {
-    outline: 2px solid var(--theme-accent, var(--color-amber));
+    outline: 2px solid var(--color-white);
     outline-offset: 3px;
 }
 
@@ -622,20 +628,6 @@
 
 .page-theme--dla-firm .event-content-block {
     border-top-color: var(--color-amber);
-}
-
-/* CTA buttons: filled amber */
-.page-theme--dla-firm .page-themed__hero-intro-body p:has(> a:only-child) a,
-.page-theme--dla-firm .event-content-block__body p:has(> a:only-child) a {
-    background: var(--color-amber);
-    color: var(--color-dark);
-    border-color: var(--color-amber);
-}
-
-.page-theme--dla-firm .page-themed__hero-intro-body p:has(> a:only-child) a:hover,
-.page-theme--dla-firm .event-content-block__body p:has(> a:only-child) a:hover {
-    background: transparent;
-    color: var(--color-amber);
 }
 
 /* Arrow + dots */

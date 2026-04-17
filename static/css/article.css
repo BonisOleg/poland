@@ -186,3 +186,35 @@
                 var(--glass-elev-shadow);
     border-color: var(--color-amber);
 }
+
+/* ── Imported HTML: lone-link CTA (pill gradient) — overrides pages.css event-detail outline ── */
+
+.article-detail.event-detail .event-content p:has(> a:only-child) a,
+.article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a,
+.article-detail.event-detail .event-content-block__body p:has(> a:only-child) a,
+.article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a {
+    padding: 0.9rem 2.5rem;
+    background: var(--gradient-cta-pill);
+    border: none;
+    color: var(--color-white);
+    transition: background var(--transition-base), transform var(--transition-base),
+        box-shadow var(--transition-base);
+}
+
+.article-detail.event-detail .event-content p:has(> a:only-child) a:hover,
+.article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a:hover,
+.article-detail.event-detail .event-content-block__body p:has(> a:only-child) a:hover,
+.article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:hover {
+    background: var(--gradient-cta-pill-hover);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.article-detail.event-detail .event-content p:has(> a:only-child) a:focus-visible,
+.article-detail.event-detail .event-content :is(h2, h3, h4):has(> a:only-child) a:focus-visible,
+.article-detail.event-detail .event-content-block__body p:has(> a:only-child) a:focus-visible,
+.article-detail.event-detail .event-content-block__body :is(h2, h3, h4):has(> a:only-child) a:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+}
