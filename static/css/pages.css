@@ -1444,15 +1444,14 @@
 
 /*
  * Vouchery: gradient pill for all .btn in intro (DB often keeps btn--outline; JS may miss if no cart widget).
- * vouchery-cart.js emits: a.btn.btn--primary.btn--lg.btn--block.vouchery-cart-btn — must override .btn--lg
- * padding (1rem 2rem) and font-size (fs-base) or the CTA stays visually “thick”.
+ * vouchery-cart.js emits: a.btn.btn--primary.btn--block.vouchery-cart-btn (no .btn--lg — avoids 1rem/2rem from components.css).
  */
 .event-detail.vouchery-page .event-content--vouchery a.btn {
     border-radius: var(--voucher-cta-radius);
     background: var(--gradient-voucher-pill);
     color: var(--color-white);
     border: none;
-    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
+    padding: var(--voucher-cta-pad-y, 0.32rem) var(--voucher-cta-pad-x, 2rem);
     font-size: var(--fs-sm);
     line-height: 1.25;
     letter-spacing: 0.06em;
@@ -1472,9 +1471,9 @@
     outline-offset: 3px;
 }
 
-/* Extra specificity vs .btn.btn--primary.btn--lg (same element) */
-.event-detail.vouchery-page .event-content--vouchery a.btn.btn--lg.vouchery-cart-btn {
-    padding: var(--voucher-cta-pad-y) var(--voucher-cta-pad-x);
+/* Cart CTA: match without relying on .btn--lg (removed in JS) */
+.event-detail.vouchery-page .event-content--vouchery a.btn.vouchery-cart-btn {
+    padding: var(--voucher-cta-pad-y, 0.32rem) var(--voucher-cta-pad-x, 2rem);
     font-size: var(--fs-sm);
     line-height: 1.25;
 }

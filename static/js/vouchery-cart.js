@@ -1,6 +1,7 @@
 /**
  * Replaces the large Elementor cart icon on /vouchery/ with a primary gradient pill CTA.
  * Preserves an existing link href from the imported markup when present.
+ * The injected link uses btn + vouchery-cart-btn (no btn--lg — padding/font come from pages.css).
  *
  * Also supports new clean HTML with data-vouchery-cart-widget attribute.
  */
@@ -45,7 +46,7 @@ function replaceWithButton(widget, href, label) {
     const finalHref = resolveHref(widget, href);
     const a = document.createElement("a");
     a.href = finalHref;
-    a.className = "btn btn--primary btn--lg btn--block vouchery-cart-btn";
+    a.className = "btn btn--primary btn--block vouchery-cart-btn";
     a.textContent = label;
 
     const container = widget.querySelector(".elementor-widget-container");
@@ -124,7 +125,9 @@ function init() {
     wrapOfferSectionCta();
     wrapZapytajSzczegolyParagraphs();
 
-    const root = document.querySelector(".event-content--vouchery");
+    const root =
+        document.querySelector(".event-content--vouchery[data-vouchery-button-href]") ||
+        document.querySelector(".event-content--vouchery");
     if (!root) {
         return;
     }
