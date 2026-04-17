@@ -15,7 +15,7 @@ class StaticPage(models.Model):
     )
     layout_version = models.CharField(
         max_length=10,
-        choices=[("v1", "Класична"), ("v2", "Галерея (нова)")],
+        choices=[("v1", "Класична")],
         default="v1",
     )
     show_contact_form = models.BooleanField(default=False)

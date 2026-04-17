@@ -115,11 +115,6 @@ def _render_static_page(request, page, extra_ctx=None):
             }
         )
         return render(request, "pages/static_page_v2.html", ctx)
-    if page.layout_version == "v2":
-        images, content_no_images = extract_images_from_html(page.content)
-        content_no_images = _prepare_vouchery_content(content_no_images)
-        ctx.update({"gallery_images": images, "content_no_images": content_no_images})
-        return render(request, "pages/static_page_v2.html", ctx)
     return render(request, "pages/static_page.html", ctx)
 
 
