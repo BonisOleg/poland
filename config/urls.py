@@ -25,5 +25,6 @@ urlpatterns += [
     path("", include("apps.seo.urls")),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# User uploads (voucher images, etc.): stable /media/… URLs for SEO; avoid hashed static names.
+# On high traffic, move to S3 and set MEDIA_URL; keep same path suffixes to preserve rankings.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

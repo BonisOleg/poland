@@ -6,7 +6,9 @@ db.sqlite3
 *.bak
 db.sqlite3.bak*
 .env
-media/
+media/*
+!media/vouchers/
+!media/vouchers/**
 staticfiles/
 *.log
 .DS_Store
