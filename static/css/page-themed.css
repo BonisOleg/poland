@@ -563,7 +563,7 @@
 
 .page-theme--dla-firm {
     --theme-accent: var(--color-amber);
-    --theme-radius: 0.25rem;
+    --theme-radius: 1.25rem;
     --theme-panel-glow: rgba(255, 179, 71, 0.12);
 }
 
