@@ -61,7 +61,7 @@ class ParsedContent:
     photos: list[dict] = field(default_factory=list)
     videos: list[dict] = field(default_factory=list)
     blocks: list[dict] = field(default_factory=list)
-    biletyna_url_from_html: str = ""  # first biletyna iframe src from legacy HTML (DB may be empty)
+    biletyna_url_from_html: str = ""  # iframe src or first <a href> on biletyna (DB may be empty)
 
 
 def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedContent:
@@ -100,8 +100,15 @@ def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedCont
     photos = _dedupe_photos(photos, ec)
     videos = _dedupe_videos(videos)
 
-    intro_html, blocks = _segment_into_blocks(soup)
-    biletyna_from_html = ticket_iframe_src[0] if ticket_iframe_src else ""
+    biletyna_from_html = (
+        ticket_iframe_src[0].strip() if ticket_iframe_src else _first_biletyna_anchor_href(soup)
+    ).strip()
+    effective_widget = (
+        ((ec.biletyna_url or "").strip()) if ec else ""
+    ) or biletyna_from_html
+
+    intro_html, blocks = _segment_into_blocks(soup, effective_widget)
+
     return ParsedContent(
         intro_html=intro_html,
         photos=photos,
@@ -300,6 +307,15 @@ def _extract_videos(
 def _looks_like_ticket_iframe(url: str) -> bool:
     host = url.lower()
     return "biletyna" in host or "ticket" in host
+
+
+def _first_biletyna_anchor_href(soup: BeautifulSoup) -> str:
+    """First <a href> that looks like a ticket widget/sales URL (legacy imports without iframe)."""
+    for anchor in soup.find_all("a"):
+        href = (anchor.get("href") or "").strip()
+        if href and _looks_like_ticket_iframe(href):
+            return href
+    return ""
 
 
 def _extract_swiper_galleries(soup: BeautifulSoup, photos: list[dict]) -> None:
@@ -528,7 +544,9 @@ def _drop_empty_containers(soup: BeautifulSoup) -> None:
 
 # ── segmentation ──────────────────────────────────────────────────────────
 
-def _segment_into_blocks(soup: BeautifulSoup) -> tuple[str, list[dict]]:
+def _segment_into_blocks(
+    soup: BeautifulSoup, effective_widget_url: str = ""
+) -> tuple[str, list[dict]]:
     """Split remaining top-level nodes by <h2> into (intro_html, blocks[])."""
     top_children = [c for c in soup.contents if isinstance(c, (Tag, NavigableString))]
     # If soup has no <body>, iterate direct children of soup
@@ -550,7 +568,7 @@ def _segment_into_blocks(soup: BeautifulSoup) -> tuple[str, list[dict]]:
             continue
         if node.name == "h2":
             if current is not None:
-                blocks.append(_finalize_block(current))
+                blocks.append(_finalize_block(current, effective_widget_url))
             current = {
                 "title": node.get_text(" ", strip=True),
                 "body_parts": [],
@@ -564,7 +582,7 @@ def _segment_into_blocks(soup: BeautifulSoup) -> tuple[str, list[dict]]:
             current["body_parts"].append(str(node))
 
     if current is not None:
-        blocks.append(_finalize_block(current))
+        blocks.append(_finalize_block(current, effective_widget_url))
 
     intro_html = _compact("".join(intro_parts))
     blocks = _drop_empty_blocks(blocks)
@@ -576,7 +594,7 @@ def _drop_empty_blocks(blocks: list[dict]) -> list[dict]:
     return [b for b in blocks if (b["body_html"] or b["button_url"])]
 
 
-def _finalize_block(draft: dict) -> dict:
+def _finalize_block(draft: dict, effective_widget_url: str = "") -> dict:
     body_html = _compact("".join(draft["body_parts"]))
     button_text = ""
     button_url = ""
@@ -587,10 +605,19 @@ def _finalize_block(draft: dict) -> dict:
         if isinstance(child, Tag):
             last = child
     if last is not None and last.name == "a" and last.get("href"):
-        button_text = last.get_text(" ", strip=True)
-        button_url = last["href"].strip()
-        last.decompose()
-        body_html = _compact(str(bs))
+        href = last["href"].strip()
+        # Central ticket modal already covers this URL — do not duplicate as outline link
+        if effective_widget_url and (
+            href == effective_widget_url
+            or (_looks_like_ticket_iframe(href))
+        ):
+            last.decompose()
+            body_html = _compact(str(bs))
+        else:
+            button_text = last.get_text(" ", strip=True)
+            button_url = href
+            last.decompose()
+            body_html = _compact(str(bs))
     return {
         "title": draft["title"],
         "body_html": body_html,

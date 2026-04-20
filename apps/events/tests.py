@@ -162,6 +162,32 @@ IFRAME_ONLY_LEGACY_HTML = """
 <p>Body text.</p>
 """
 
+# No iframe: ticket URL only as <a href> (many WP imports)
+ANCHOR_ONLY_LEGACY_HTML = """
+<p>Wstęp <a href="https://anchor888.biletyna.pl/event/view/id/88">Bilety</a></p>
+<h2>Galeria</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><figure><img alt="P1" data-src="https://example.com/anchor-only.jpg"></figure></div>
+  </div>
+</div>
+<h2>Opis</h2>
+<p>Treść sekcji.</p>
+"""
+
+# Trailing block CTA points to same biletyna URL as DB — should not duplicate outline button
+CTA_DEDUPE_LEGACY_HTML = """
+<h2>Galeria</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><img alt="G" data-src="https://example.com/dedupe-gallery.jpg"></div>
+  </div>
+</div>
+<h2>Dlaczego teatr</h2>
+<p>Treść bloku.</p>
+<a href="https://shared.biletyna.pl/event/42">PRZEŻYJ NIEZAPOMNIANE EMOCJE</a>
+"""
+
 
 class EventDetailLegacyLayoutTests(TestCase):
     @classmethod
@@ -257,6 +283,61 @@ class EventDetailLegacyBiletynaFromIframeTests(TestCase):
         photo_idx = body.index("event-gallery--photo")
         cta_idx = body.index("event-detail__panel--cta")
         self.assertLess(photo_idx, cta_idx)
+
+
+class EventDetailLegacyBiletynaAnchorOnlyTests(TestCase):
+    """Widget URL from first <a href> to biletyna when DB empty and no iframe."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Toruń", slug="torun-anchor")
+        cls.event = Event.objects.create(
+            title="Anchor-only widget",
+            slug="anchor-only-widget",
+        )
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="anchor-only-widget-torun",
+            is_published=True,
+            use_new_layout=False,
+            biletyna_url="",
+            content_html=ANCHOR_ONLY_LEGACY_HTML,
+        )
+
+    def test_ticket_cta_from_anchor_href_without_iframe(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "event-detail__panel--cta")
+        self.assertContains(response, "anchor888.biletyna.pl")
+
+
+class EventDetailLegacyBlockTrailingBiletynaDedupeTests(TestCase):
+    """No second outline CTA when trailing link duplicates central biletyna URL."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Bydgoszcz", slug="bydgoszcz-dedupe")
+        cls.event = Event.objects.create(
+            title="Dedupe CTA test",
+            slug="dedupe-cta-test",
+        )
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="dedupe-cta-test-bydg",
+            is_published=True,
+            use_new_layout=False,
+            biletyna_url="https://shared.biletyna.pl/event/42",
+            content_html=CTA_DEDUPE_LEGACY_HTML,
+        )
+
+    def test_no_outline_cta_duplicate_for_trailing_biletyna_link(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "event-detail__panel--cta")
+        self.assertNotContains(response, "btn--outline-amber")
+        self.assertNotContains(response, "PRZEŻYJ NIEZAPOMNIANE EMOCJE")
 
 
 ORPHAN_CONTENT_HTML = """
