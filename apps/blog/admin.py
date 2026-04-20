@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.conf import settings
 from modeltranslation.admin import TranslationAdmin
 from django_ckeditor_5.widgets import CKEditor5Widget
+
+from apps.core.labels import pl_uk
 from .models import Article
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
@@ -24,10 +26,10 @@ class ArticleAdmin(TranslationAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_editable = ("is_published",)
     fieldsets = (
-        ("Основне", {
+        (pl_uk("Podstawowe", "Основне"), {
             "fields": ("title", "slug", "is_published", "published_at"),
         }),
-        ("Контент", {
+        (pl_uk("Treść", "Контент"), {
             "fields": ("excerpt", "content", "image"),
         }),
         ("SEO", {

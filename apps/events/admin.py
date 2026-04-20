@@ -2,9 +2,17 @@ from django.contrib import admin
 from django.conf import settings
 from modeltranslation.admin import TranslationAdmin
 from django_ckeditor_5.widgets import CKEditor5Widget
+
+from apps.core.labels import pl_uk
 from .models import Category, AgeGroup, City, Venue, Event, EventCity, EventImage, EventVideo, EventContentBlock
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
+_EVENT_CONTENT_BLOCK_TRANSLATED = ("title", "body", "button_text")
+_EVENT_CONTENT_BLOCK_INLINE_FIELDS = (
+    ("sort_order",)
+    + tuple(f"{base}_{lang}" for base in _EVENT_CONTENT_BLOCK_TRANSLATED for lang in _LANGS)
+    + ("button_url",)
+)
 
 
 def _apply_ckeditor(form, *base_field_names):
@@ -21,8 +29,11 @@ class EventImageInline(admin.TabularInline):
     model = EventImage
     extra = 3
     fields = ("image", "image_url", "alt_text", "sort_order")
-    verbose_name = "Zdjęcie"
-    verbose_name_plural = "Galeria zdjęć — dodaj wiele zdjęć tutaj (pojawią się jako galeria na stronie)"
+    verbose_name = pl_uk("Zdjęcie galerii", "Фото галереї")
+    verbose_name_plural = pl_uk(
+        "Galeria zdjęć (dodaj wiele — pojawi się na stronie)",
+        "Галерея фото (додайте кілька — з’явиться на сайті)",
+    )
 
 
 class EventVideoInline(admin.TabularInline):
@@ -34,7 +45,7 @@ class EventVideoInline(admin.TabularInline):
 class EventContentBlockInline(admin.StackedInline):
     model = EventContentBlock
     extra = 0
-    fields = ("sort_order", "title_pl", "title_en", "body_pl", "body_en", "button_text_pl", "button_text_en", "button_url")
+    fields = _EVENT_CONTENT_BLOCK_INLINE_FIELDS
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -79,22 +90,22 @@ class EventAdmin(TranslationAdmin):
     filter_horizontal = ("categories",)
     list_editable = ("sort_order", "is_active")
     fieldsets = (
-        ("Основне", {
+        (pl_uk("Podstawowe", "Основне"), {
             "fields": ("title", "slug", "event_type", "is_active", "sort_order"),
         }),
-        ("Опис", {
+        (pl_uk("Opis", "Опис"), {
             "fields": ("description", "short_description"),
         }),
-        ("Деталі", {
+        (pl_uk("Szczegóły", "Деталі"), {
             "fields": ("target_audience", "duration", "language_spoken"),
         }),
-        ("Категорії та аудиторія", {
+        (pl_uk("Kategorie i grupa docelowa", "Категорії та аудиторія"), {
             "fields": ("categories", "age_group"),
         }),
-        ("Зображення", {
+        (pl_uk("Obraz", "Зображення"), {
             "fields": ("image", "hero_image_focal"),
         }),
-        ("Квитки", {
+        (pl_uk("Bilety", "Квитки"), {
             "fields": ("biletyna_base_url",),
             "classes": ("collapse",),
         }),
@@ -117,10 +128,10 @@ class EventCityAdmin(TranslationAdmin):
     list_editable = ("ticket_status", "is_published")
     filter_horizontal = ("related_events_manual",)
     fieldsets = (
-        ("Основне", {
+        (pl_uk("Podstawowe", "Основне"), {
             "fields": ("event", "city", "venue", "slug", "custom_title", "is_published", "use_new_layout"),
         }),
-        ("Дата і квитки", {
+        (pl_uk("Data i bilety", "Дата і квитки"), {
             "fields": (
                 "event_date", "sale_end_date",
                 "biletyna_url", "ticket_status", "seats_left",
@@ -131,11 +142,11 @@ class EventCityAdmin(TranslationAdmin):
             "fields": ("seo_title", "seo_description", "keywords", "og_image", "canonical_url"),
             "classes": ("collapse",),
         }),
-        ("Контент", {
+        (pl_uk("Treść", "Контент"), {
             "fields": ("content_html",),
             "classes": ("collapse",),
         }),
-        ("Пов'язані події (ручні)", {
+        (pl_uk("Powiązane wydarzenia (ręcznie)", "Пов’язані події (вручну)"), {
             "fields": ("related_events_manual",),
             "classes": ("collapse",),
         }),

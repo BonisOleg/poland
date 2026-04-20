@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.conf import settings
 from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 from django_ckeditor_5.widgets import CKEditor5Widget
+
+from apps.core.labels import pl_uk
 from .models import PageMedia, StaticPage
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
@@ -31,10 +33,10 @@ class StaticPageAdmin(TranslationAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_editable = ("is_published",)
     fieldsets = (
-        ("Основне", {
+        (pl_uk("Podstawowe", "Основне"), {
             "fields": ("title", "slug", "page_type", "layout_version", "sort_order", "is_published", "show_contact_form"),
         }),
-        ("Контент", {
+        (pl_uk("Treść", "Контент"), {
             "fields": ("content",),
         }),
         ("SEO", {
