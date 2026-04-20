@@ -19,15 +19,20 @@ and then flip the switch.
 
 from __future__ import annotations
 
+from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericStackedInline, GenericTabularInline
+from django.contrib.contenttypes.models import ContentType
 from django_ckeditor_5.widgets import CKEditor5Widget
 from modeltranslation.admin import TranslationAdmin
 
+from apps.blog.models import Article
 from apps.core.labels import pl_uk
+from apps.events.models import EventCity
+from apps.pages.models import StaticPage
 
-from .models import GalleryItem, PageBlock, RelatedItem
+from .models import KIND_GALLERY, GalleryItem, PageBlock, RelatedItem
 
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
@@ -67,12 +72,105 @@ class GalleryItemInline(admin.TabularInline):
     )
 
 
+class RelatedItemForm(forms.ModelForm):
+    """Friendly form for RelatedItem that replaces raw GFK fields with model-choice dropdowns.
+
+    Instead of asking the admin to know the numeric ``target_object_id``, the form
+    exposes one ModelChoiceField per allowed target type. ``clean()`` and ``save()``
+    resolve the selection back to the ``target_content_type`` / ``target_object_id``
+    GFK pair transparently. Existing rows are pre-filled from the GFK on init.
+    """
+
+    event_city_target = forms.ModelChoiceField(
+        queryset=EventCity.objects.filter(is_published=True)
+            .select_related("event", "city")
+            .order_by("event__title", "city__name"),
+        required=False,
+        label=pl_uk("Wydarzenie w mieście", "Подія в місті"),
+        help_text=pl_uk(
+            "Wybierz, jeśli chcesz dodać konkretne Wydarzenie w mieście.",
+            "Виберіть, якщо хочете додати конкретну Подію в місті.",
+        ),
+    )
+    static_page_target = forms.ModelChoiceField(
+        queryset=StaticPage.objects.all().order_by("title"),
+        required=False,
+        label=pl_uk("Strona statyczna", "Статична сторінка"),
+        help_text=pl_uk(
+            "Wybierz, jeśli chcesz powiązać stronę statyczną.",
+            "Виберіть, якщо хочете пов'язати статичну сторінку.",
+        ),
+    )
+    article_target = forms.ModelChoiceField(
+        queryset=Article.objects.all().order_by("title"),
+        required=False,
+        label=pl_uk("Artykuł", "Стаття"),
+        help_text=pl_uk(
+            "Wybierz, jeśli chcesz powiązać artykuł z bloga.",
+            "Виберіть, якщо хочете пов'язати статтю з блогу.",
+        ),
+    )
+
+    class Meta:
+        model = RelatedItem
+        fields = ("target_content_type", "target_object_id", "sort_order")
+        widgets = {
+            "target_content_type": forms.HiddenInput(),
+            "target_object_id": forms.HiddenInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            try:
+                target = self.instance.target
+            except Exception:  # noqa: BLE001
+                target = None
+            if isinstance(target, EventCity):
+                self.fields["event_city_target"].initial = target
+            elif isinstance(target, StaticPage):
+                self.fields["static_page_target"].initial = target
+            elif isinstance(target, Article):
+                self.fields["article_target"].initial = target
+
+    def clean(self) -> dict:
+        data = super().clean()
+        target = (
+            data.get("event_city_target")
+            or data.get("static_page_target")
+            or data.get("article_target")
+        )
+        if target is None and not self.instance.pk:
+            raise forms.ValidationError(
+                pl_uk("Wybierz cel powiązania.", "Виберіть ціль пов'язання.")
+            )
+        if target is not None:
+            data["target_content_type"] = ContentType.objects.get_for_model(type(target))
+            data["target_object_id"] = target.pk
+        return data
+
+    def save(self, commit: bool = True) -> RelatedItem:
+        instance = super().save(commit=False)
+        target = (
+            self.cleaned_data.get("event_city_target")
+            or self.cleaned_data.get("static_page_target")
+            or self.cleaned_data.get("article_target")
+        )
+        if target is not None:
+            instance.target_content_type = ContentType.objects.get_for_model(type(target))
+            instance.target_object_id = target.pk
+        if commit:
+            instance.save()
+        return instance
+
+
 class RelatedItemInline(admin.TabularInline):
     model = RelatedItem
+    form = RelatedItemForm
     extra = 1
-    fields = ("target_content_type", "target_object_id", "sort_order")
-    verbose_name = pl_uk("Powiązana strona", "Пов’язана сторінка")
-    verbose_name_plural = pl_uk("Powiązane strony", "Пов’язані сторінки")
+    fields = ("event_city_target", "static_page_target", "article_target", "sort_order")
+    verbose_name = pl_uk("Powiązana strona", "Пов'язана сторінка")
+    verbose_name_plural = pl_uk("Powiązane strony", "Пов'язані сторінки")
 
 
 # ── Standalone PageBlock admin ────────────────────────────────────────────
@@ -153,6 +251,7 @@ class PageBlockInline(GenericStackedInline):
     ct_fk_field = "object_id"
     extra = 0
     show_change_link = True
+    readonly_fields = ("gallery_items_count",)
     fields = (
         ("kind", "sort_order", "is_visible"),
         ("css_anchor",),
@@ -164,16 +263,35 @@ class PageBlockInline(GenericStackedInline):
         ("form_kind",),
         ("reviews_limit",),
         ("related_strategy", "related_limit"),
+        ("gallery_items_count",),
     )
     classes = ("cms-block-inline",)
     verbose_name = pl_uk("Blok strony (CMS)", "Блок сторінки (CMS)")
     verbose_name_plural = pl_uk(
         "Bloki strony (CMS — konstruktor)",
-        "Блоки сторінки (CMS — конструктор)",
+        "Блоки sторінки (CMS — конструктор)",
     )
 
     class Media:
         css = {"all": ("admin/cms/cms-blocks.css",)}
+
+    def gallery_items_count(self, obj: PageBlock) -> str:
+        if not obj.pk or obj.kind != KIND_GALLERY:
+            return pl_uk(
+                "Zapisz blok typu 'Galeria', potem kliknij 'Zmień →' aby dodać zdjęcia.",
+                "Збережіть блок типу 'Галерея', потім натисніть 'Змінити →' для додавання фото.",
+            )
+        count = obj.gallery_items.count()
+        if count == 0:
+            return pl_uk(
+                "Brak zdjęć. Kliknij 'Zmień →' aby dodać zdjęcia do galerii.",
+                "Фото відсутні. Натисніть 'Змінити →' щоб додати фото до галереї.",
+            )
+        return pl_uk(
+            f"Zdjęć w galerii: {count}. Kliknij 'Zmień →' aby edytować.",
+            f"Фото в галереї: {count}. Натисніть 'Змінити →' для редагування.",
+        )
+    gallery_items_count.short_description = pl_uk("Zdjęcia galerii", "Фото галереї")
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
