@@ -1,0 +1,20 @@
+{% load i18n %}
+<section class="cms-block cms-block--text"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    {% if block.heading %}
+        {% if block.heading_level == "h3" %}
+            <h3 class="cms-block__heading cms-block__heading--h3">{{ block.heading }}</h3>
+        {% elif block.heading_level == "h4" %}
+            <h4 class="cms-block__heading cms-block__heading--h4">{{ block.heading }}</h4>
+        {% else %}
+            <h2 class="cms-block__heading cms-block__heading--h2">{{ block.heading }}</h2>
+        {% endif %}
+    {% endif %}
+    {% if block.body %}
+        <div class="cms-block__body event-content">{{ block.body|safe }}</div>
+    {% endif %}
+    {% if block.button_text and block.button_url %}
+        <div class="cms-block__cta">
+            <a href="{{ block.button_url }}" class="btn btn--{{ block.button_style|default:'primary' }}">{{ block.button_text }}</a>
+        </div>
+    {% endif %}
+</section>

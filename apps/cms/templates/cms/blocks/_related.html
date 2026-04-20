@@ -1,0 +1,23 @@
+{% load i18n %}
+{% if related %}
+<section class="cms-block cms-block--related section"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    <h2 class="section__title">{% if block.heading %}{{ block.heading }}{% else %}{% trans "Zobacz także" %}{% endif %}</h2>
+    <div class="grid grid--cards">
+        {% for entity in related %}
+            {% if entity._meta.model_name == "eventcity" %}
+                {% include "components/event_card.html" with ec=entity %}
+            {% else %}
+                <article class="card card--simple">
+                    {% if entity.image %}
+                        <img src="{{ entity.image.url }}" alt="{{ entity }}" class="card__image" loading="lazy" width="400" height="250">
+                    {% endif %}
+                    <div class="card__body">
+                        <h3 class="card__title">{{ entity }}</h3>
+                    </div>
+                    <a href="{{ entity.get_absolute_url }}" class="card__link" aria-label="{{ entity }}"></a>
+                </article>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

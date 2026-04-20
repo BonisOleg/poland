@@ -242,6 +242,14 @@ class EventCity(models.Model):
         ),
         verbose_name=pl_uk("Nowy układ strony", "Новий макет сторінки"),
     )
+    use_block_builder = models.BooleanField(
+        default=False,
+        help_text=pl_uk(
+            "Renderuj stronę z konstruktora bloków (CMS). Pomija stary układ.",
+            "Рендерити сторінку з блок-конструктора (CMS). Ігнорує старий макет.",
+        ),
+        verbose_name=pl_uk("Konstruktor bloków (CMS)", "Блок-конструктор (CMS)"),
+    )
     is_published = models.BooleanField(default=True, verbose_name=pl_uk("Opublikowane", "Опубліковано"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=pl_uk("Utworzono", "Створено"))

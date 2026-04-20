@@ -23,6 +23,26 @@ class Article(models.Model):
     seo_description = models.TextField(blank=True, verbose_name=pl_uk("Opis SEO", "SEO-опис"))
     og_image = models.URLField(blank=True, max_length=500, verbose_name=pl_uk("Obraz OG", "OG-зображення"))
     keywords = models.CharField(max_length=500, blank=True, verbose_name=pl_uk("Słowa kluczowe", "Ключові слова"))
+    canonical_url = models.URLField(
+        blank=True, max_length=500, verbose_name=pl_uk("URL kanoniczny", "Канонічний URL")
+    )
+    robots_directives = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text=pl_uk(
+            "Np. noindex,nofollow — pozostaw puste dla domyślnych",
+            "Напр. noindex,nofollow — залиш порожнім для дефолтних",
+        ),
+        verbose_name=pl_uk("Dyrektywy robots", "Директиви robots"),
+    )
+    use_block_builder = models.BooleanField(
+        default=False,
+        help_text=pl_uk(
+            "Użyj nowego konstruktora bloków (CMS). Stary HTML jest ignorowany.",
+            "Використати новий блок-конструктор (CMS). Старий HTML ігнорується.",
+        ),
+        verbose_name=pl_uk("Konstruktor bloków (CMS)", "Блок-конструктор (CMS)"),
+    )
     is_published = models.BooleanField(default=False, verbose_name=pl_uk("Opublikowane", "Опубліковано"))
     published_at = models.DateTimeField(null=True, blank=True, verbose_name=pl_uk("Data publikacji", "Дата публікації"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=pl_uk("Utworzono", "Створено"))

@@ -1,0 +1,20 @@
+{% load i18n %}
+<section class="cms-block cms-block--video"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    {% if block.heading %}<h2 class="cms-block__heading">{{ block.heading }}</h2>{% endif %}
+    <div class="cms-block__video-wrap">
+        {% if block.video_file %}
+            <video class="cms-block__video" controls preload="metadata" title="{{ block.heading }}">
+                <source src="{{ block.video_file.url }}">
+            </video>
+        {% elif block.video_embed_url %}
+            <iframe
+                src="{{ block.video_embed_url }}"
+                title="{{ block.heading }}"
+                class="cms-block__video"
+                allowfullscreen
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin allow-presentation"
+            ></iframe>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,25 @@
+{% load i18n %}
+{% if block.countdown_target %}
+<section class="cms-block cms-block--countdown"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %} aria-label="{% trans 'Odliczanie' %}">
+    {% if block.heading %}<h2 class="cms-block__heading">{{ block.heading }}</h2>{% endif %}
+    {% if block.countdown_label %}<p class="cms-block__countdown-label">{{ block.countdown_label }}</p>{% endif %}
+    <div class="countdown" data-countdown="{{ block.countdown_target|date:'c' }}">
+        <div class="countdown__block">
+            <div class="countdown__number" data-days>--</div>
+            <div class="countdown__label">{% trans "Dni" %}</div>
+        </div>
+        <div class="countdown__block">
+            <div class="countdown__number" data-hours>--</div>
+            <div class="countdown__label">{% trans "Godz" %}</div>
+        </div>
+        <div class="countdown__block">
+            <div class="countdown__number" data-minutes>--</div>
+            <div class="countdown__label">{% trans "Min" %}</div>
+        </div>
+        <div class="countdown__block">
+            <div class="countdown__number" data-seconds>--</div>
+            <div class="countdown__label">{% trans "Sek" %}</div>
+        </div>
+    </div>
+</section>
+{% endif %}

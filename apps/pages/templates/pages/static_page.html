@@ -1,8 +1,10 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static cms_tags %}
 
 {% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ page.seo_description }}{% endblock %}
+{% block canonical %}{% if page.canonical_url %}{{ page.canonical_url }}{% else %}{{ SITE_URL }}{{ page.get_absolute_url }}{% endif %}{% endblock %}
+{% block extra_meta %}{% if page.robots_directives %}<meta name="robots" content="{{ page.robots_directives }}">{% endif %}{% if page.og_image %}<meta property="og:image" content="{{ page.og_image }}">{% endif %}{% endblock %}
 
 {% block content %}
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
@@ -10,11 +12,15 @@
 <section class="section">
     <div class="container page-container--narrow">
         <h1 class="page-title">{{ page.title }}</h1>
+        {% if page.use_block_builder %}
+            {% render_blocks page %}
+        {% else %}
         <div class="event-content">
             {{ page.content|safe }}
         </div>
+        {% endif %}
 
-        {% if page.show_contact_form %}
+        {% if page.show_contact_form and not page.use_block_builder %}
         <div class="page-contact-form">
             <h2>{% trans "Formularz kontaktowy" %}</h2>
             <form method="post" action="/contact/">

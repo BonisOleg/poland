@@ -3,6 +3,7 @@ from django.conf import settings
 from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 from django_ckeditor_5.widgets import CKEditor5Widget
 
+from apps.cms.admin import PageBlockInline
 from apps.core.labels import pl_uk
 from .models import GroupInquiry, PageMedia, StaticPage
 
@@ -83,21 +84,35 @@ class GroupInquiryAdmin(admin.ModelAdmin):
 
 @admin.register(StaticPage)
 class StaticPageAdmin(TranslationAdmin):
-    inlines = [PageMediaInline]
+    inlines = [PageBlockInline, PageMediaInline]
 
-    list_display = ("title", "slug", "page_type", "layout_version", "is_published", "show_contact_form", "sort_order")
-    list_filter = ("page_type", "is_published")
+    list_display = (
+        "title", "slug", "page_type", "layout_version", "use_block_builder",
+        "is_published", "show_contact_form", "sort_order",
+    )
+    list_filter = ("page_type", "is_published", "use_block_builder")
     prepopulated_fields = {"slug": ("title",)}
-    list_editable = ("is_published",)
+    list_editable = ("is_published", "use_block_builder")
     fieldsets = (
         (pl_uk("Podstawowe", "Основне"), {
-            "fields": ("title", "slug", "page_type", "layout_version", "sort_order", "is_published", "show_contact_form"),
+            "fields": (
+                "title", "slug", "page_type", "layout_version",
+                "sort_order", "is_published", "show_contact_form",
+                "use_block_builder",
+            ),
         }),
-        (pl_uk("Treść", "Контент"), {
+        (pl_uk("Treść (legacy HTML)", "Контент (legacy HTML)"), {
             "fields": ("content",),
+            "description": pl_uk(
+                "Używane gdy 'Konstruktor bloków (CMS)' jest WYŁĄCZONY.",
+                "Використовується, коли «Блок-конструктор (CMS)» ВИМКНЕНО.",
+            ),
         }),
         ("SEO", {
-            "fields": ("seo_title", "seo_description", "keywords"),
+            "fields": (
+                "seo_title", "seo_description", "keywords",
+                "og_image", "canonical_url", "robots_directives",
+            ),
             "classes": ("collapse",),
         }),
     )

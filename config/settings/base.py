@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "apps.reviews",
     "apps.pages",
     "apps.vouchers",
+    "apps.cms",
     "apps.seo",
 ]
 

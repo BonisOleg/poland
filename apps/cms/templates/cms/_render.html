@@ -1,0 +1,16 @@
+{% load cms_tags i18n %}
+{% for item in items %}
+    {% with block=item.block %}
+        {% if block.kind == "text" %}{% include "cms/blocks/_text.html" %}
+        {% elif block.kind == "image" %}{% include "cms/blocks/_image.html" %}
+        {% elif block.kind == "gallery" %}{% include "cms/blocks/_gallery.html" with gallery_items=item.gallery_items %}
+        {% elif block.kind == "video" %}{% include "cms/blocks/_video.html" %}
+        {% elif block.kind == "form" %}{% include "cms/blocks/_form.html" %}
+        {% elif block.kind == "countdown" %}{% include "cms/blocks/_countdown.html" %}
+        {% elif block.kind == "reviews" %}{% include "cms/blocks/_reviews.html" with reviews=item.reviews %}
+        {% elif block.kind == "related" %}{% include "cms/blocks/_related.html" with related=item.related %}
+        {% elif block.kind == "cta" %}{% include "cms/blocks/_cta.html" %}
+        {% elif block.kind == "html" %}{% include "cms/blocks/_html.html" %}
+        {% endif %}
+    {% endwith %}
+{% endfor %}

@@ -1,0 +1,59 @@
+{% load i18n %}
+<section class="cms-block cms-block--form page-contact-form"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    {% if block.heading %}<h2 class="cms-block__heading">{{ block.heading }}</h2>{% endif %}
+    {% if block.body %}<div class="cms-block__body event-content">{{ block.body|safe }}</div>{% endif %}
+
+    {% if block.form_kind == "group" %}
+        <form method="post" action="/dla-firm/" class="cms-form cms-form--group">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <div class="hp-field" aria-hidden="true">
+                <label for="cms-group-hp-{{ block.pk }}">{% trans "Nie wypełniaj" %}</label>
+                <input type="text" name="website" id="cms-group-hp-{{ block.pk }}" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Imię i nazwisko" %}</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>{% trans "Email" %}</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>{% trans "Firma" %}</label>
+                <input type="text" name="company">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Wiadomość" %}</label>
+                <textarea name="message" required></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">{% trans "Wyślij zapytanie" %}</button>
+        </form>
+    {% else %}
+        <form method="post" action="/contact/" class="cms-form cms-form--contact">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <div class="hp-field" aria-hidden="true">
+                <label for="cms-contact-hp-{{ block.pk }}">{% trans "Nie wypełniaj" %}</label>
+                <input type="text" name="website" id="cms-contact-hp-{{ block.pk }}" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Imię i nazwisko" %}</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>{% trans "Email" %}</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>{% trans "Organizacja" %}</label>
+                <input type="text" name="organization">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Wiadomość" %}</label>
+                <textarea name="message" required></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">{% trans "Wyślij" %}</button>
+        </form>
+    {% endif %}
+</section>

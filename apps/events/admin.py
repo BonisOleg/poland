@@ -3,6 +3,7 @@ from django.conf import settings
 from modeltranslation.admin import TranslationAdmin
 from django_ckeditor_5.widgets import CKEditor5Widget
 
+from apps.cms.admin import PageBlockInline
 from apps.core.labels import pl_uk
 from .models import Category, AgeGroup, City, Venue, Event, EventCity, EventImage, EventVideo, EventContentBlock
 
@@ -119,17 +120,21 @@ class EventAdmin(TranslationAdmin):
 @admin.register(EventCity)
 class EventCityAdmin(TranslationAdmin):
     list_display = (
-        "event", "city", "event_date", "ticket_status", "is_published", "slug"
+        "event", "city", "event_date", "ticket_status",
+        "is_published", "use_block_builder", "slug",
     )
-    list_filter = ("is_published", "ticket_status", "city", "event__event_type")
+    list_filter = ("is_published", "ticket_status", "city", "event__event_type", "use_block_builder")
     search_fields = ("slug", "event__title", "city__name", "seo_title")
     raw_id_fields = ("event", "city", "venue")
-    inlines = [EventImageInline, EventVideoInline, EventContentBlockInline]
-    list_editable = ("ticket_status", "is_published")
+    inlines = [PageBlockInline, EventImageInline, EventVideoInline, EventContentBlockInline]
+    list_editable = ("ticket_status", "is_published", "use_block_builder")
     filter_horizontal = ("related_events_manual",)
     fieldsets = (
         (pl_uk("Podstawowe", "Основне"), {
-            "fields": ("event", "city", "venue", "slug", "custom_title", "is_published", "use_new_layout"),
+            "fields": (
+                "event", "city", "venue", "slug", "custom_title",
+                "is_published", "use_new_layout", "use_block_builder",
+            ),
         }),
         (pl_uk("Data i bilety", "Дата і квитки"), {
             "fields": (

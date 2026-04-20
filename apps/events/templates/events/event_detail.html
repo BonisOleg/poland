@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load static i18n cms_tags %}
 
 {% block title %}{{ event_city.get_seo_title }}{% endblock %}
 {% block meta_description %}{{ event_city.seo_description }}{% endblock %}
@@ -214,23 +214,27 @@
     </div>
     {% endif %}
 
-    {% if intro_html %}
-    <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
-    {% endif %}
+    {% if event_city.use_block_builder %}
+        {% render_blocks event_city %}
+    {% else %}
+        {% if intro_html %}
+        <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
+        {% endif %}
 
-    {% for block in blocks %}
-    <section class="event-detail__panel event-content-block">
-        {% if block.title %}<h2 class="event-content-block__title">{{ block.title }}</h2>{% endif %}
-        {% if block.body_html %}
-        <div class="event-content-block__body">{{ block.body_html|safe }}</div>
-        {% endif %}
-        {% if block.button_text and block.button_url %}
-        <div class="event-content-block__cta">
-            <a href="{{ block.button_url }}" class="btn btn--outline-amber">{{ block.button_text }}</a>
-        </div>
-        {% endif %}
-    </section>
-    {% endfor %}
+        {% for block in blocks %}
+        <section class="event-detail__panel event-content-block">
+            {% if block.title %}<h2 class="event-content-block__title">{{ block.title }}</h2>{% endif %}
+            {% if block.body_html %}
+            <div class="event-content-block__body">{{ block.body_html|safe }}</div>
+            {% endif %}
+            {% if block.button_text and block.button_url %}
+            <div class="event-content-block__cta">
+                <a href="{{ block.button_url }}" class="btn btn--outline-amber">{{ block.button_text }}</a>
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+    {% endif %}
 
     {% if videos %}
     <section class="event-detail__panel event-gallery event-gallery--video" aria-label="{% trans 'Galeria wideo' %}">

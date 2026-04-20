@@ -1,0 +1,4 @@
+{# Raw HTML escape hatch — used by populate_cms_blocks for legacy blobs. #}
+<section class="cms-block cms-block--html event-content"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    {{ block.body|safe }}
+</section>

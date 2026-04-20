@@ -1,0 +1,9 @@
+{% load i18n %}
+{% if block.image %}
+<figure class="cms-block cms-block--image"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    <img src="{{ block.image.url }}" alt="{{ block.image_alt|default:block.heading }}" class="cms-block__image" loading="lazy">
+    {% if block.heading %}
+        <figcaption class="cms-block__caption">{{ block.heading }}</figcaption>
+    {% endif %}
+</figure>
+{% endif %}

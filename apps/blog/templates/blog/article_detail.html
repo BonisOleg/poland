@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static cms_tags %}
 
 {% block title %}{% if article.seo_title %}{{ article.seo_title }}{% else %}{{ article.title }}{% endif %} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ article.seo_description }}{% endblock %}
-{% block canonical %}{{ SITE_URL }}{{ article.get_absolute_url }}{% endblock %}
+{% block canonical %}{% if article.canonical_url %}{{ article.canonical_url }}{% else %}{{ SITE_URL }}{{ article.get_absolute_url }}{% endif %}{% endblock %}
 
 {% block og_meta %}
 <meta property="og:type" content="article">
@@ -29,6 +29,7 @@
 <meta name="twitter:image" content="{{ SITE_URL }}{{ article.image.url }}">
 {% endif %}
 {% if article.keywords %}<meta name="keywords" content="{{ article.keywords }}">{% endif %}
+{% if article.robots_directives %}<meta name="robots" content="{{ article.robots_directives }}">{% endif %}
 {% endblock %}
 
 {% block schema_org %}
@@ -145,7 +146,9 @@
     {% endif %}
 
     {# ── Content panel ───────────────────────────────────────────────────── #}
-    {% if content_html %}
+    {% if article.use_block_builder %}
+        {% render_blocks article %}
+    {% elif content_html %}
     <section class="event-detail__panel event-content-block">
         <div class="event-content-block__body">
             {{ content_html|safe }}

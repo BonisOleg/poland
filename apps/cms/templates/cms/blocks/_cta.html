@@ -1,0 +1,13 @@
+{% load i18n %}
+<section class="cms-block cms-block--cta"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+    {% if block.image %}
+        <img src="{{ block.image.url }}" alt="{{ block.image_alt|default:block.heading }}" class="cms-block__cta-image" loading="lazy">
+    {% endif %}
+    {% if block.heading %}<h2 class="cms-block__heading">{{ block.heading }}</h2>{% endif %}
+    {% if block.body %}<div class="cms-block__body event-content">{{ block.body|safe }}</div>{% endif %}
+    {% if block.button_text and block.button_url %}
+        <div class="cms-block__cta-actions">
+            <a href="{{ block.button_url }}" class="btn btn--{{ block.button_style|default:'primary' }} btn--lg">{{ block.button_text }}</a>
+        </div>
+    {% endif %}
+</section>
