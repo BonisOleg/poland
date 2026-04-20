@@ -43,10 +43,13 @@
 .cms-block--image {
   margin: 1.5rem 0 2rem;
   text-align: center;
+  max-width: 36rem;
+  margin-inline: auto;
 }
 
 .cms-block__image {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
   border-radius: 14px;
@@ -63,6 +66,8 @@
   position: relative;
   aspect-ratio: 16 / 9;
   width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
   border-radius: 14px;
   overflow: hidden;
   background: #000;
