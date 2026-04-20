@@ -660,6 +660,43 @@
                 var(--glass-elev-shadow);
 }
 
+/* Merged first-screen / second-screen panels */
+.page-theme--dla-firm .dla-firm__merged-body {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 179, 71, 0.28);
+}
+
+.page-theme--dla-firm .page-themed__hero-intro.dla-firm__panel--merge-1 .dla-firm__merged--1 {
+    border-top-color: rgba(255, 179, 71, 0.35);
+}
+
+.page-theme--dla-firm .event-content-block.dla-firm__panel--merge-2 .dla-firm__merged--2 {
+    border-top: none;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+}
+
+/* Wide gradient CTA for trailing «bilety» word */
+.page-theme--dla-firm .dla-firm-tickets-btn.btn {
+    min-width: min(100%, 14rem);
+    padding-inline: var(--space-xl, 1.75rem);
+    justify-content: center;
+    background: var(--gradient-voucher-pill);
+    border: none;
+    color: var(--color-white);
+}
+
+.page-theme--dla-firm .dla-firm-tickets-btn.btn:hover {
+    background: var(--gradient-voucher-pill-hover);
+    color: var(--color-white);
+}
+
+.page-theme--dla-firm .dla-firm-tickets-btn.btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+}
+
 /* Group inquiry modal (native dialog) */
 .page-theme--dla-firm .group-inquiry-dialog {
     position: fixed;

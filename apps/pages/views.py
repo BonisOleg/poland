@@ -13,6 +13,7 @@ from .utils import (
     split_html_by_h2_into_panels,
     split_vouchery_content_into_panels,
     strip_dla_dzieci_panel_headings,
+    merge_dla_firm_panel_pairs,
     strip_elementor_residue,
     strip_quick_view_from_html,
     tag_dla_firm_group_ctas,
@@ -22,6 +23,7 @@ from .utils import (
     tag_vouchery_reasons_list,
     transform_dla_dzieci_faq_to_accordion,
     transform_vouchery_faq_editor_list_to_accordion,
+    wrap_dla_firm_tickets_word,
 )
 
 
@@ -43,6 +45,7 @@ def _render_themed_page(request, page):
     html = strip_elementor_residue(page.content)
     if page.slug == "dla-firm":
         html = tag_dla_firm_group_ctas(html)
+        html = wrap_dla_firm_tickets_word(html)
 
     db_media = list(page.media.all())
     if db_media:
@@ -73,6 +76,8 @@ def _render_themed_page(request, page):
         html = replace_city_list_with_select(html)
 
     panels_html = split_html_by_h2_into_panels(html)
+    if page.slug == "dla-firm":
+        panels_html = merge_dla_firm_panel_pairs(panels_html)
 
     # FAQ accordion must run AFTER split so .event-content-block sections exist.
     if page.slug == "dla-dzieci":

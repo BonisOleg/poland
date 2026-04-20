@@ -4,7 +4,7 @@ from modeltranslation.admin import TranslationAdmin, TranslationStackedInline
 from django_ckeditor_5.widgets import CKEditor5Widget
 
 from apps.core.labels import pl_uk
-from .models import PageMedia, StaticPage
+from .models import GroupInquiry, PageMedia, StaticPage
 
 _LANGS = [lang for lang, _ in settings.LANGUAGES]
 
@@ -22,6 +22,63 @@ def _apply_ckeditor(form, *base_field_names):
             if field_name in form.base_fields:
                 form.base_fields[field_name].widget = CKEditor5Widget(config_name="default")
     return form
+
+
+@admin.register(GroupInquiry)
+class GroupInquiryAdmin(admin.ModelAdmin):
+    list_display = (
+        "created_at",
+        "intent",
+        "email",
+        "name",
+        "company",
+        "handled",
+    )
+    list_filter = ("intent", "handled", "created_at")
+    search_fields = ("email", "name", "company", "message")
+    readonly_fields = (
+        "intent",
+        "name",
+        "email",
+        "phone",
+        "company",
+        "nip",
+        "ticket_count",
+        "message",
+        "source_page",
+        "created_at",
+    )
+    fieldsets = (
+        (
+            pl_uk("Zgłoszenie", "Заявка"),
+            {
+                "fields": (
+                    "created_at",
+                    "intent",
+                    "source_page",
+                    "name",
+                    "email",
+                    "phone",
+                    "company",
+                    "nip",
+                    "ticket_count",
+                    "message",
+                ),
+            },
+        ),
+        (
+            pl_uk("Obsługa", "Обробка"),
+            {
+                "fields": ("handled", "staff_notes"),
+            },
+        ),
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
 
 
 @admin.register(StaticPage)

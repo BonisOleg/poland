@@ -4,6 +4,7 @@ from django.core import mail
 from django.test import SimpleTestCase, TestCase, override_settings
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
+from apps.pages.models import GroupInquiry
 from apps.pages.utils import (
     extract_media_from_html,
     remove_products_grid_from_html,
@@ -12,7 +13,9 @@ from apps.pages.utils import (
     split_vouchery_content_into_panels,
     strip_elementor_residue,
     strip_quick_view_from_html,
+    merge_dla_firm_panel_pairs,
     tag_dla_firm_group_ctas,
+    wrap_dla_firm_tickets_word,
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
@@ -543,6 +546,60 @@ class TagDlaFirmGroupCtasTests(SimpleTestCase):
         self.assertNotIn("data-group-intent", out)
 
 
+class WrapDlaFirmTicketsWordTests(SimpleTestCase):
+    def test_wraps_last_word_bilety_after_repertuar(self) -> None:
+        html = "<p>REPERTUAR ZAREZERWUJ BILETY</p>"
+        out = wrap_dla_firm_tickets_word(html)
+        self.assertIn("dla-firm-tickets-btn", out)
+        self.assertIn('data-group-intent="rezerwacja"', out)
+
+    def test_wraps_ru_line(self) -> None:
+        html = "<p>РЕПЕРТУАР ЗАБРОНИРОВАТЬ БИЛЕТЫ</p>"
+        out = wrap_dla_firm_tickets_word(html)
+        self.assertIn("dla-firm-tickets-btn", out)
+
+    def test_skips_when_group_intent_anchor_present(self) -> None:
+        html = '<p>REPERTUAR <a href="#" data-group-intent="rezerwacja">BILETY</a></p>'
+        out = wrap_dla_firm_tickets_word(html)
+        self.assertNotIn("dla-firm-tickets-btn", out)
+        self.assertIn("BILETY", out)
+
+
+class MergeDlaFirmPanelPairsTests(SimpleTestCase):
+    def test_merges_four_sections_into_two(self) -> None:
+        panels = """
+<section class="event-detail__panel page-themed__hero-intro">
+<div class="page-themed__hero-intro-body"><h1>H</h1></div>
+</section>
+<section class="event-detail__panel event-content-block">
+<div class="event-content-block__body"><h2>A</h2></div>
+</section>
+<section class="event-detail__panel event-content-block">
+<div class="event-content-block__body"><h2>B</h2></div>
+</section>
+<section class="event-detail__panel event-content-block">
+<div class="event-content-block__body"><h2>C</h2></div>
+</section>
+""".strip()
+        out = merge_dla_firm_panel_pairs(panels)
+        self.assertEqual(out.count("<section"), 2)
+        self.assertIn("dla-firm__panel--merge-1", out)
+        self.assertIn("dla-firm__panel--merge-2", out)
+
+    def test_noop_with_two_sections(self) -> None:
+        panels = """
+<section class="event-detail__panel page-themed__hero-intro">
+<div class="page-themed__hero-intro-body"><p>x</p></div>
+</section>
+<section class="event-detail__panel event-content-block">
+<div class="event-content-block__body"><h2>A</h2></div>
+</section>
+""".strip()
+        out = merge_dla_firm_panel_pairs(panels)
+        self.assertEqual(out.count("<section"), 1)
+        self.assertIn("dla-firm__panel--merge-1", out)
+
+
 class GroupInquiryAndContactViewTests(TestCase):
     @override_settings(
         INQUIRY_EMAIL_TO=["ops@example.com"],
@@ -550,6 +607,7 @@ class GroupInquiryAndContactViewTests(TestCase):
     )
     def test_group_inquiry_post_sends_mail(self) -> None:
         mail.outbox.clear()
+        self.assertEqual(GroupInquiry.objects.count(), 0)
         resp = self.client.post(
             "/group-inquiry/",
             {
@@ -569,6 +627,10 @@ class GroupInquiryAndContactViewTests(TestCase):
         self.assertEqual(resp["Location"], "/dla-firm/")
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn("repertuar", mail.outbox[0].body.lower())
+        self.assertEqual(GroupInquiry.objects.count(), 1)
+        row = GroupInquiry.objects.get()
+        self.assertEqual(row.email, "jan@example.com")
+        self.assertEqual(row.intent, "repertuar")
 
     @override_settings(
         INQUIRY_EMAIL_TO=["ops@example.com"],
@@ -576,6 +638,7 @@ class GroupInquiryAndContactViewTests(TestCase):
     )
     def test_group_inquiry_invalid_sends_no_mail(self) -> None:
         mail.outbox.clear()
+        self.assertEqual(GroupInquiry.objects.count(), 0)
         self.client.post(
             "/group-inquiry/",
             {
@@ -587,6 +650,7 @@ class GroupInquiryAndContactViewTests(TestCase):
             },
         )
         self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(GroupInquiry.objects.count(), 0)
 
     @override_settings(
         INQUIRY_EMAIL_TO=["ops@example.com"],
@@ -610,9 +674,10 @@ class GroupInquiryAndContactViewTests(TestCase):
         self.assertIn("kontakt", mail.outbox[0].subject.lower())
 
     @override_settings(INQUIRY_EMAIL_TO=[])
-    def test_group_inquiry_empty_recipients_no_mail(self) -> None:
+    def test_group_inquiry_empty_recipients_saves_db_no_mail(self) -> None:
         mail.outbox.clear()
-        self.client.post(
+        self.assertEqual(GroupInquiry.objects.count(), 0)
+        resp = self.client.post(
             "/group-inquiry/",
             {
                 "name": "Jan Kowalski",
@@ -622,4 +687,6 @@ class GroupInquiryAndContactViewTests(TestCase):
                 "next": "/dla-firm/",
             },
         )
+        self.assertEqual(resp.status_code, 302)
         self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(GroupInquiry.objects.count(), 1)

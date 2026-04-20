@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from html import escape
 
 from bs4 import BeautifulSoup, NavigableString, Tag
@@ -609,6 +610,122 @@ def tag_dla_firm_group_ctas(html: str) -> str:
             a["data-group-intent"] = intent
             a["href"] = "#"
     return str(soup)
+
+
+_REPERT_FOR_TICKET_BTN = re.compile(
+    r"repertuar|репертуар|zarezerwuj|забронир|забронировать",
+    re.IGNORECASE,
+)
+
+_TICKET_LAST_WORD = frozenset({"bilety", "билеты", "tickets"})
+
+
+def wrap_dla_firm_tickets_word(html: str) -> str:
+    """Turn trailing «bilety/билеты/tickets» into a gradient CTA link on repertoire lines.
+
+    Only touches simple ``p`` / ``h3`` without existing ``a[data-group-intent]``.
+    """
+
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup.find_all(["p", "h3"]):
+        if not isinstance(tag, Tag):
+            continue
+        if tag.find("a", attrs={"data-group-intent": True}):
+            continue
+        if tag.find(["p", "div", "section", "ul", "ol"]):
+            continue
+        raw = tag.get_text().replace("\xa0", " ")
+        raw = " ".join(raw.split())
+        if not raw:
+            continue
+        parts = raw.rsplit(None, 1)
+        if len(parts) < 2:
+            continue
+        prefix, last_token = parts[0], parts[1]
+        last_core = last_token.rstrip(".,!?:;·").lower()
+        if last_core not in _TICKET_LAST_WORD:
+            continue
+        if not _REPERT_FOR_TICKET_BTN.search(prefix):
+            continue
+        tag.clear()
+        tag.append(f"{prefix} ")
+        a = soup.new_tag(
+            "a",
+            href="#",
+            attrs={
+                "class": ["btn", "dla-firm-tickets-btn"],
+                "data-group-intent": "rezerwacja",
+            },
+        )
+        a.string = last_token
+        tag.append(a)
+    return str(soup)
+
+
+def merge_dla_firm_panel_pairs(panels_html: str) -> str:
+    """Merge panel 0+1 and 2+3 into two wider sections (dla-firm layout only).
+
+    Expects output from ``split_html_by_h2_into_panels``.
+    """
+
+    if not panels_html or not panels_html.strip():
+        return panels_html
+
+    soup = BeautifulSoup(f"<div id='merge-wrap'>{panels_html}</div>", "html.parser")
+    wrap = soup.find(id="merge-wrap")
+    if not wrap:
+        return panels_html
+
+    def sections() -> list[Tag]:
+        out: list[Tag] = []
+        for c in wrap.children:
+            if not isinstance(c, Tag) or c.name != "section":
+                continue
+            cl = c.get("class") or []
+            if "event-detail__panel" in cl:
+                out.append(c)
+        return out
+
+    def inner_body(sec: Tag) -> Tag | None:
+        body = sec.find(class_="event-content-block__body")
+        if body:
+            return body
+        return sec.find(class_="page-themed__hero-intro-body")
+
+    def merge_into(a: Tag, b: Tag, label: str) -> None:
+        body_b = inner_body(b)
+        if not body_b:
+            return
+        classes = list(a.get("class") or [])
+        marker = f"dla-firm__panel--merge-{label}"
+        if marker not in classes:
+            classes.append(marker)
+        a["class"] = classes
+        holder = soup.new_tag(
+            "div",
+            attrs={
+                "class": [
+                    "event-content-block__body",
+                    "dla-firm__merged-body",
+                    f"dla-firm__merged--{label}",
+                ]
+            },
+        )
+        for child in list(body_b.children):
+            holder.append(child.extract())
+        a.append(holder)
+        b.decompose()
+
+    secs = sections()
+    if len(secs) >= 2:
+        merge_into(secs[0], secs[1], "1")
+    secs = sections()
+    if len(secs) >= 3:
+        merge_into(secs[1], secs[2], "2")
+    return wrap.decode_contents() or panels_html
 
 
 def _themed_panel_inner_is_effectively_empty(inner: str) -> bool:

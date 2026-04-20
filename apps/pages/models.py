@@ -3,6 +3,42 @@ from django.db import models
 from apps.core.labels import pl_uk
 
 
+class GroupInquiry(models.Model):
+    """Lead from the corporate group inquiry form on /dla-firm/."""
+
+    INTENT_CHOICES = [
+        ("repertuar", "Repertuar"),
+        ("rezerwacja", "Rezerwacja biletów"),
+        ("specjalna_oferta", "Oferta specjalna"),
+        ("event_firmowy", "Event / wyjazd"),
+        ("voucher", "Voucher / prezent"),
+        ("other", "Inne"),
+    ]
+
+    intent = models.CharField(max_length=32, choices=INTENT_CHOICES, db_index=True)
+    name = models.CharField(max_length=200)
+    email = models.EmailField(db_index=True)
+    phone = models.CharField(max_length=40, blank=True)
+    company = models.CharField(max_length=300, blank=True)
+    nip = models.CharField(max_length=20, blank=True)
+    ticket_count = models.CharField(max_length=50, blank=True)
+    message = models.TextField()
+    source_page = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    handled = models.BooleanField(default=False, verbose_name=pl_uk("Obsłużone", "Опрацьовано"))
+    staff_notes = models.TextField(
+        blank=True, verbose_name=pl_uk("Notatki wewnętrzne", "Внутрішні нотатки")
+    )
+
+    class Meta:
+        verbose_name = pl_uk("Zgłoszenie grupowe", "Групова заявка")
+        verbose_name_plural = pl_uk("Zgłoszenia grupowe", "Групові заявки")
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.created_at:%Y-%m-%d %H:%M} — {self.email} ({self.get_intent_display()})"
+
+
 class StaticPage(models.Model):
     title = models.CharField(max_length=500, verbose_name=pl_uk("Tytuł", "Заголовок"))
     slug = models.SlugField(max_length=300, unique=True, verbose_name=pl_uk("Slug", "Слаг"))
