@@ -149,6 +149,19 @@ LEGACY_CONTENT_HTML = """
 <a href="https://example.com/more" target="_blank"><span><span>PRZEŻYJ EMOCJE</span></span></a>
 """
 
+# Legacy import: biletyna only as iframe in HTML, DB biletyna_url empty
+IFRAME_ONLY_LEGACY_HTML = """
+<h2>Galeria</h2>
+<div class="swiper" role="region">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide"><figure><img alt="P1" data-src="https://example.com/iframe-only.jpg"></figure></div>
+  </div>
+</div>
+<iframe src="https://iframe999.biletyna.pl/event/view/id/99" title="Bilety"></iframe>
+<h2>After widget</h2>
+<p>Body text.</p>
+"""
+
 
 class EventDetailLegacyLayoutTests(TestCase):
     @classmethod
@@ -187,6 +200,12 @@ class EventDetailLegacyLayoutTests(TestCase):
         self.assertContains(self.response, 'src="https://example.com/img2.jpg"')
         self.assertNotContains(self.response, 'data-src="https://example.com/img1.jpg"')
 
+    def test_photo_gallery_appears_before_ticket_cta_panel(self):
+        body = self.response.content.decode()
+        photo_idx = body.index("event-gallery--photo")
+        cta_idx = body.index("event-detail__panel--cta")
+        self.assertLess(photo_idx, cta_idx)
+
     def test_video_section_rendered(self):
         self.assertContains(self.response, "event-gallery--video")
         self.assertContains(self.response, 'src="https://example.com/promo.mp4"')
@@ -207,6 +226,37 @@ class EventDetailLegacyLayoutTests(TestCase):
         self.assertContains(self.response, "5 POWODÓW")
         self.assertContains(self.response, "PRZEŻYJ EMOCJE")
         self.assertContains(self.response, "btn--outline-amber")
+
+
+class EventDetailLegacyBiletynaFromIframeTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.city = City.objects.create(name="Gdynia", slug="gdynia")
+        cls.event = Event.objects.create(
+            title="Iframe widget test",
+            slug="iframe-widget-test",
+        )
+        cls.ec = EventCity.objects.create(
+            event=cls.event,
+            city=cls.city,
+            slug="iframe-widget-test-gdynia",
+            is_published=True,
+            use_new_layout=False,
+            biletyna_url="",
+            content_html=IFRAME_ONLY_LEGACY_HTML,
+        )
+
+    def test_ticket_cta_uses_iframe_src_when_db_biletyna_url_empty(self):
+        response = self.client.get(f"/{self.ec.slug}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "event-detail__panel--cta")
+        self.assertContains(response, "iframe999.biletyna.pl")
+
+    def test_photo_gallery_before_cta_when_widget_from_iframe_only(self):
+        body = self.client.get(f"/{self.ec.slug}/").content.decode()
+        photo_idx = body.index("event-gallery--photo")
+        cta_idx = body.index("event-detail__panel--cta")
+        self.assertLess(photo_idx, cta_idx)
 
 
 ORPHAN_CONTENT_HTML = """

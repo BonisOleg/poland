@@ -112,6 +112,7 @@ def event_detail(request, slug):
     related = ec.get_related_events(6)
     reviews = ec.reviews.filter(is_approved=True)[:10]
     parsed = build_detail_sections(ec)
+    biletyna_widget_url = (ec.biletyna_url or "").strip() or parsed.biletyna_url_from_html
 
     return render(request, "events/event_detail.html", {
         "event_city": ec,
@@ -122,6 +123,7 @@ def event_detail(request, slug):
         "photos": parsed.photos,
         "videos": parsed.videos,
         "blocks": parsed.blocks,
+        "biletyna_widget_url": biletyna_widget_url,
     })
 
 

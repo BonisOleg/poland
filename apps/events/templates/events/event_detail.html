@@ -99,7 +99,7 @@
                         {{ event_city.city.name }}
                     {% endif %}
                 </p>
-                {% if event_city.biletyna_url %}
+                {% if biletyna_widget_url %}
                 <div class="hero__cta">
                     <button type="button" class="hero__cta-btn" @click="showTickets = true">
                         {% trans "Kup bilet" %}
@@ -160,36 +160,6 @@
     </section>
     {% endif %}
 
-    {% if event_city.biletyna_url %}
-    <div class="event-detail__panel event-detail__panel--cta">
-        <button class="btn btn--primary btn--lg btn--block" @click="showTickets = true">
-            {% trans "Kup bilet" %}
-        </button>
-        <div class="ticket-modal" x-show="showTickets" x-cloak
-             role="dialog" aria-modal="true" aria-label="{% trans 'Kup bilet' %}"
-             @keydown.escape.window="showTickets = false">
-            <div class="ticket-modal__content" @click.outside="showTickets = false">
-                <div class="ticket-modal__header">
-                    <h3>{% trans "Kup bilet" %}</h3>
-                    <button class="ticket-modal__close" @click="showTickets = false" aria-label="{% trans 'Zamknij' %}">&times;</button>
-                </div>
-                <iframe
-                    :src="showTickets ? '{{ event_city.biletyna_url }}' : ''"
-                    class="ticket-modal__iframe"
-                    title="{% trans 'Kupno biletu' %}"
-                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                    referrerpolicy="origin"
-                    loading="lazy"
-                ></iframe>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if intro_html %}
-    <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
-    {% endif %}
-
     {% if photos %}
     <section class="event-detail__panel event-gallery event-gallery--photo" aria-label="{% trans 'Galeria zdjęć' %}">
         <h2 class="event-gallery__title">{% trans "Zdjęcia" %}</h2>
@@ -216,6 +186,36 @@
         <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
         <img src="" alt="" class="event-lightbox__img">
     </dialog>
+    {% endif %}
+
+    {% if biletyna_widget_url %}
+    <div class="event-detail__panel event-detail__panel--cta">
+        <button class="btn btn--primary btn--lg btn--block" @click="showTickets = true">
+            {% trans "Kup bilet" %}
+        </button>
+        <div class="ticket-modal" x-show="showTickets" x-cloak
+             role="dialog" aria-modal="true" aria-label="{% trans 'Kup bilet' %}"
+             @keydown.escape.window="showTickets = false">
+            <div class="ticket-modal__content" @click.outside="showTickets = false">
+                <div class="ticket-modal__header">
+                    <h3>{% trans "Kup bilet" %}</h3>
+                    <button class="ticket-modal__close" @click="showTickets = false" aria-label="{% trans 'Zamknij' %}">&times;</button>
+                </div>
+                <iframe
+                    :src="showTickets ? '{{ biletyna_widget_url }}' : ''"
+                    class="ticket-modal__iframe"
+                    title="{% trans 'Kupno biletu' %}"
+                    sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                    referrerpolicy="origin"
+                    loading="lazy"
+                ></iframe>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if intro_html %}
+    <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
     {% endif %}
 
     {% for block in blocks %}

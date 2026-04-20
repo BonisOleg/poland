@@ -61,6 +61,7 @@ class ParsedContent:
     photos: list[dict] = field(default_factory=list)
     videos: list[dict] = field(default_factory=list)
     blocks: list[dict] = field(default_factory=list)
+    biletyna_url_from_html: str = ""  # first biletyna iframe src from legacy HTML (DB may be empty)
 
 
 def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedContent:
@@ -83,7 +84,8 @@ def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedCont
     videos: list[dict] = []
 
     _extract_and_drop_rekomendacje(soup)
-    _extract_videos(soup, videos)
+    ticket_iframe_src: list[str] = []
+    _extract_videos(soup, videos, ticket_iframe_src)
     _extract_swiper_galleries(soup, photos)
     _extract_wp_gallery_columns(soup, photos)
     _extract_premium_banner_images(soup, photos)
@@ -99,7 +101,14 @@ def parse_legacy_content(html: str, ec: "EventCity | None" = None) -> ParsedCont
     videos = _dedupe_videos(videos)
 
     intro_html, blocks = _segment_into_blocks(soup)
-    return ParsedContent(intro_html=intro_html, photos=photos, videos=videos, blocks=blocks)
+    biletyna_from_html = ticket_iframe_src[0] if ticket_iframe_src else ""
+    return ParsedContent(
+        intro_html=intro_html,
+        photos=photos,
+        videos=videos,
+        blocks=blocks,
+        biletyna_url_from_html=biletyna_from_html,
+    )
 
 
 def build_detail_sections(ec: "EventCity") -> ParsedContent:
@@ -257,7 +266,11 @@ def _extract_and_drop_rekomendacje(soup: BeautifulSoup) -> None:
             current.decompose()
 
 
-def _extract_videos(soup: BeautifulSoup, videos: list[dict]) -> None:
+def _extract_videos(
+    soup: BeautifulSoup,
+    videos: list[dict],
+    ticket_iframe_src: list[str] | None = None,
+) -> None:
     for vid in list(soup.find_all("video")):
         src = (vid.get("src") or "").strip()
         if not src:
@@ -275,6 +288,8 @@ def _extract_videos(soup: BeautifulSoup, videos: list[dict]) -> None:
             frame.decompose()
             continue
         if _looks_like_ticket_iframe(src):
+            if ticket_iframe_src is not None and not ticket_iframe_src:
+                ticket_iframe_src.append(src)
             frame.decompose()
             continue
         title = (frame.get("title") or "").strip()
