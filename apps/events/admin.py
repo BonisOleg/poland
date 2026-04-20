@@ -126,7 +126,9 @@ class EventCityAdmin(TranslationAdmin):
     list_filter = ("is_published", "ticket_status", "city", "event__event_type", "use_block_builder")
     search_fields = ("slug", "event__title", "city__name", "seo_title")
     raw_id_fields = ("event", "city", "venue")
-    inlines = [PageBlockInline, EventImageInline, EventVideoInline, EventContentBlockInline]
+    # Старі inline-панелі (галерея, відео, блоки контенту) тимчасово приховані для нового шаблону
+    # Повернення: розкоментувати та додати: EventImageInline, EventVideoInline, EventContentBlockInline
+    inlines = [PageBlockInline]
     list_editable = ("ticket_status", "is_published", "use_block_builder")
     filter_horizontal = ("related_events_manual",)
     fieldsets = (
