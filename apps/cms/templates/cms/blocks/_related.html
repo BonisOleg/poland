@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if related %}
-<section class="cms-block cms-block--related section"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+<section class="event-detail__panel cms-block cms-block--related section"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
     <h2 class="section__title">{% if block.heading %}{{ block.heading }}{% else %}{% trans "Zobacz także" %}{% endif %}</h2>
     <div class="grid grid--cards">
         {% for entity in related %}

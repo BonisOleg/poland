@@ -135,7 +135,7 @@ class EventCityAdmin(TranslationAdmin):
         (pl_uk("Podstawowe", "Основне"), {
             "fields": (
                 "event", "city", "venue", "slug", "custom_title",
-                "is_published", "use_new_layout", "use_block_builder",
+                "is_published", "use_block_builder",
             ),
         }),
         (pl_uk("Data i bilety", "Дата і квитки"), {

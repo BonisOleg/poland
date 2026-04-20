@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if gallery_items %}
-<section class="cms-block cms-block--gallery event-gallery event-gallery--photo"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %} aria-label="{% trans 'Galeria zdjęć' %}">
+<section class="event-detail__panel cms-block cms-block--gallery event-gallery event-gallery--photo"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %} aria-label="{% trans 'Galeria zdjęć' %}">
     {% if block.heading %}<h2 class="event-gallery__title">{{ block.heading }}</h2>{% endif %}
     <div class="event-gallery__carousel-wrap">
         <button class="event-gallery__arrow event-gallery__arrow--prev" aria-label="{% trans 'Poprzednie' %}" type="button">

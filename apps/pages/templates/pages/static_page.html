@@ -6,6 +6,10 @@
 {% block canonical %}{% if page.canonical_url %}{{ page.canonical_url }}{% else %}{{ SITE_URL }}{{ page.get_absolute_url }}{% endif %}{% endblock %}
 {% block extra_meta %}{% if page.robots_directives %}<meta name="robots" content="{{ page.robots_directives }}">{% endif %}{% if page.og_image %}<meta property="og:image" content="{{ page.og_image }}">{% endif %}{% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'js/event-gallery.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
 {% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
@@ -14,6 +18,11 @@
         <h1 class="page-title">{{ page.title }}</h1>
         {% if page.use_block_builder %}
             {% render_blocks page %}
+            <dialog class="event-lightbox" id="event-lightbox"
+                    aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+                <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+                <img src="" alt="" class="event-lightbox__img">
+            </dialog>
         {% else %}
         <div class="event-content">
             {{ page.content|safe }}

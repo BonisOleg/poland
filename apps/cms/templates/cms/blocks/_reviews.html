@@ -1,5 +1,5 @@
 {% load i18n %}
-<section class="cms-block cms-block--reviews section"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% else %} id="recenzje"{% endif %}>
+<section class="event-detail__panel cms-block cms-block--reviews section"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% else %} id="recenzje"{% endif %}>
     <h2 class="section__title">{% if block.heading %}{{ block.heading }}{% else %}{% trans "Recenzje" %}{% endif %}</h2>
     <div class="cms-block__reviews-list">
         {% for review in reviews %}

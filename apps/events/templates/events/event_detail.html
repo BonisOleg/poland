@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static i18n cms_tags %}
 
+{% block extra_css %}
+{% if event_city.use_block_builder %}<link rel="stylesheet" href="{% static 'css/cms.css' %}?v={{ STATIC_ASSET_VERSION }}">{% endif %}
+{% endblock %}
+
 {% block title %}{{ event_city.get_seo_title }}{% endblock %}
 {% block meta_description %}{{ event_city.seo_description }}{% endblock %}
 {% block canonical %}{% if event_city.canonical_url %}{{ event_city.canonical_url }}{% else %}{{ SITE_URL }}{{ event_city.get_absolute_url }}{% endif %}{% endblock %}
@@ -216,6 +220,10 @@
 
     {% if event_city.use_block_builder %}
         {% render_blocks event_city %}
+        <dialog class="event-lightbox" id="event-lightbox" aria-modal="true" aria-label="{% trans 'Podgląd zdjęcia' %}">
+            <button class="event-lightbox__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+            <img src="" alt="" class="event-lightbox__img">
+        </dialog>
     {% else %}
         {% if intro_html %}
         <div class="event-detail__panel event-content">{{ intro_html|safe }}</div>
@@ -302,7 +310,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/countdown.js' %}" defer></script>
-{% if photos or videos %}
+{% if photos or videos or event_city.use_block_builder %}
 <script src="{% static 'js/event-gallery.js' %}" defer></script>
 {% endif %}
 {% endblock %}

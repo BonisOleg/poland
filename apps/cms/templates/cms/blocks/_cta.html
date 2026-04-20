@@ -1,5 +1,5 @@
 {% load i18n %}
-<section class="cms-block cms-block--cta"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
+<section class="event-detail__panel cms-block cms-block--cta"{% if block.css_anchor %} id="{{ block.css_anchor }}"{% endif %}>
     {% if block.image %}
         <img src="{{ block.image.url }}" alt="{{ block.image_alt|default:block.heading }}" class="cms-block__cta-image" loading="lazy">
     {% endif %}
