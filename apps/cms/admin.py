@@ -274,6 +274,7 @@ class PageBlockInline(GenericStackedInline):
 
     class Media:
         css = {"all": ("admin/cms/cms-blocks.css",)}
+        js = ("admin/cms/cms-block-kind.js",)
 
     def gallery_items_count(self, obj: PageBlock) -> str:
         if not obj.pk or obj.kind != KIND_GALLERY:
