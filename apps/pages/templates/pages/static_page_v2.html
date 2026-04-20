@@ -90,6 +90,11 @@
             <h2>{% trans "Formularz kontaktowy" %}</h2>
             <form method="post" action="/contact/">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <div class="hp-field" aria-hidden="true">
+                    <label for="v2-contact-hp">{% trans "Nie wypełniaj" %}</label>
+                    <input type="text" name="website" id="v2-contact-hp" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="form-group">
                     <label>{% trans "Imię i nazwisko" %}</label>
                     <input type="text" name="name" required>

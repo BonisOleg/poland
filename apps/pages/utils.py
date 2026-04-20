@@ -557,6 +557,60 @@ def extract_media_from_html(html: str) -> tuple[list[dict[str, str]], list[dict[
     return images, videos, str(soup)
 
 
+def _normalize_dla_firm_link_text(text: str) -> str:
+    return " ".join(text.split()).lower()
+
+
+def _href_is_dla_firm_cta_placeholder(href: str) -> bool:
+    h = (href or "").strip().lower()
+    return h in ("", "#", "#!", "javascript:void(0)", "javascript:;")
+
+
+def tag_dla_firm_group_ctas(html: str) -> str:
+    """Add data-group-intent to corporate CTA links (placeholder href only).
+
+    Skips anchors that already have data-group-intent (manual admin markup).
+    """
+
+    def _match_intent(norm: str) -> str | None:
+        if "zarezerwuj" in norm:
+            return "rezerwacja"
+        if "repertuar" in norm:
+            return "repertuar"
+        if "poznaj" in norm and "warunk" in norm:
+            return "specjalna_oferta"
+        if "specjalne" in norm and "warunk" in norm:
+            return "specjalna_oferta"
+        if "zapytaj" in norm:
+            return "event_firmowy"
+        if "voucher" in norm:
+            return "voucher"
+        if "zrób prezent" in norm or "zrob prezent" in norm:
+            return "voucher"
+        return None
+
+    if not html or not html.strip():
+        return html
+
+    soup = BeautifulSoup(html, "html.parser")
+    for a in soup.find_all("a"):
+        if not isinstance(a, Tag):
+            continue
+        if a.get("data-group-intent"):
+            continue
+        href = (a.get("href") or "").strip()
+        if not _href_is_dla_firm_cta_placeholder(href):
+            continue
+        norm = _normalize_dla_firm_link_text(a.get_text() or "")
+        if not norm:
+            continue
+        intent = _match_intent(norm)
+        if intent:
+            a["data-group-intent"] = intent
+            a["href"] = "#"
+    return str(soup)
+
+
 def _themed_panel_inner_is_effectively_empty(inner: str) -> bool:
     """True if panel HTML has no visible text and no embedded media (themed pages).
 

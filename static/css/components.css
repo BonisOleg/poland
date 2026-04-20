@@ -467,3 +467,43 @@ input.filter-bar__select:focus-visible {
     height: 70vh;
     border: none;
 }
+
+/* Django messages (flash) */
+.site-messages {
+    max-width: 42rem;
+    margin: var(--space-md) auto 0;
+    padding: 0 var(--space-md);
+}
+
+.site-messages__item {
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    line-height: 1.45;
+}
+
+.site-messages__item--success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: var(--color-white);
+}
+
+.site-messages__item--error {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: var(--color-white);
+}
+
+/* Honeypot — off-screen, keep in DOM for tabindex trap */
+.hp-field {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

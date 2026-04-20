@@ -15,6 +15,7 @@ from .utils import (
     strip_dla_dzieci_panel_headings,
     strip_elementor_residue,
     strip_quick_view_from_html,
+    tag_dla_firm_group_ctas,
     tag_products_grid,
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
@@ -40,6 +41,8 @@ def _prepare_vouchery_content(html: str) -> str:
 def _render_themed_page(request, page):
     """Render dla-dzieci / dla-szkol / dla-firm with the themed layout."""
     html = strip_elementor_residue(page.content)
+    if page.slug == "dla-firm":
+        html = tag_dla_firm_group_ctas(html)
 
     db_media = list(page.media.all())
     if db_media:

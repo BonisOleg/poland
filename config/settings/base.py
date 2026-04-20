@@ -107,9 +107,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_URL = os.environ.get("SITE_URL", "https://hypeglobal.pro")
 SITE_NAME = "Hype Global Production"
+
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
+INQUIRY_EMAIL_TO = [
+    x.strip()
+    for x in os.environ.get("INQUIRY_EMAIL_TO", "").split(",")
+    if x.strip()
+]
 # Bump after CSS/JS changes. If STATIC_ASSET_VERSION is set in .env, it overrides this default
 # (stale .env = users never see stylesheet updates — keep .env in sync or remove the line locally).
-STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "56")
+STATIC_ASSET_VERSION = os.environ.get("STATIC_ASSET_VERSION", "57")
 
 # PayU REST API 2.1 credentials (set in env; defaults point to sandbox)
 PAYU_POS_ID = os.environ.get("PAYU_POS_ID", "")

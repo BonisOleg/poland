@@ -660,6 +660,109 @@
                 var(--glass-elev-shadow);
 }
 
+/* Group inquiry modal (native dialog) */
+.page-theme--dla-firm .group-inquiry-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    max-width: min(92vw, 28rem);
+    max-height: min(92dvh, 40rem);
+    width: 100%;
+    padding: 0;
+    border: 1px solid rgba(255, 179, 71, 0.35);
+    border-radius: var(--theme-radius, 1.25rem);
+    background: var(--color-dark-surface);
+    color: var(--color-white);
+    overflow: hidden;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog::backdrop {
+    background: rgb(0 0 0 / 0.82);
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__inner {
+    position: relative;
+    padding: var(--space-lg) var(--space-lg) var(--space-md);
+    max-height: min(92dvh, 40rem);
+    overflow-y: auto;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__title {
+    font-family: var(--font-heading);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-bold);
+    color: var(--color-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 2.5rem var(--space-md) 0;
+    line-height: 1.25;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--color-white);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    padding: 0;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__close:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 179, 71, 0.45);
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__close:focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__form .form-group {
+    margin: 0;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__form label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-size: var(--fs-sm);
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__form input,
+.page-theme--dla-firm .group-inquiry-dialog__form select,
+.page-theme--dla-firm .group-inquiry-dialog__form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--color-white);
+    font: inherit;
+}
+
+.page-theme--dla-firm .group-inquiry-dialog__form textarea {
+    resize: vertical;
+    min-height: 6rem;
+}
+
 /* Suppress Elementor residue still in DB (defensive) */
 .page-themed .premium-title-container,
 .page-themed .premium-title-style9-letter,

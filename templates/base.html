@@ -51,6 +51,14 @@
 <body>
     {% include "includes/header.html" %}
 
+    {% if messages %}
+    <div class="site-messages" role="region" aria-label="{% trans 'Powiadomienia' %}">
+        {% for message in messages %}
+        <p class="site-messages__item site-messages__item--{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <main id="main">
         {% block content %}{% endblock %}
     </main>

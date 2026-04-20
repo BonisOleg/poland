@@ -1,6 +1,7 @@
 """Tests for pages app."""
 
-from django.test import SimpleTestCase, TestCase
+from django.core import mail
+from django.test import SimpleTestCase, TestCase, override_settings
 
 from apps.pages.management.commands.clean_elementor_content import transform_html
 from apps.pages.utils import (
@@ -11,6 +12,7 @@ from apps.pages.utils import (
     split_vouchery_content_into_panels,
     strip_elementor_residue,
     strip_quick_view_from_html,
+    tag_dla_firm_group_ctas,
     tag_vouchery_faq_section,
     tag_vouchery_offer_section,
     tag_vouchery_reasons_list,
@@ -490,6 +492,8 @@ class ThemedPageSmokeTests(TestCase):
         resp = self.client.get("/dla-firm/")
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "page-theme--dla-firm")
+        self.assertContains(resp, "group-inquiry-dialog")
+        self.assertContains(resp, "dla-firm-group-dialog.js")
 
     def test_themed_pages_have_no_premium_title_residue(self) -> None:
         for slug in ("dla-dzieci", "dla-szkol", "dla-firm"):
@@ -510,3 +514,112 @@ class ThemedPageSmokeTests(TestCase):
         self.assertNotContains(resp, "page-theme--")
         # v2 template renders vouchery-page class
         self.assertContains(resp, "vouchery-page")
+
+
+# ---------------------------------------------------------------------------
+# Dla firm: CTA tagging + inquiry / contact POST
+# ---------------------------------------------------------------------------
+
+
+class TagDlaFirmGroupCtasTests(SimpleTestCase):
+    def test_zarezerwuj_gets_rezerwacja(self) -> None:
+        html = '<p><a href="#" class="btn">ZAREZERWUJ BILETY</a></p>'
+        out = tag_dla_firm_group_ctas(html)
+        self.assertIn('data-group-intent="rezerwacja"', out)
+
+    def test_repertuar_without_zarezerwuj(self) -> None:
+        html = '<p><a href="#">REPERTUAR</a></p>'
+        out = tag_dla_firm_group_ctas(html)
+        self.assertIn('data-group-intent="repertuar"', out)
+
+    def test_preserves_manual_data_group_intent(self) -> None:
+        html = '<a href="#" data-group-intent="other">CUSTOM</a>'
+        out = tag_dla_firm_group_ctas(html)
+        self.assertIn('data-group-intent="other"', out)
+
+    def test_skips_external_href(self) -> None:
+        html = '<a href="https://example.com/page">ZAREZERWUJ BILETY</a>'
+        out = tag_dla_firm_group_ctas(html)
+        self.assertNotIn("data-group-intent", out)
+
+
+class GroupInquiryAndContactViewTests(TestCase):
+    @override_settings(
+        INQUIRY_EMAIL_TO=["ops@example.com"],
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    )
+    def test_group_inquiry_post_sends_mail(self) -> None:
+        mail.outbox.clear()
+        resp = self.client.post(
+            "/group-inquiry/",
+            {
+                "name": "Jan Kowalski",
+                "email": "jan@example.com",
+                "phone": "",
+                "company": "",
+                "nip": "",
+                "ticket_count": "",
+                "message": "Proszę o kontakt.",
+                "intent": "repertuar",
+                "source_page": "dla-firm",
+                "next": "/dla-firm/",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp["Location"], "/dla-firm/")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("repertuar", mail.outbox[0].body.lower())
+
+    @override_settings(
+        INQUIRY_EMAIL_TO=["ops@example.com"],
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    )
+    def test_group_inquiry_invalid_sends_no_mail(self) -> None:
+        mail.outbox.clear()
+        self.client.post(
+            "/group-inquiry/",
+            {
+                "name": "",
+                "email": "not-an-email",
+                "message": "",
+                "intent": "repertuar",
+                "next": "/dla-firm/",
+            },
+        )
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(
+        INQUIRY_EMAIL_TO=["ops@example.com"],
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    )
+    def test_contact_post_sends_mail(self) -> None:
+        mail.outbox.clear()
+        resp = self.client.post(
+            "/contact/",
+            {
+                "name": "Anna",
+                "email": "anna@example.com",
+                "organization": "ACME",
+                "message": "Hello",
+                "next": "/polityka-prywatnosci/",
+            },
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp["Location"], "/polityka-prywatnosci/")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("kontakt", mail.outbox[0].subject.lower())
+
+    @override_settings(INQUIRY_EMAIL_TO=[])
+    def test_group_inquiry_empty_recipients_no_mail(self) -> None:
+        mail.outbox.clear()
+        self.client.post(
+            "/group-inquiry/",
+            {
+                "name": "Jan Kowalski",
+                "email": "jan@example.com",
+                "message": "x",
+                "intent": "repertuar",
+                "next": "/dla-firm/",
+            },
+        )
+        self.assertEqual(len(mail.outbox), 0)

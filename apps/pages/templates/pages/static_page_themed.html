@@ -120,12 +120,75 @@
         {# ── Content panels (hero-intro + h2-split sections) ──────── #}
         {{ panels_html|safe }}
 
+        {% if page.slug == "dla-firm" %}
+        <dialog class="group-inquiry-dialog" id="group-inquiry-dialog" aria-labelledby="group-inquiry-title" aria-modal="true">
+            <div class="group-inquiry-dialog__inner">
+                <button type="button" class="group-inquiry-dialog__close" aria-label="{% trans 'Zamknij' %}">&times;</button>
+                <h2 class="group-inquiry-dialog__title" id="group-inquiry-title">{% trans "Zgłoszenie grupowe" %}</h2>
+                <form method="post" action="/group-inquiry/" class="group-inquiry-dialog__form">
+                    {% csrf_token %}
+                    <input type="hidden" name="source_page" value="dla-firm">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="group-inquiry-hp">{% trans "Nie wypełniaj" %}</label>
+                        <input type="text" name="website" id="group-inquiry-hp" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-intent">{% trans "Temat" %}</label>
+                        <select name="intent" id="group-inquiry-intent" required>
+                            <option value="repertuar">{% trans "Repertuar" %}</option>
+                            <option value="rezerwacja">{% trans "Rezerwacja biletów" %}</option>
+                            <option value="specjalna_oferta">{% trans "Oferta specjalna" %}</option>
+                            <option value="event_firmowy">{% trans "Event / wyjazd" %}</option>
+                            <option value="voucher">{% trans "Voucher / prezent" %}</option>
+                            <option value="other">{% trans "Inne" %}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-name">{% trans "Imię i nazwisko" %}</label>
+                        <input type="text" id="group-inquiry-name" name="name" required maxlength="200" autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-email">{% trans "Email" %}</label>
+                        <input type="email" id="group-inquiry-email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-phone">{% trans "Telefon" %}</label>
+                        <input type="text" id="group-inquiry-phone" name="phone" maxlength="40" autocomplete="tel">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-company">{% trans "Firma" %}</label>
+                        <input type="text" id="group-inquiry-company" name="company" maxlength="300" autocomplete="organization">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-nip">{% trans "NIP" %}</label>
+                        <input type="text" id="group-inquiry-nip" name="nip" maxlength="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-tickets">{% trans "Szacowana liczba biletów" %}</label>
+                        <input type="text" id="group-inquiry-tickets" name="ticket_count" maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="group-inquiry-msg">{% trans "Wiadomość" %}</label>
+                        <textarea id="group-inquiry-msg" name="message" required rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn--primary">{% trans "Wyślij" %}</button>
+                </form>
+            </div>
+        </dialog>
+        {% endif %}
+
         {# ── Optional contact form ─────────────────────────────────── #}
         {% if page.show_contact_form %}
         <section class="event-detail__panel page-themed__contact-panel">
             <h2 class="page-themed__contact-title">{% trans "Formularz kontaktowy" %}</h2>
             <form method="post" action="/contact/" class="page-themed__contact-form">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <div class="hp-field" aria-hidden="true">
+                    <label for="themed-contact-hp">{% trans "Nie wypełniaj" %}</label>
+                    <input type="text" name="website" id="themed-contact-hp" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="form-group">
                     <label for="themed-name">{% trans "Imię i nazwisko" %}</label>
                     <input type="text" id="themed-name" name="name" required>
@@ -153,4 +216,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/event-gallery.js' %}" defer></script>
+{% if page.slug == "dla-firm" %}
+<script src="{% static 'js/dla-firm-group-dialog.js' %}?v={{ STATIC_ASSET_VERSION }}" defer></script>
+{% endif %}
 {% endblock %}
