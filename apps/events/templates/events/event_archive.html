@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Archiwum Wydarzeń" %} — {{ SITE_NAME }}{% endblock %}
+
+{% block extra_meta %}
+    <meta name="robots" content="noindex, follow">
+{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section__title text-gradient">{% trans "Archiwum Wydarzeń" %}</h1>
+        <p class="text-gray" style="margin-bottom: var(--space-lg);">{% trans "Wydarzenia z ubiegłych lat i roku 2025" %}</p>
+
+        <div class="filter-bar">
+            <select class="filter-bar__select"
+                    name="city"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="">{% trans "Wszystkie miasta" %}</option>
+                {% for city in cities %}
+                    <option value="{{ city.slug }}" {% if current_filters.city == city.slug %}selected{% endif %}>{{ city.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="category"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="">{% trans "Wszystkie kategorie" %}</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.slug }}" {% if current_filters.category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="age"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="">{% trans "Wiek" %}</option>
+                {% for ag in age_groups %}
+                    <option value="{{ ag.slug }}" {% if current_filters.age == ag.slug %}selected{% endif %}>{{ ag.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="year"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="">{% trans "Dowolny rok" %}</option>
+                {% for y in available_years %}
+                    <option value="{{ y }}" {% if current_filters.year == y|stringformat:"d" %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="month"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="">{% trans "Cały rok" %}</option>
+                {% for m in month_choices %}
+                    <option value="{{ m.0 }}" {% if current_filters.month == m.0|stringformat:"d" %}selected{% endif %}>{{ m.1 }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="filter-bar__select"
+                    name="sort"
+                    hx-get="{% url 'events:archive' %}"
+                    hx-target="#events-grid"
+                    hx-include=".filter-bar__select, .filter-bar__checkbox">
+                <option value="date_desc" {% if current_filters.sort == 'date_desc' %}selected{% endif %}>{% trans "Od najnowszych" %}</option>
+                <option value="date_asc" {% if current_filters.sort == 'date_asc' %}selected{% endif %}>{% trans "Od najstarszych" %}</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: var(--space-lg);">
+            <label class="filter-bar__label">{% trans "Status biletów" %}</label>
+            <div class="filter-checkboxes">
+                {% for value, label in ticket_statuses %}
+                    <label class="filter-checkbox">
+                        <input type="checkbox"
+                               name="ticket_status"
+                               value="{{ value }}"
+                               class="filter-bar__checkbox"
+                               {% if value in current_filters.ticket_status %}checked{% endif %}
+                               hx-get="{% url 'events:archive' %}"
+                               hx-target="#events-grid"
+                               hx-include=".filter-bar__select, .filter-bar__checkbox">
+                        <span>{{ label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="events-grid">
+            {% include "events/partials/event_grid.html" %}
+        </div>
+    </div>
+</section>
+{% endblock %}

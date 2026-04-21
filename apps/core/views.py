@@ -4,9 +4,10 @@ from django.shortcuts import render
 def homepage(request):
     from apps.events.models import EventCity, Category
     from apps.blog.models import Article
+    from django.urls import reverse
 
     events = EventCity.objects.filter(
-        is_published=True
+        is_published=True, is_archived=False
     ).select_related("event", "city").order_by("-event__sort_order", "event_date")[:15]
 
     categories = Category.objects.order_by("sort_order")
@@ -16,6 +17,7 @@ def homepage(request):
         "events": events,
         "categories": categories,
         "articles": articles,
+        "archive_url": reverse("events:archive"),
     })
 
 

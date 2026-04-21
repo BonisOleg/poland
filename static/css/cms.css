@@ -136,3 +136,44 @@
   height: 1px;
   overflow: hidden;
 }
+
+/* ── Archive filters ────────────────────────────────────────────────────── */
+.filter-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--color-primary, #ff6b35);
+}
+
+.filter-bar__label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* ── Homepage archive link ──────────────────────────────────────────────── */
+.archive-btn {
+  margin-left: var(--space-md);
+}
+
+.archive-hint {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-gray-600);
+}

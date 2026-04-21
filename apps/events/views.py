@@ -32,19 +32,19 @@ def _month_choices():
 
 def event_list(request):
     events = EventCity.objects.filter(
-        is_published=True
+        is_published=True, is_archived=False
     ).select_related("event", "city")
 
     cities = City.objects.all()
     categories = (
         Category.objects
-        .filter(events__event_cities__is_published=True)
+        .filter(events__event_cities__is_published=True, events__event_cities__is_archived=False)
         .distinct()
         .order_by("sort_order", "name")
     )
     age_groups = (
         AgeGroup.objects
-        .filter(events__event_cities__is_published=True)
+        .filter(events__event_cities__is_published=True, events__event_cities__is_archived=False)
         .distinct()
         .order_by("min_age")
     )
@@ -85,7 +85,7 @@ def event_list(request):
 
 def event_filter(request):
     events = EventCity.objects.filter(
-        is_published=True
+        is_published=True, is_archived=False
     ).select_related("event", "city")
     events = _apply_filters(events, request)
 
@@ -101,6 +101,72 @@ def event_filter(request):
     return render(request, "events/partials/event_grid.html", {
         "page_obj": page,
     })
+
+
+def archive_event_list(request):
+    """Display archived events with extended filters."""
+    events = EventCity.objects.filter(
+        is_published=True, is_archived=True
+    ).select_related("event", "city")
+
+    cities = City.objects.all()
+    categories = (
+        Category.objects
+        .filter(events__event_cities__is_published=True, events__event_cities__is_archived=True)
+        .distinct()
+        .order_by("sort_order", "name")
+    )
+    age_groups = (
+        AgeGroup.objects
+        .filter(events__event_cities__is_published=True, events__event_cities__is_archived=True)
+        .distinct()
+        .order_by("min_age")
+    )
+
+    events = _apply_filters(events, request, include_archived=True)
+
+    sort = request.GET.get("sort", "date_desc")
+    if sort == "date_asc":
+        events = events.order_by("event_date")
+    else:
+        events = events.order_by("-event_date")
+
+    ticket_status_filter = request.GET.getlist("ticket_status")
+    if ticket_status_filter:
+        events = events.filter(ticket_status__in=ticket_status_filter)
+
+    paginator = Paginator(events, 18)
+    page = paginator.get_page(request.GET.get("page", 1))
+
+    years_with_events = (
+        EventCity.objects
+        .filter(is_published=True, is_archived=True, event_date__isnull=False)
+        .dates("event_date", "year", order="DESC")
+    )
+    available_years = [d.year for d in years_with_events]
+
+    ctx = {
+        "page_obj": page,
+        "cities": cities,
+        "categories": categories,
+        "age_groups": age_groups,
+        "current_filters": {
+            "city": request.GET.get("city", ""),
+            "category": request.GET.get("category", ""),
+            "age": request.GET.get("age", ""),
+            "year": request.GET.get("year", ""),
+            "month": request.GET.get("month", ""),
+            "sort": sort,
+            "ticket_status": ticket_status_filter,
+        },
+        "available_years": available_years,
+        "month_choices": _month_choices(),
+        "ticket_statuses": EventCity.TICKET_STATUS_CHOICES,
+    }
+
+    if request.htmx:
+        return render(request, "events/partials/event_grid.html", ctx)
+    return render(request, "events/event_archive.html", ctx)
 
 
 def event_detail(request, slug):
@@ -127,7 +193,7 @@ def event_detail(request, slug):
     })
 
 
-def _apply_filters(qs, request):
+def _apply_filters(qs, request, include_archived=False):
     city = request.GET.get("city")
     if city:
         qs = qs.filter(city__slug=city)

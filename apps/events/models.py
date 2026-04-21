@@ -251,6 +251,17 @@ class EventCity(models.Model):
         verbose_name=pl_uk("Konstruktor bloków (CMS)", "Блок-конструктор (CMS)"),
     )
     is_published = models.BooleanField(default=True, verbose_name=pl_uk("Opublikowane", "Опубліковано"))
+    is_archived = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name=pl_uk("Zarchiwizowane", "Заархівоване"),
+    )
+    archive_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name=pl_uk("Data archiwizacji", "Дата архівації"),
+    )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=pl_uk("Utworzono", "Створено"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=pl_uk("Zaktualizowano", "Оновлено"))
@@ -300,6 +311,24 @@ class EventCity(models.Model):
             if self.seats_left < 50:
                 return "Ostatnie miejsca!"
         return dict(self.TICKET_STATUS_CHOICES).get(self.ticket_status, "")
+
+    @property
+    def should_be_archived(self) -> bool:
+        """Check if event meets archival criteria (2025 or older, or past event)."""
+        if not self.event_date:
+            return False
+        # Archive if event is in 2025 or earlier, OR if date is in the past
+        return self.event_date.year <= 2025 or self.event_date < timezone.now()
+
+    @classmethod
+    def get_upcoming_events(cls):
+        """Queryset for active/upcoming events only."""
+        return cls.objects.filter(is_published=True, is_archived=False).select_related("event", "city")
+
+    @classmethod
+    def get_archived_events(cls):
+        """Queryset for archived events only."""
+        return cls.objects.filter(is_published=True, is_archived=True).select_related("event", "city")
 
 
 class EventVideo(models.Model):

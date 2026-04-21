@@ -121,16 +121,16 @@ class EventAdmin(TranslationAdmin):
 class EventCityAdmin(TranslationAdmin):
     list_display = (
         "event", "city", "event_date", "ticket_status",
-        "is_published", "use_block_builder", "slug",
+        "is_published", "is_archived", "archive_date", "use_block_builder", "slug",
     )
-    list_filter = ("is_published", "ticket_status", "city", "event__event_type", "use_block_builder")
+    list_filter = ("is_published", "is_archived", "ticket_status", "city", "event__event_type", "use_block_builder")
     search_fields = ("slug", "event__title", "city__name", "seo_title")
     raw_id_fields = ("event", "city", "venue")
-    # Старі inline-панелі (галерея, відео, блоки контенту) тимчасово приховані для нового шаблону
-    # Повернення: розкоментувати та додати: EventImageInline, EventVideoInline, EventContentBlockInline
     inlines = [PageBlockInline]
-    list_editable = ("ticket_status", "is_published", "use_block_builder")
+    list_editable = ("ticket_status", "is_published", "is_archived", "use_block_builder")
     filter_horizontal = ("related_events_manual",)
+    readonly_fields = ("archive_date",)
+    actions = ["archive_selected_events", "unarchive_selected_events"]
     fieldsets = (
         (pl_uk("Podstawowe", "Основне"), {
             "fields": (
@@ -145,6 +145,10 @@ class EventCityAdmin(TranslationAdmin):
                 "price_from", "price_to",
             ),
         }),
+        (pl_uk("Archiwizacja", "Архівація"), {
+            "fields": ("is_archived", "archive_date"),
+            "classes": ("collapse",),
+        }),
         ("SEO", {
             "fields": ("seo_title", "seo_description", "keywords", "og_image", "canonical_url"),
             "classes": ("collapse",),
@@ -157,6 +161,34 @@ class EventCityAdmin(TranslationAdmin):
             "fields": ("related_events_manual",),
             "classes": ("collapse",),
         }),
+    )
+
+    def archive_selected_events(self, request, queryset):
+        """Admin action to archive selected events."""
+        from django.utils import timezone as tz
+        now = tz.now()
+        for event_city in queryset:
+            event_city.is_archived = True
+            event_city.archive_date = now
+            event_city.save(update_fields=["is_archived", "archive_date"])
+        self.message_user(request, f"{queryset.count()} event(s) archived")
+
+    archive_selected_events.short_description = pl_uk(
+        "Archiwizuj wybrane wydarzenia",
+        "Archivuj vybrani podii"
+    )
+
+    def unarchive_selected_events(self, request, queryset):
+        """Admin action to unarchive selected events."""
+        for event_city in queryset:
+            event_city.is_archived = False
+            event_city.archive_date = None
+            event_city.save(update_fields=["is_archived", "archive_date"])
+        self.message_user(request, f"{queryset.count()} event(s) unarchived")
+
+    unarchive_selected_events.short_description = pl_uk(
+        "Przywroc wybrane wydarzenia",
+        "Vidnovyty vybrani podii"
     )
 
     def get_form(self, request, obj=None, **kwargs):
