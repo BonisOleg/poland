@@ -104,7 +104,7 @@ class EventAdmin(TranslationAdmin):
             "fields": ("categories", "age_group"),
         }),
         (pl_uk("Obraz", "Зображення"), {
-            "fields": ("image", "hero_image_focal"),
+            "fields": ("image", "hero_image_focal", "hero_video_file", "hero_video_embed_url", "hero_video_autoplay", "hero_video_muted"),
         }),
         (pl_uk("Bilety", "Квитки"), {
             "fields": ("biletyna_base_url",),

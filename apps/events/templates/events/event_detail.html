@@ -85,7 +85,17 @@
 <div class="container event-detail" x-data="{ showTickets: false }">
     <div class="hero{% if not event.image and not event_city.og_image %} hero--no-media{% endif %}" data-hero-focal="{{ event.hero_image_focal }}">
         <div class="event-detail__hero-layout">
-            {% if event.image %}
+            {% if event.hero_video_file or event.hero_video_embed_url %}
+            <div class="hero__media hero__media--bleed hero__media--video">
+                {% if event.hero_video_file %}
+                <video class="hero__video" {% if event.hero_video_autoplay %}autoplay{% endif %} {% if event.hero_video_muted %}muted{% endif %} loop playsinline>
+                    <source src="{{ event.hero_video_file.url }}" type="video/mp4">
+                </video>
+                {% elif event.hero_video_embed_url %}
+                <iframe src="{{ event.hero_video_embed_url }}" class="hero__video-iframe" allowfullscreen loading="lazy" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
+                {% endif %}
+            </div>
+            {% elif event.image %}
             <div class="hero__media hero__media--bleed">
                 <img src="{{ event.image.url }}" alt="{{ event_city.get_display_title }}" class="hero__image">
             </div>

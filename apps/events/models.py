@@ -149,6 +149,41 @@ class Event(models.Model):
         ),
         verbose_name=pl_uk("Ostrość obrazu bohatera", "Фокус зображення героя"),
     )
+    hero_video_file = models.FileField(
+        upload_to="events/videos/",
+        blank=True,
+        null=True,
+        help_text=pl_uk(
+            "Plik wideo (mp4/webm) jako tło szapki. Będzie odtwarzany w pełnej szerokości.",
+            "Відеофайл (mp4/webm) як фонове відео шапки. Буде відтворюватися на весь екран.",
+        ),
+        verbose_name=pl_uk("Wideo героя", "Відео героя"),
+    )
+    hero_video_embed_url = models.URLField(
+        blank=True,
+        max_length=500,
+        help_text=pl_uk(
+            "Zamiast pliku: URL do osadzenia wideo (YouTube /embed/…, Vimeo …)",
+            "Замість файлу: URL для вбудовування відео (YouTube /embed/…, Vimeo …)",
+        ),
+        verbose_name=pl_uk("URL osadzenia wideo", "URL вбудовування відео"),
+    )
+    hero_video_autoplay = models.BooleanField(
+        default=True,
+        help_text=pl_uk(
+            "Automatyczne odtwarzanie wideo (wymagane muted=True dla polityk przeglądarki)",
+            "Автоматичне відтворення відео (вимагає muted=True для політик браузера)",
+        ),
+        verbose_name=pl_uk("Autoplay wideo", "Автовідтворення відео"),
+    )
+    hero_video_muted = models.BooleanField(
+        default=True,
+        help_text=pl_uk(
+            "Wyciszenie wideo (wymagane dla autoplay)",
+            "Вимкнення звуку видео (вимагається для autoplay)",
+        ),
+        verbose_name=pl_uk("Wyciszenie wideo", "Вимкнення звуку"),
+    )
     sort_order = models.IntegerField(default=0, verbose_name=pl_uk("Kolejność", "Порядок"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=pl_uk("Utworzono", "Створено"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=pl_uk("Zaktualizowano", "Оновлено"))

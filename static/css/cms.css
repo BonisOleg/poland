@@ -171,9 +171,3 @@
 .archive-btn {
   margin-left: var(--space-md);
 }
-
-.archive-hint {
-  margin-top: var(--space-sm);
-  font-size: var(--fs-sm);
-  color: var(--color-gray-600);
-}
